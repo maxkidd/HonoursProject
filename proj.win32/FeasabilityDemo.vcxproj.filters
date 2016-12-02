@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{715254bc-d70b-4ec5-bf29-467dd3ace079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Layers">
+      <UniqueIdentifier>{562de329-a21e-4c40-856b-b11216df725a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Layers\Box2D">
+      <UniqueIdentifier>{52941cbf-014a-4842-828a-b763b18cc6b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Layers\Box2D\Tests">
+      <UniqueIdentifier>{ac2e6457-5f5a-4389-96a2-397714ce9684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Network">
+      <UniqueIdentifier>{67c8a2e8-82ec-4a30-8c6c-7b4dfc1ee698}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ServerLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ClientLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\NetworkLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\NetworkDebugView.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Box2DTestBed\GLES-Render.cpp">
+      <Filter>src\Layers\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Box2DTestBed\Test.cpp">
+      <Filter>src\Layers\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BaseTest.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\VisibleRect.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\controller.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Box2DTestBed\Box2DTest.cpp">
+      <Filter>src\Layers\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Box2DTestBed\TestEntries.cpp">
+      <Filter>src\Layers\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\WorldState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\b2NetworkWorld.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\network_channel.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\network_connection.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\network_packet.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\network_message.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\HelloWorldScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\NetMessage.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Client.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Server.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ServerLayer.h">
+      <Filter>src\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ClientLayer.h">
+      <Filter>src\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\NetworkLayer.h">
+      <Filter>src\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\NetworkDebugView.h">
+      <Filter>src\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\GLES-Render.h">
+      <Filter>src\Layers\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Test.h">
+      <Filter>src\Layers\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\AddPair.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\ApplyForce.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\BodyTypes.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Breakable.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Bridge.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\BulletTest.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Cantilever.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Car.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Chain.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\CharacterCollision.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\CollisionFiltering.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\CollisionProcessing.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\CompoundShapes.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Confined.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\ContinuousTest.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\ConvexHull.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\ConveyorBelt.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\DistanceTest.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Dominos.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\DumpShell.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\DynamicTreeTest.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\EdgeShapes.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\EdgeTest.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Gears.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Mobile.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\MobileBalanced.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\MotorJoint.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\OneSidedPlatform.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Pinball.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\PolyCollision.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\PolyShapes.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Prismatic.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Pulleys.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Pyramid.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\RayCast.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Revolute.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Rope.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\RopeJoint.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\SensorTest.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\ShapeEditing.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\SliderCrank.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\SphereStack.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\TheoJansen.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Tiles.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\TimeOfImpact.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Tumbler.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\VaryingFriction.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\VaryingRestitution.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\VerticalStack.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Tests\Web.h">
+      <Filter>src\Layers\Box2D\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BaseTest.h">
+      <Filter>src\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\VisibleRect.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\controller.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\testResource.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\tests.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DTestBed\Box2DTest.h">
+      <Filter>src\Layers\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\WorldState.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\b2NetworkWorld.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\network_channel.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\network_connection.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\network_packet.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\network_message.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\network_bitpack.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\network_stream.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+</Project>
