@@ -166,6 +166,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\network_connection.cpp" />
     <ClCompile Include="..\Classes\network_message.cpp" />
     <ClCompile Include="..\Classes\network_packet.cpp" />
+    <ClCompile Include="..\Classes\network_transport.cpp" />
     <ClCompile Include="..\Classes\ServerLayer.cpp" />
     <ClCompile Include="..\Classes\VisibleRect.cpp" />
     <ClCompile Include="..\Classes\WorldState.cpp" />
