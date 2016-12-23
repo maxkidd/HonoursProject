@@ -16,6 +16,7 @@ class OStream
 	bool SerializeInteger(uint32_t value)
 	{
 		_bitWriter.WriteBits(value, 32);
+		return true;
 	}
 	BitWrite _bitWriter;
 };
@@ -29,6 +30,7 @@ public:
 	bool SerializeInteger(uint32_t value)
 	{
 		_bitReader.ReadBits(32);
+		return true;
 	}
 	BitRead _bitReader;
 };

@@ -241,6 +241,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\network_message.h" />
     <ClInclude Include="..\Classes\network_packet.h" />
     <ClInclude Include="..\Classes\network_stream.h" />
+    <ClInclude Include="..\Classes\network_transport.h" />
     <ClInclude Include="..\Classes\Server.h" />
     <ClInclude Include="..\Classes\ServerLayer.h" />
     <ClInclude Include="..\Classes\testResource.h" />
