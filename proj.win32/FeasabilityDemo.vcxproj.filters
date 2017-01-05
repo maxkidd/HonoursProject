@@ -87,6 +87,9 @@
     <ClCompile Include="..\Classes\network_transport.cpp">
       <Filter>src\Network</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SnapshotInterpolationLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -319,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\network_transport.h">
       <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SnapshotInterpolationLayer.h">
+      <Filter>src\Layers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

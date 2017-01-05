@@ -4,9 +4,10 @@
 #include <queue>
 #include "asio\asio.hpp"
 
+#include "network_packet.h"
+
 using asio::ip::udp;
 
-class Packet;
 
 class BaseTransport
 {

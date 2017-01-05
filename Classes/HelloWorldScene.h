@@ -16,6 +16,7 @@
 #include "ServerLayer.h"
 #include "NetworkLayer.h"
 #include "Box2DTestBed/Box2DTest.h"
+#include "SnapshotInterpolationLayer.h"
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -34,6 +35,7 @@ public:
 	void LoadServer();
 	void LoadNetwork();
 	void LoadBox2DTest();
+	void LoadSnapshot();
 };
 
 #endif // __HELLOWORLD_SCENE_H__

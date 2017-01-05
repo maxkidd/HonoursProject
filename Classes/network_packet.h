@@ -3,7 +3,7 @@
 
 class Packet
 {
-
+	char * data;
 };
 
 #endif

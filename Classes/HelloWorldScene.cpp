@@ -82,9 +82,10 @@ bool HelloWorld::init()
 	auto serverItem = MenuItemFont::create("Server", CC_CALLBACK_0(HelloWorld::LoadServer, this));
 	auto networkItem = MenuItemFont::create("Network", CC_CALLBACK_0(HelloWorld::LoadNetwork, this));
 	auto box2DItem = MenuItemFont::create("Box2D", CC_CALLBACK_0(HelloWorld::LoadBox2DTest, this));
+	auto snapshotItem = MenuItemFont::create("Snapshot Interpolation", CC_CALLBACK_0(HelloWorld::LoadSnapshot, this));
 	
 
-	Menu* menu2 = Menu::create(clientItem, serverItem, networkItem, box2DItem, NULL);
+	Menu* menu2 = Menu::create(clientItem, serverItem, networkItem, box2DItem, snapshotItem , NULL);
 	menu2->alignItemsVertically();
 	addChild(menu2);
 
@@ -119,4 +120,9 @@ void HelloWorld::LoadNetwork()
 void HelloWorld::LoadBox2DTest()
 {
 	Director::getInstance()->replaceScene(Box2DTest::create());
+}
+
+void HelloWorld::LoadSnapshot()
+{
+	Director::getInstance()->replaceScene(SnapshotInterpolationLayer::scene());
 }
