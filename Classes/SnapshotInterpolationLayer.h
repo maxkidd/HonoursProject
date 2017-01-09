@@ -9,27 +9,68 @@
 //#include "NetworkDebugView.h"
 
 #include "network_transport.h"
+#include "network_connection.h"
+#include "network_config.h"
 
 class SnapshotClient 
 {
+public:
+	SnapshotClient();
+	virtual ~SnapshotClient();
 
+	void Init(const char* ip = "localhost", const char* port = "1500");
 
+	bool Start();
+	bool Stop();
+
+	void Reset();
+
+	bool IsActive() { return _active; }
 private:
 	SocketTransport* _transport;
+
+	bool _active = false;
+
+	const char* _serverIP;
+	const char* _serverPort;
+
+	Connection* _connection;
+
 };
 
 class SnapshotServer
 {
+public:
+	SnapshotServer();
+	virtual ~SnapshotServer();
 
+	void Init(char* port = "1500");
+
+	bool Start();
+	bool Stop();
+
+	void Reset();
+
+	bool IsActive() { return _active; }
 private:
 	SocketTransport* _transport;
+
+	bool _active = false;
+
+	const char* _serverIP;
+	const char* _serverPort;
+
+	int _numClients;
+	Connection* _connection[MAX_CLIENTS];
+
 };
 class SnapshotInterpolationLayer : public cocos2d::Layer
 {
 private:
-	Server server;
+	SnapshotServer server;
+	SnapshotClient client;
+
 	cocos2d::LabelTTF* _statusLabel;
-	//NetworkDebugLayer* _networkDebug = nullptr;
 public:
 	SnapshotInterpolationLayer();
 	virtual ~SnapshotInterpolationLayer();
@@ -47,6 +88,7 @@ protected:
 
 	void setupNetwork();
 
-	void ConnectClient();
+	void ConnectAsClient();
+
 };
 #endif

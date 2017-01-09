@@ -10,7 +10,7 @@
 using namespace std;
 using namespace cocos2d;
 
-SnapshotInterpolationLayer::SnapshotInterpolationLayer() : server(std::atoi("1500")), _statusLabel(nullptr)
+SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr)
 {
 }
 
@@ -50,7 +50,7 @@ bool SnapshotInterpolationLayer::init()
 	//addChild(menu2);
 
 
-	auto connectItem = MenuItemFont::create("Connect to Server", CC_CALLBACK_0(SnapshotInterpolationLayer::ConnectClient, this));
+	auto connectItem = MenuItemFont::create("Connect to Server", CC_CALLBACK_0(SnapshotInterpolationLayer::ConnectAsClient, this));
 	
 	Menu* menu3 = Menu::create(connectItem, NULL);
 	menu3->alignItemsHorizontally();
@@ -76,16 +76,21 @@ void SnapshotInterpolationLayer::ReloadScene()
 
 void SnapshotInterpolationLayer::update(float dt)
 {
-	if (server.received)
-		_statusLabel->setString(std::string("Connecting to...").append(server.address));
-	if (server.message == Message::NET_NULL)
+	std::string debugString;
+	if (server.IsActive())
 	{
-		_statusLabel->setString(std::string("NULL message from...").append(server.address));
+		debugString.append("Server: ");
 	}
-	else if (server.message == Message::NET_PING)
+	else if (client.IsActive())
 	{
-		_statusLabel->setString(std::string("PING message from...").append(server.address));
+		debugString.append("Client: ");
 	}
+	else
+	{
+		debugString.append("No Client/Server running");
+	}
+
+	_statusLabel->setString(debugString);
 }
 
 void SnapshotInterpolationLayer::createNetworkStatsLabel()
@@ -110,7 +115,7 @@ void SnapshotInterpolationLayer::setupNetwork()
 
 		//server s(std::atoi("1500"));
 
-		server.run();
+		//server.run();
 	}
 	catch (std::exception& e)
 	{
@@ -118,32 +123,50 @@ void SnapshotInterpolationLayer::setupNetwork()
 	}
 }
 
-void SnapshotInterpolationLayer::ConnectClient()
+void SnapshotInterpolationLayer::ConnectAsClient()
 {
 	Size winSize = Director::getInstance()->getWinSize();
 
 	Node *connectNode = Node::create();
 
-	ui::TextField *textfield = ui::TextField::create("IP ADDRESS", "Ariel", 50);
-	textfield->setMaxLength(12);
-	textfield->setMaxLengthEnabled(true);
-	//textfield->setPosition(Vec2(300, 400));
-	textfield->setPosition(Vec2(winSize.width / 2.0f, winSize.height / 2.0f  + 30.0f) + Director::getInstance()->getVisibleOrigin());
-	connectNode->addChild(textfield);
+	// IP address field
+	ui::TextField *ipText = ui::TextField::create("IP ADDRESS", "Ariel", 50);
+	ipText->setMaxLength(12);
+	ipText->setMaxLengthEnabled(true);
+	ipText->setPosition(Vec2(winSize.width / 2.0f, winSize.height / 2.0f  + 30.0f) + Director::getInstance()->getVisibleOrigin());
+	connectNode->addChild(ipText);
 
-	ui::TextField *textfield2 = ui::TextField::create("PORT", "Ariel", 50);
-	textfield2->setMaxLength(12);
-	textfield2->setMaxLengthEnabled(true);
-	//textfield->setPosition(Vec2(300, 400));
-	textfield2->setPosition(Vec2(winSize.width / 2.0f, winSize.height / 2.0f - 20.0f) + Director::getInstance()->getVisibleOrigin());
-	connectNode->addChild(textfield2);
+	// Port address field
+	ui::TextField *portText = ui::TextField::create("PORT", "Ariel", 50);
+	portText->setMaxLength(12);
+	portText->setMaxLengthEnabled(true);
+	portText->setPosition(Vec2(winSize.width / 2.0f, winSize.height / 2.0f - 20.0f) + Director::getInstance()->getVisibleOrigin());
+	connectNode->addChild(portText);
 
-
+	// Connect button
 	ui::Button *connectButton = ui::Button::create(
 		"CloseNormal.png");
 	connectButton->setPosition(Vec2(winSize.width / 2.0f, winSize.height / 2.0f - 60.0f) + Director::getInstance()->getVisibleOrigin());
+
+	connectButton->addTouchEventListener([this, connectNode, ipText, portText](Ref* pSender, ui::Widget::TouchEventType type)
+	{
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			if (server.IsActive())
+			{
+
+			}
+
+			client.Init(ipText->getString().c_str(), portText->getString().c_str());
+
+			client.Start();
+
+			connectNode->removeFromParentAndCleanup(true);
+		}
+	});
 	connectNode->addChild(connectButton);
 
+	// Cancel UI button
 	ui::Button *cancelButton = ui::Button::create(
 		"Cancel.png");
 	cancelButton->setPosition(Vec2(25.0f, winSize.height - 25.0f) + Director::getInstance()->getVisibleOrigin());
