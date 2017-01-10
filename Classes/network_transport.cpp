@@ -14,7 +14,7 @@ bool SocketTransport::InternalReceivePacket(udp::endpoint & endpoint, void * dat
 
 bool SocketTransport::InternalSendPacket(const udp::endpoint & endpoint, const void * data, int size)
 {
-	//socket_.send_to(asio::buffer(data, size), endpoint);
+	socket_.send_to(asio::buffer(data, size), endpoint);
 	return true;
 }
 

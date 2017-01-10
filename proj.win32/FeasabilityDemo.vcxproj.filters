@@ -326,6 +326,9 @@
     <ClInclude Include="..\Classes\SnapshotInterpolationLayer.h">
       <Filter>src\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\network_clientserver.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

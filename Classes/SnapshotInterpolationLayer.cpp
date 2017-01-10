@@ -50,7 +50,7 @@ bool SnapshotInterpolationLayer::init()
 	//addChild(menu2);
 
 
-	auto connectItem = MenuItemFont::create("Connect to Server", CC_CALLBACK_0(SnapshotInterpolationLayer::ConnectAsClient, this));
+	auto connectItem = MenuItemFont::create("Connect to Server", CC_CALLBACK_0(SnapshotInterpolationLayer::connectAsClient, this));
 	
 	Menu* menu3 = Menu::create(connectItem, NULL);
 	menu3->alignItemsHorizontally();
@@ -77,17 +77,27 @@ void SnapshotInterpolationLayer::ReloadScene()
 void SnapshotInterpolationLayer::update(float dt)
 {
 	std::string debugString;
-	if (server.IsActive())
+	if (true) // Client or Server tick
 	{
-		debugString.append("Server: ");
-	}
-	else if (client.IsActive())
-	{
-		debugString.append("Client: ");
-	}
-	else
-	{
-		debugString.append("No Client/Server running");
+		if (server.IsActive()) // Server
+		{
+			server.SendPackets();
+			//server.WritePackets();
+			//server.ReadPackets();
+			//server.ReceivePackets();
+
+			debugString.append("Server: ");
+		}
+		else if (client.IsActive()) // Client
+		{
+			debugString.append("Client: ");
+		}
+		else
+		{
+			// Start server
+
+			debugString.append("No Client/Server running");
+		}
 	}
 
 	_statusLabel->setString(debugString);
@@ -123,7 +133,7 @@ void SnapshotInterpolationLayer::setupNetwork()
 	}
 }
 
-void SnapshotInterpolationLayer::ConnectAsClient()
+void SnapshotInterpolationLayer::connectAsClient()
 {
 	Size winSize = Director::getInstance()->getWinSize();
 
@@ -183,5 +193,86 @@ void SnapshotInterpolationLayer::ConnectAsClient()
 
 
 	this->addChild(connectNode);
+
+}
+
+SnapshotClient::SnapshotClient()
+{
+}
+
+SnapshotClient::~SnapshotClient()
+{
+}
+
+void SnapshotClient::Init(const char * ip, const char * port)
+{
+}
+
+bool SnapshotClient::Start()
+{
+	return false;
+}
+
+bool SnapshotClient::Stop()
+{
+	return false;
+}
+
+void SnapshotClient::Reset()
+{
+}
+
+void SnapshotClient::SendPackets()
+{
+	switch (_state)
+	{
+	case(CLIENT_REQUESTING) :
+	{
+		//Packet* packet = CreatePacket(CLIENT_REQUESTING);
+	}
+	break;
+	case(CLIENT_REQUEST_DENIED) :
+	{
+
+	}
+	break;
+	case(CLIENT_CONNECTED) :
+	{
+
+	}
+	break;
+	}
+}
+
+SnapshotServer::SnapshotServer()
+{
+}
+
+SnapshotServer::~SnapshotServer()
+{
+}
+
+void SnapshotServer::Init(char * port)
+{
+}
+
+bool SnapshotServer::Start()
+{
+	return false;
+}
+
+bool SnapshotServer::Stop()
+{
+	return false;
+}
+
+void SnapshotServer::Reset()
+{
+}
+
+void SnapshotServer::SendPackets()
+{
+	udp::resolver::query query(udp::v4(), "localhost", "1500");
+	asio::ip::address::from_string("localhost");
 
 }

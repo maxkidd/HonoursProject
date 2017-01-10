@@ -14,6 +14,12 @@
 
 class SnapshotClient 
 {
+	enum ClientState
+	{
+		CLIENT_REQUESTING,
+		CLIENT_REQUEST_DENIED,
+		CLIENT_CONNECTED
+	};
 public:
 	SnapshotClient();
 	virtual ~SnapshotClient();
@@ -25,11 +31,17 @@ public:
 
 	void Reset();
 
+	void SendPackets();
+	//void WritePackets();
+	//void ReadPackets();
+	//void ReceivePackets();
+
 	bool IsActive() { return _active; }
 private:
 	SocketTransport* _transport;
 
 	bool _active = false;
+	ClientState _state;
 
 	const char* _serverIP;
 	const char* _serverPort;
@@ -50,6 +62,11 @@ public:
 	bool Stop();
 
 	void Reset();
+
+	void SendPackets();
+	//void WritePackets();
+	//void ReadPackets();
+	//void ReceivePackets();
 
 	bool IsActive() { return _active; }
 private:
@@ -88,7 +105,7 @@ protected:
 
 	void setupNetwork();
 
-	void ConnectAsClient();
+	void connectAsClient();
 
 };
 #endif

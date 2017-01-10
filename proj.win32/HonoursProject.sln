@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcocos2d", "..\cocos2d\cocos\2d\libcocos2d.vcxproj", "{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}"
 EndProject
@@ -13,9 +13,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbullet", "..\cocos2d\ext
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "librecast", "..\cocos2d\external\recast\proj.win32\librecast.vcxproj", "{41E34993-647E-4282-8384-4AB1AE31A452}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asio", "..\cocos2d\external\asio\libasio\libasio.vcxproj", "{E155D8BC-2313-477E-8C76-22605C1FF88C}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FeasabilityDemo", "FeasabilityDemo.vcxproj", "{62ABA968-07B9-410C-9A26-C4C9895DC2F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E155D8BC-2313-477E-8C76-22605C1FF88C} = {E155D8BC-2313-477E-8C76-22605C1FF88C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libasio", "..\cocos2d\external\asio\libasio.vcxproj", "{E155D8BC-2313-477E-8C76-22605C1FF88C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +58,12 @@ Global
 		{41E34993-647E-4282-8384-4AB1AE31A452}.Release|Win32.ActiveCfg = Release|Win32
 		{41E34993-647E-4282-8384-4AB1AE31A452}.Release|Win32.Build.0 = Release|Win32
 		{41E34993-647E-4282-8384-4AB1AE31A452}.Release|x64.ActiveCfg = Release|Win32
+		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Debug|Win32.Build.0 = Debug|Win32
+		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Debug|x64.ActiveCfg = Debug|Win32
+		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Release|Win32.ActiveCfg = Release|Win32
+		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Release|Win32.Build.0 = Release|Win32
+		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Release|x64.ActiveCfg = Release|Win32
 		{E155D8BC-2313-477E-8C76-22605C1FF88C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E155D8BC-2313-477E-8C76-22605C1FF88C}.Debug|Win32.Build.0 = Debug|Win32
 		{E155D8BC-2313-477E-8C76-22605C1FF88C}.Debug|x64.ActiveCfg = Debug|x64
@@ -63,12 +72,6 @@ Global
 		{E155D8BC-2313-477E-8C76-22605C1FF88C}.Release|Win32.Build.0 = Release|Win32
 		{E155D8BC-2313-477E-8C76-22605C1FF88C}.Release|x64.ActiveCfg = Release|x64
 		{E155D8BC-2313-477E-8C76-22605C1FF88C}.Release|x64.Build.0 = Release|x64
-		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Debug|Win32.Build.0 = Debug|Win32
-		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Debug|x64.ActiveCfg = Debug|Win32
-		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Release|Win32.ActiveCfg = Release|Win32
-		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Release|Win32.Build.0 = Release|Win32
-		{62ABA968-07B9-410C-9A26-C4C9895DC2F3}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
