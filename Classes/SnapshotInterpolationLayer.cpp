@@ -10,7 +10,7 @@
 using namespace std;
 using namespace cocos2d;
 
-SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr)
+SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr), client()
 {
 }
 
@@ -196,25 +196,40 @@ void SnapshotInterpolationLayer::connectAsClient()
 
 }
 
-SnapshotClient::SnapshotClient()
+SnapshotClient::SnapshotClient() : 
+	_state(CLIENT_SLEEP), _transport(new SocketTransport())
 {
 }
 
+
 SnapshotClient::~SnapshotClient()
 {
+	_state = CLIENT_SLEEP;
 }
 
 void SnapshotClient::Init(const char * ip, const char * port)
 {
+	_serverIP = ip;
+	_serverPort = port;
+
+	udp::resolver resolver{ *_transport->GetIOService() };
+	_serverEndpoint = *resolver.resolve({ udp::v4(), ip, port });
+
 }
 
 bool SnapshotClient::Start()
 {
+	// Update state
+	_state = CLIENT_REQUESTING;
+
+
+
 	return false;
 }
 
 bool SnapshotClient::Stop()
 {
+	_state = CLIENT_SLEEP;
 	return false;
 }
 
@@ -228,7 +243,8 @@ void SnapshotClient::SendPackets()
 	{
 	case(CLIENT_REQUESTING) :
 	{
-		//Packet* packet = CreatePacket(CLIENT_REQUESTING);
+		Packet* packet = CreateRequestPacket();
+		_transport->SendPacket(_serverEndpoint, packet);
 	}
 	break;
 	case(CLIENT_REQUEST_DENIED) :
@@ -242,6 +258,15 @@ void SnapshotClient::SendPackets()
 	}
 	break;
 	}
+}
+
+Packet* SnapshotClient::CreateRequestPacket()
+{
+	Packet* packet;
+
+	packet->data;
+
+	return nullptr;
 }
 
 SnapshotServer::SnapshotServer()
@@ -274,5 +299,7 @@ void SnapshotServer::SendPackets()
 {
 	udp::resolver::query query(udp::v4(), "localhost", "1500");
 	asio::ip::address::from_string("localhost");
+
+
 
 }

@@ -9,6 +9,7 @@
 using asio::ip::udp;
 
 
+
 class BaseTransport
 {
 public:
@@ -24,9 +25,9 @@ public:
 
 protected:
 	// Internal receive functions to recieve packets from destination
-	virtual bool InternalReceivePacket(const udp::endpoint & endpoint, const void * data, int bytes) = 0;
+	virtual bool InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes) = 0;
 	// Internal send function to transport packets to a destination
-	virtual bool InternalSendPacket(udp::endpoint & endpoint, void * data, int size) = 0;
+	virtual bool InternalSendPacket(const udp::endpoint & endpoint, const void * data, int size) = 0;
 
 private:
 	std::queue<Packet> send_queue_;
@@ -37,7 +38,8 @@ private:
 class SocketTransport : public BaseTransport
 {
 public:
-
+	SocketTransport();
+	asio::io_service* GetIOService() { return &io_service_; }
 protected:
 	virtual bool InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes);
 	virtual bool InternalSendPacket(const udp::endpoint & endpoint, const void * data, int size);
@@ -45,8 +47,6 @@ protected:
 private:
 	asio::io_service io_service_;
 	udp::socket socket_;
-
-
 };
 
 #endif

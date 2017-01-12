@@ -16,6 +16,7 @@ class SnapshotClient
 {
 	enum ClientState
 	{
+		CLIENT_SLEEP,
 		CLIENT_REQUESTING,
 		CLIENT_REQUEST_DENIED,
 		CLIENT_CONNECTED
@@ -37,6 +38,8 @@ public:
 	//void ReceivePackets();
 
 	bool IsActive() { return _active; }
+protected:
+	Packet* CreateRequestPacket();
 private:
 	SocketTransport* _transport;
 
@@ -45,6 +48,7 @@ private:
 
 	const char* _serverIP;
 	const char* _serverPort;
+	udp::endpoint _serverEndpoint;
 
 	Connection* _connection;
 

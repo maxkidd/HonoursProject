@@ -1,6 +1,12 @@
 #include "network_transport.h"
 
 
+SocketTransport::SocketTransport() : io_service_(),
+	socket_(io_service_, udp::endpoint(udp::v4(), 0))
+{
+	
+}
+
 bool SocketTransport::InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes)
 {
 	//int result = socket_.receive(asio::buffer(data, bytes));
@@ -30,6 +36,7 @@ Packet * BaseTransport::ReceivePacket()
 
 void BaseTransport::SendPacket(const udp::endpoint & endpoint, Packet * packet)
 {
+	InternalSendPacket(endpoint, packet->data, 1024);
 }
 
 void BaseTransport::WritePackets()
