@@ -9,6 +9,7 @@ class PacketFactory;
 
 class Packet : public Serializable
 {
+public:
 	Packet() : _factory(nullptr), _type(0){}
 protected:
 	friend class PacketFactory;
@@ -16,6 +17,8 @@ protected:
 	void SetType(int type) { _type = type; }
 	void SetPacketFactory(PacketFactory& factory) { _factory = &factory; }
 
+	virtual bool Serialize(class IStream& stream);
+	virtual bool Serialize(class OStream& stream);
 private:
 	PacketFactory* _factory;
 	int _type;
@@ -38,30 +41,26 @@ private:
 	int _packetTypes;
 };
 
-#define PACKET_FACTORY_START(factory_class, base_class, num_packets)	\
-class factory_class : public base_class									\
-{																		\
-public:																	\
-	factory_class(num_packets) : base_class(num_packets) {}				\
-																		\
-	Packet* CreatePacket(int type)										\
-	{																	\
-		Packet* packet = base_class::CreatePacket(type);				\
-		switch (type){																
+#define PACKET_FACTORY_START(factory_class, base_class, num_packets)				\
+class factory_class : public base_class{											\
+public:																				\
+	factory_class(int packetTypes = num_packets) : base_class(packetTypes) {}		\
+	Packet* CreatePacket(int type){													\
+		Packet* packet = base_class::CreatePacket(type);							\
+		switch (type){
 
 #define PACKET_FACTORY_TYPE(packet_type, packet_class)							\
 		case packet_type:														\
 			packet = new packet_class();										\
-			if (!packet)														\
-				return nullptr;													\
+			if (!packet) return nullptr;										\
 			SetPacketType(packet, packet_type);									\
-			SetPacketFactory(packet)											\
+			SetFactory(packet);													\
 			return packet;
 
 #define PACKET_FACTORY_END()			\
 			default: return nullptr;	\
 		}								\
 	}									\
-};										
+};
 
 #endif

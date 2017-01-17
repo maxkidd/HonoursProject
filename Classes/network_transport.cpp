@@ -34,9 +34,9 @@ Packet * BaseTransport::ReceivePacket()
 	return nullptr;
 }
 
-void BaseTransport::SendPacket(const udp::endpoint & endpoint, Packet * packet)
+void BaseTransport::SendPacket(const udp::endpoint & endpoint, const void * data)
 {
-	InternalSendPacket(endpoint, packet->data, 1024);
+	InternalSendPacket(endpoint, data, 1024);
 }
 
 void BaseTransport::WritePackets()

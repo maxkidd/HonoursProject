@@ -19,3 +19,13 @@ void PacketFactory::SetFactory(Packet * packet)
 {
 	packet->SetPacketFactory(*this);
 }
+
+bool Packet::Serialize(IStream & stream)
+{
+	return false;
+}
+
+bool Packet::Serialize(OStream & stream)
+{
+	return false;
+}

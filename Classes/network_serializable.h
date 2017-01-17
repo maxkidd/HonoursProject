@@ -2,11 +2,14 @@
 #define _NETWORK_SERIALIZABLE_H_
 
 
-#include "network_stream.h"
+//#include "network_stream.h"
 
+class IStream;
+class OStream;
 class Serializable
 {
 public:
+	Serializable() {}
 	virtual ~Serializable() {}
 
 	virtual bool Serialize(class IStream& stream) = 0;

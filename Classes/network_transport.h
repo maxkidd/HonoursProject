@@ -18,7 +18,7 @@ public:
 	Packet* CreatePacket();
 	Packet* ReceivePacket();
 
-	void SendPacket(const udp::endpoint & endpoint, Packet * packet);
+	void SendPacket(const udp::endpoint & endpoint, const void * data);
 
 	void WritePackets();
 	void ReadPackets();

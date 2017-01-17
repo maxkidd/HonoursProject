@@ -1,8 +1,20 @@
 #include "network_connection.h"
 
+#include "network_common.h"
+
+Connection::Connection()
+{
+}
+
+Connection::~Connection()
+{
+}
+
 ConnectionPacket * Connection::GeneratePacket()
 {
-	ConnectionPacket* packet = new ConnectionPacket(); // TODO create packet factory
+	ConnectionPacket* packet = new ConnectionPacket();
+
+	// Add messages to connection packet
 
 	return packet;
 }

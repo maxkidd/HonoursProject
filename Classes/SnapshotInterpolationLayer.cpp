@@ -43,12 +43,6 @@ bool SnapshotInterpolationLayer::init()
 	MenuItemFont::setFontSize(16);
 	MenuItemFont::setFontName("fonts/UbuntuMono-R.ttf");
 
-	//auto reloadItem = MenuItemFont::create("Reload Scene", CC_CALLBACK_0(SnapshotInterpolationLayer::ReloadScene, this));
-
-	//Menu* menu2 = Menu::create(reloadItem, NULL);
-	//menu2->alignItemsVertically();
-	//addChild(menu2);
-
 
 	auto connectItem = MenuItemFont::create("Connect to Server", CC_CALLBACK_0(SnapshotInterpolationLayer::connectAsClient, this));
 	
@@ -61,8 +55,10 @@ bool SnapshotInterpolationLayer::init()
 
 	createNetworkStatsLabel();
 
-	std::thread bt(std::bind(&SnapshotInterpolationLayer::setupNetwork, this));
-	bt.detach();
+	//std::thread bt(std::bind(&SnapshotInterpolationLayer::setupNetwork, this));
+	//bt.detach();
+
+	setupServer();
 
 	scheduleUpdate();
 
@@ -90,6 +86,11 @@ void SnapshotInterpolationLayer::update(float dt)
 		}
 		else if (client.IsActive()) // Client
 		{
+			//client.SendPackets();
+			//server.WritePackets();
+			//server.ReadPackets();
+			//server.ReceivePackets();
+
 			debugString.append("Client: ");
 		}
 		else
@@ -117,20 +118,11 @@ void SnapshotInterpolationLayer::createNetworkStatsLabel()
 	_statusLabel->setPosition(Vec2(winSize.width / 2.0f, winSize.height / 2.0f + height_spacing * 0) + Director::getInstance()->getVisibleOrigin());
 }
 
-void SnapshotInterpolationLayer::setupNetwork()
+void SnapshotInterpolationLayer::setupServer()
 {
+	server.Init();
 
-	try
-	{
-
-		//server s(std::atoi("1500"));
-
-		//server.run();
-	}
-	catch (std::exception& e)
-	{
-
-	}
+	server.Start();
 }
 
 void SnapshotInterpolationLayer::connectAsClient()
@@ -164,7 +156,7 @@ void SnapshotInterpolationLayer::connectAsClient()
 		{
 			if (server.IsActive())
 			{
-
+				server.Stop();
 			}
 
 			client.Init(ipText->getString().c_str(), portText->getString().c_str());
@@ -221,16 +213,17 @@ bool SnapshotClient::Start()
 {
 	// Update state
 	_state = CLIENT_REQUESTING;
+	_active = true;
 
 
-
-	return false;
+	return true;
 }
 
 bool SnapshotClient::Stop()
 {
 	_state = CLIENT_SLEEP;
-	return false;
+	_active = false;
+	return true;
 }
 
 void SnapshotClient::Reset()
@@ -249,24 +242,38 @@ void SnapshotClient::SendPackets()
 	break;
 	case(CLIENT_REQUEST_DENIED) :
 	{
-
+		_error = CLIENT_ERROR_REQUEST_DENIED; // TODO: received request
+		Stop();
 	}
 	break;
 	case(CLIENT_CONNECTED) :
 	{
-
+		Packet* packet = CreateConnectionPacket();
+		_transport->SendPacket(_serverEndpoint, packet);
 	}
 	break;
 	}
+}
+
+void SnapshotClient::ReceivePackets()
+{
 }
 
 Packet* SnapshotClient::CreateRequestPacket()
 {
 	Packet* packet;
 
-	packet->data;
+	//packet->data;
 
 	return nullptr;
+}
+
+Packet * SnapshotClient::CreateConnectionPacket()
+{
+	Packet* packet  = (Packet*)_connection->GeneratePacket();
+
+
+	return packet;
 }
 
 SnapshotServer::SnapshotServer()
@@ -283,12 +290,16 @@ void SnapshotServer::Init(char * port)
 
 bool SnapshotServer::Start()
 {
-	return false;
+	_active = true;
+
+	return true;
 }
 
 bool SnapshotServer::Stop()
 {
-	return false;
+	_active = false;
+
+	return true;
 }
 
 void SnapshotServer::Reset()
@@ -297,9 +308,10 @@ void SnapshotServer::Reset()
 
 void SnapshotServer::SendPackets()
 {
-	udp::resolver::query query(udp::v4(), "localhost", "1500");
-	asio::ip::address::from_string("localhost");
+	//udp::resolver::query query(udp::v4(), "localhost", "1500");
+	//asio::ip::address::from_string("localhost");
+}
 
-
-
+void SnapshotServer::ReceivePackets()
+{
 }

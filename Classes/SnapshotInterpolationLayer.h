@@ -10,10 +10,19 @@
 
 #include "network_transport.h"
 #include "network_connection.h"
-#include "network_config.h"
+#include "network_common.h"
+#include "network_packet.h"
+
+#define MAX_CLIENTS 32;
 
 class SnapshotClient 
 {
+	enum ClientError
+	{
+		CLIENT_ERROR_NONE = 0,
+		CLIENT_ERROR_REQUEST_DENIED
+	} _error;
+
 	enum ClientState
 	{
 		CLIENT_SLEEP,
@@ -32,14 +41,19 @@ public:
 
 	void Reset();
 
+	// Send packets from the connection layer
 	void SendPackets();
+
 	//void WritePackets();
 	//void ReadPackets();
-	//void ReceivePackets();
+
+	// Receive packets to connection layer
+	void ReceivePackets();
 
 	bool IsActive() { return _active; }
 protected:
 	Packet* CreateRequestPacket();
+	Packet* CreateConnectionPacket();
 private:
 	SocketTransport* _transport;
 
@@ -70,9 +84,11 @@ public:
 	void SendPackets();
 	//void WritePackets();
 	//void ReadPackets();
-	//void ReceivePackets();
+	void ReceivePackets();
 
 	bool IsActive() { return _active; }
+protected:
+
 private:
 	SocketTransport* _transport;
 
@@ -82,7 +98,7 @@ private:
 	const char* _serverPort;
 
 	int _numClients;
-	Connection* _connection[MAX_CLIENTS];
+	Connection* _connections; // MAX 32
 
 };
 class SnapshotInterpolationLayer : public cocos2d::Layer
@@ -107,7 +123,7 @@ public:
 protected:
 	void createNetworkStatsLabel();
 
-	void setupNetwork();
+	void setupServer();
 
 	void connectAsClient();
 

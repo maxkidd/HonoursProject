@@ -1,13 +1,8 @@
-#ifndef _NETWORKCONNECTION_H_
-#define _NETWORKCONNECTION_H_
-
-#include "network_packet.h"
+#ifndef _NETWORK_CONNECTION_H_
+#define _NETWORK_CONNECTION_H_
 
 
-class ConnectionPacket : public Packet
-{
-	
-};
+class ConnectionPacket;
 
 class Connection
 {
@@ -18,7 +13,8 @@ public:
 	ConnectionPacket* GeneratePacket();
 protected:
 private:
-
+	//QUEUE(MESSAGES) sentqueue
+	//queue(MESSAGES) receivedqueue
 
 };
 
