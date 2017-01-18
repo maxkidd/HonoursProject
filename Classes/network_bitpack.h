@@ -36,6 +36,18 @@ public:
 		}
 		_bitsWritten += bits;
 	}
+
+	void FlushBits()
+	{
+		if (_scratchBits != 0)
+		{
+			_buffer[_wordIndex] = asio::detail::socket_ops::host_to_network_long(uint32_t(_scratch & 0xFFFFFFFF));
+			_scratch >>= 32;
+			_scratchBits -= 32;
+			_wordIndex++;
+		}
+	}
+
 private:
 
 	uint32_t* _buffer;

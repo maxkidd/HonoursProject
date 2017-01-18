@@ -8,6 +8,7 @@ using namespace std;
 
 class OStream
 {
+public:
 	enum { IsWriting = 1 };
 	enum { IsReading = 0 };
 
@@ -18,20 +19,29 @@ class OStream
 		_bitWriter.WriteBits(value, 32);
 		return true;
 	}
+
+	void Flush() { _bitWriter.FlushBits(); }
+
+private:
+
 	BitWrite _bitWriter;
 };
 
-class IStream
+class InStream
 {
 public:
 	enum { IsWriting = 0 };
 	enum { IsReading = 1 };
 
-	bool SerializeInteger(uint32_t value)
+	InStream(uint32_t* buffer, int bytes) : _bitReader(buffer, bytes) {}
+
+	bool SerializeInteger(uint32_t& value)
 	{
-		_bitReader.ReadBits(32);
+		value = _bitReader.ReadBits(32);
 		return true;
 	}
+
+private:
 	BitRead _bitReader;
 };
 #endif

@@ -22,10 +22,36 @@ void PacketFactory::SetFactory(Packet * packet)
 
 bool Packet::Serialize(IStream & stream)
 {
-	return false;
+	return true;
 }
 
 bool Packet::Serialize(OStream & stream)
 {
-	return false;
+	return true;
+}
+
+bool WritePacket(Packet * packet, void * buffer, int size)
+{
+	OStream stream{ (uint32_t*)buffer,size };
+	
+	int packetType = packet->GetType();
+	
+	// Write packet type to stream
+	stream.SerializeInteger(packetType);
+
+	// Finished writing bits to stream
+	stream.Flush();
+
+	return true;
+}
+
+Packet * ReadPacket(void * buffer, int size)
+{
+	InStream stream{ (uint32_t*)buffer,size };
+
+	uint32_t test;
+
+	stream.SerializeInteger(test);
+
+	return nullptr;
 }

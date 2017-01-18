@@ -1,5 +1,5 @@
-#ifndef _NETWORKPACKET_H_
-#define _NETWORKPACKET_H_
+#ifndef _NETWORK_PACKET_H_
+#define _NETWORK_PACKET_H_
 
 #include "network_serializable.h"
 
@@ -11,14 +11,16 @@ class Packet : public Serializable
 {
 public:
 	Packet() : _factory(nullptr), _type(0){}
+
+	int GetType() { return _type; }
 protected:
 	friend class PacketFactory;
 
 	void SetType(int type) { _type = type; }
 	void SetPacketFactory(PacketFactory& factory) { _factory = &factory; }
 
-	virtual bool Serialize(class IStream& stream);
-	virtual bool Serialize(class OStream& stream);
+	virtual bool Serialize(IStream& stream);
+	virtual bool Serialize(OStream& stream);
 private:
 	PacketFactory* _factory;
 	int _type;
@@ -62,5 +64,13 @@ public:																				\
 		}								\
 	}									\
 };
+
+
+// Write packet to buffer
+bool WritePacket(Packet* packet, void* buffer, int size);
+
+// Read packet from buffer
+Packet* ReadPacket(void* buffer, int size);
+
 
 #endif

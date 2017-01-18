@@ -7,6 +7,8 @@ class ConnectionRequestPacket : public Packet
 {
 public:
 	ConnectionRequestPacket();
+
+	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
 class ConnectionDeniedPacket : public Packet
@@ -14,6 +16,8 @@ class ConnectionDeniedPacket : public Packet
 public:
 	ConnectionDeniedPacket();
 
+
+	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
 class ConnectionPacket : public Packet
@@ -21,12 +25,16 @@ class ConnectionPacket : public Packet
 public:
 	ConnectionPacket() {}
 
+
+	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 class ConnectionAcceptPacket : public Packet
 {
 public:
 	ConnectionAcceptPacket();
 
+
+	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
 class ConnectionDisconnectPacket : public Packet
@@ -34,6 +42,8 @@ class ConnectionDisconnectPacket : public Packet
 public:
 	ConnectionDisconnectPacket();
 
+
+	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
 enum ClientServerPacketTypes

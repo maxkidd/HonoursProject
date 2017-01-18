@@ -5,13 +5,13 @@
 
 #include "asio\asio.hpp"
 
-#include "server.h"
+//#include "server.h"
 //#include "NetworkDebugView.h"
 
 #include "network_transport.h"
 #include "network_connection.h"
 #include "network_common.h"
-#include "network_packet.h"
+//#include "network_packet.h"
 
 #define MAX_CLIENTS 32;
 
