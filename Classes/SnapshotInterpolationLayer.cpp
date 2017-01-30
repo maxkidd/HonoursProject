@@ -7,6 +7,8 @@
 #include "cocos\ui\UIButton.h"
 #include "cocos\ui\UIWidget.h"
 
+#include <chrono>
+
 using namespace std;
 using namespace cocos2d;
 
@@ -73,13 +75,20 @@ void SnapshotInterpolationLayer::ReloadScene()
 void SnapshotInterpolationLayer::update(float dt)
 {
 	std::string debugString;
-	if (true) // Client or Server tick
+
+	_networkTimer += dt;
+
+	while (_networkTimer > 1.0f) // Client or Server tick
 	{
+		_networkTimer -= (1.0f);
+
 		if (server.IsActive()) // Server
 		{
 			server.SendPackets();
+
 			//server.WritePackets();
 			//server.ReadPackets();
+
 			server.ReceivePackets();
 
 			debugString.append("Server: ");
@@ -87,8 +96,10 @@ void SnapshotInterpolationLayer::update(float dt)
 		else if (client.IsActive()) // Client
 		{
 			client.SendPackets();
-			//client.WritePackets();
-			//client.ReadPackets();
+
+			client.WritePackets();
+			client.ReadPackets();
+
 			client.ReceivePackets();
 
 			debugString.append("Client: ");
@@ -261,13 +272,24 @@ void SnapshotClient::ReceivePackets()
 {
 }
 
+void SnapshotClient::WritePackets()
+{
+	_transport->WritePackets();
+}
+
+void SnapshotClient::ReadPackets()
+{
+	_transport->ReadPackets();
+}
+
 Packet* SnapshotClient::CreateRequestPacket()
 {
-	Packet* packet;
+	ConnectionRequestPacket* packet = new ConnectionRequestPacket();
+	
 
 	//packet->data;
 
-	return nullptr;
+	return packet;
 }
 
 Packet * SnapshotClient::CreateConnectionPacket()
@@ -316,5 +338,25 @@ void SnapshotServer::SendPackets()
 
 void SnapshotServer::ReceivePackets()
 {
-	Packet* packet = _transport->ReceivePacket();
+	while (true)
+	{
+		Packet* packet = _transport->ReceivePacket();
+		if (!packet)
+			break;
+
+		int type = packet->GetType();
+
+		
+	}
+
+}
+
+void SnapshotServer::WritePackets()
+{
+	_transport->WritePackets();
+}
+
+void SnapshotServer::ReadPackets()
+{
+	_transport->ReadPackets();
 }

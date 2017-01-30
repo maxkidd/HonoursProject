@@ -70,7 +70,7 @@ public:																				\
 int WritePacket(Packet* packet, void* buffer, int size);
 
 // Read packet from buffer
-Packet* ReadPacket(void* buffer, int size);
+Packet* ReadPacket(PacketFactory* pf, void* buffer, int size);
 
 
 #endif

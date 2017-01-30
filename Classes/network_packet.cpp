@@ -45,13 +45,15 @@ int WritePacket(Packet * packet, void * buffer, int size)
 	return stream.BytesUsed();
 }
 
-Packet * ReadPacket(void * buffer, int size)
+Packet * ReadPacket(PacketFactory* pf, void * buffer, int size)
 {
 	InStream stream{ (uint32_t*)buffer,size };
 
-	uint32_t test;
+	uint32_t packetType;
+	stream.SerializeInteger(packetType);
 
-	stream.SerializeInteger(test);
+	Packet* packet = pf->Create(packetType);
+	packet->SerializeInternal(stream);
 
-	return nullptr;
+	return packet;
 }

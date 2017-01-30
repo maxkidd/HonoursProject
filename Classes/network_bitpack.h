@@ -50,7 +50,7 @@ public:
 
 	int GetBytesWritten()
 	{
-		return (_bitsWritten + 7) / 8
+		return (_bitsWritten + 7) / 8;
 	}
 private:
 

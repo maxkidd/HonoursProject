@@ -49,8 +49,8 @@ public:
 	void ReceivePackets();
 
 	// Transport layer
-	//void WritePackets();
-	//void ReadPackets();
+	void WritePackets();
+	void ReadPackets();
 
 	bool IsActive() { return _active; }
 protected:
@@ -89,8 +89,8 @@ public:
 	void ReceivePackets();
 
 	// Transport layer
-	//void WritePackets();
-	//void ReadPackets();
+	void WritePackets();
+	void ReadPackets();
 
 	bool IsActive() { return _active; }
 protected:
@@ -116,6 +116,9 @@ private:
 	SnapshotClient client;
 
 	cocos2d::LabelTTF* _statusLabel;
+
+	float _networkTimer = 0.0f;
+
 public:
 	SnapshotInterpolationLayer();
 	virtual ~SnapshotInterpolationLayer();
