@@ -48,6 +48,10 @@ public:
 		}
 	}
 
+	int GetBytesWritten()
+	{
+		return (_bitsWritten + 7) / 8
+	}
 private:
 
 	uint32_t* _buffer;

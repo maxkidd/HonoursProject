@@ -12,12 +12,12 @@ public:
 	Serializable() {}
 	virtual ~Serializable() {}
 
-	virtual bool SerializeInternal(class IStream& stream) = 0;
+	virtual bool SerializeInternal(class InStream& stream) = 0;
 	virtual bool SerializeInternal(class OStream& stream) = 0;
 };
 
 #define VIRTUAL_SERIALIZE_FUNCTIONS()											\
-	bool SerializeInternal(class IStream& stream){return Serialize(stream);};	\
+	bool SerializeInternal(class InStream& stream){return Serialize(stream);};	\
 	bool SerializeInternal(class OStream& stream){return Serialize(stream);};
 
 #endif

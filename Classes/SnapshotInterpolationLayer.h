@@ -11,7 +11,7 @@
 #include "network_transport.h"
 #include "network_connection.h"
 #include "network_common.h"
-//#include "network_packet.h"
+#include "network_packet.h"
 
 #define MAX_CLIENTS 32;
 
@@ -44,11 +44,13 @@ public:
 	// Send packets from the connection layer
 	void SendPackets();
 
-	//void WritePackets();
-	//void ReadPackets();
 
 	// Receive packets to connection layer
 	void ReceivePackets();
+
+	// Transport layer
+	//void WritePackets();
+	//void ReadPackets();
 
 	bool IsActive() { return _active; }
 protected:
@@ -56,6 +58,8 @@ protected:
 	Packet* CreateConnectionPacket();
 private:
 	SocketTransport* _transport;
+
+	SnapshotPacketFactory _packetFactory;
 
 	bool _active = false;
 	ClientState _state;
@@ -82,15 +86,19 @@ public:
 	void Reset();
 
 	void SendPackets();
+	void ReceivePackets();
+
+	// Transport layer
 	//void WritePackets();
 	//void ReadPackets();
-	void ReceivePackets();
 
 	bool IsActive() { return _active; }
 protected:
 
 private:
 	SocketTransport* _transport;
+
+	SnapshotPacketFactory _packetFactory;
 
 	bool _active = false;
 

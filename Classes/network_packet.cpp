@@ -20,7 +20,7 @@ void PacketFactory::SetFactory(Packet * packet)
 	packet->SetPacketFactory(*this);
 }
 
-bool Packet::Serialize(IStream & stream)
+bool Packet::Serialize(InStream & stream)
 {
 	return true;
 }
@@ -30,7 +30,7 @@ bool Packet::Serialize(OStream & stream)
 	return true;
 }
 
-bool WritePacket(Packet * packet, void * buffer, int size)
+int WritePacket(Packet * packet, void * buffer, int size)
 {
 	OStream stream{ (uint32_t*)buffer,size };
 	
@@ -42,7 +42,7 @@ bool WritePacket(Packet * packet, void * buffer, int size)
 	// Finished writing bits to stream
 	stream.Flush();
 
-	return true;
+	return stream.BytesUsed();
 }
 
 Packet * ReadPacket(void * buffer, int size)

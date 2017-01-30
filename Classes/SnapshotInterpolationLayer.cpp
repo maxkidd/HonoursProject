@@ -80,16 +80,16 @@ void SnapshotInterpolationLayer::update(float dt)
 			server.SendPackets();
 			//server.WritePackets();
 			//server.ReadPackets();
-			//server.ReceivePackets();
+			server.ReceivePackets();
 
 			debugString.append("Server: ");
 		}
 		else if (client.IsActive()) // Client
 		{
-			//client.SendPackets();
-			//server.WritePackets();
-			//server.ReadPackets();
-			//server.ReceivePackets();
+			client.SendPackets();
+			//client.WritePackets();
+			//client.ReadPackets();
+			client.ReceivePackets();
 
 			debugString.append("Client: ");
 		}
@@ -189,7 +189,7 @@ void SnapshotInterpolationLayer::connectAsClient()
 }
 
 SnapshotClient::SnapshotClient() : 
-	_state(CLIENT_SLEEP), _transport(new SocketTransport())
+	_state(CLIENT_SLEEP), _transport(new SocketTransport(&_packetFactory))
 {
 }
 
@@ -236,7 +236,7 @@ void SnapshotClient::SendPackets()
 	{
 	case(CLIENT_REQUESTING) :
 	{
-		Packet* packet = CreateRequestPacket();
+		ConnectionRequestPacket* packet = (ConnectionRequestPacket*)CreateRequestPacket();
 		_transport->SendPacket(_serverEndpoint, packet);
 	}
 	break;
@@ -251,6 +251,8 @@ void SnapshotClient::SendPackets()
 		Packet* packet = CreateConnectionPacket();
 		_transport->SendPacket(_serverEndpoint, packet);
 	}
+	break;
+	default:
 	break;
 	}
 }
@@ -276,7 +278,7 @@ Packet * SnapshotClient::CreateConnectionPacket()
 	return packet;
 }
 
-SnapshotServer::SnapshotServer()
+SnapshotServer::SnapshotServer() : _transport(new SocketTransport(&_packetFactory))
 {
 }
 
@@ -314,4 +316,5 @@ void SnapshotServer::SendPackets()
 
 void SnapshotServer::ReceivePackets()
 {
+	Packet* packet = _transport->ReceivePacket();
 }

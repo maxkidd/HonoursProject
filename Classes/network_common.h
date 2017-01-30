@@ -6,17 +6,27 @@
 class ConnectionRequestPacket : public Packet
 {
 public:
-	ConnectionRequestPacket();
+	ConnectionRequestPacket() {}
 
+
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
+
+		return true;
+	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
 class ConnectionDeniedPacket : public Packet
 {
 public:
-	ConnectionDeniedPacket();
+	ConnectionDeniedPacket() {}
 
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
 
+		return true;
+	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
@@ -25,24 +35,35 @@ class ConnectionPacket : public Packet
 public:
 	ConnectionPacket() {}
 
-
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
+		return true;
+	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 class ConnectionAcceptPacket : public Packet
 {
 public:
-	ConnectionAcceptPacket();
+	ConnectionAcceptPacket() {}
 
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
 
+		return true;
+	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
 class ConnectionDisconnectPacket : public Packet
 {
 public:
-	ConnectionDisconnectPacket();
+	ConnectionDisconnectPacket() {}
 
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
 
+		return true;
+	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 

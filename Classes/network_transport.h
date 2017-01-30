@@ -8,7 +8,8 @@
 
 using asio::ip::udp;
 
-
+#define MAX_SEND_QUEUE (100)
+#define MAX_RECEIVE_QUEUE (100)
 
 class BaseTransport
 {
@@ -18,7 +19,7 @@ public:
 	Packet* CreatePacket();
 	Packet* ReceivePacket();
 
-	void SendPacket(const udp::endpoint & endpoint, const void * data);
+	void SendPacket(const udp::endpoint & endpoint, Packet * data);
 
 	void WritePackets();
 	void ReadPackets();
@@ -30,15 +31,15 @@ protected:
 	virtual bool InternalSendPacket(const udp::endpoint & endpoint, const void * data, int size) = 0;
 
 private:
-	std::queue<Packet> send_queue_;
-	std::queue<Packet> receive_queue_;
+	std::queue<Packet*> send_queue_;
+	std::queue<Packet*> receive_queue_;
 
 };
 
 class SocketTransport : public BaseTransport
 {
 public:
-	SocketTransport();
+	SocketTransport(PacketFactory* packetFactory);
 	asio::io_service* GetIOService() { return &io_service_; }
 protected:
 	virtual bool InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes);
@@ -47,6 +48,8 @@ protected:
 private:
 	asio::io_service io_service_;
 	udp::socket socket_;
+
+	PacketFactory* _packetFactory;
 };
 
 #endif

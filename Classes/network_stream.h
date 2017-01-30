@@ -22,6 +22,7 @@ public:
 
 	void Flush() { _bitWriter.FlushBits(); }
 
+	int BytesUsed() { return _bitWriter.GetBytesWritten(); }
 private:
 
 	BitWrite _bitWriter;

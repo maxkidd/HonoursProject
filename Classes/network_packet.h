@@ -19,7 +19,7 @@ protected:
 	void SetType(int type) { _type = type; }
 	void SetPacketFactory(PacketFactory& factory) { _factory = &factory; }
 
-	virtual bool Serialize(IStream& stream);
+	virtual bool Serialize(InStream& stream);
 	virtual bool Serialize(OStream& stream);
 private:
 	PacketFactory* _factory;
@@ -47,7 +47,7 @@ private:
 class factory_class : public base_class{											\
 public:																				\
 	factory_class(int packetTypes = num_packets) : base_class(packetTypes) {}		\
-	Packet* CreatePacket(int type){													\
+	virtual Packet* CreatePacket(int type){													\
 		Packet* packet = base_class::CreatePacket(type);							\
 		switch (type){
 
@@ -67,7 +67,7 @@ public:																				\
 
 
 // Write packet to buffer
-bool WritePacket(Packet* packet, void* buffer, int size);
+int WritePacket(Packet* packet, void* buffer, int size);
 
 // Read packet from buffer
 Packet* ReadPacket(void* buffer, int size);
