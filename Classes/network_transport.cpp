@@ -2,10 +2,12 @@
 
 #include <cocos2d.h>
 
-SocketTransport::SocketTransport(PacketFactory * packetFactory) : BaseTransport(packetFactory), io_service_(),
-socket_(io_service_, udp::endpoint(udp::v4(), 0))
+SocketTransport::SocketTransport(PacketFactory * packetFactory, unsigned short port) : BaseTransport(packetFactory), io_service_(),
+socket_(io_service_, udp::endpoint(udp::v4(), port))
 {
+	socket_.non_blocking(true);
 }
+
 
 int SocketTransport::InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes)
 {

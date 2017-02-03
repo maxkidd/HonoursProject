@@ -12,8 +12,10 @@
 using namespace std;
 using namespace cocos2d;
 
-SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr), client()
+SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr),
+server(nullptr), client(nullptr)
 {
+
 }
 
 SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
@@ -47,8 +49,9 @@ bool SnapshotInterpolationLayer::init()
 
 
 	auto connectItem = MenuItemFont::create("Connect to Server", CC_CALLBACK_0(SnapshotInterpolationLayer::connectAsClient, this));
+	auto serverItem = MenuItemFont::create("Create Server", CC_CALLBACK_0(SnapshotInterpolationLayer::connectAsServer, this));
 	
-	Menu* menu3 = Menu::create(connectItem, NULL);
+	Menu* menu3 = Menu::create(connectItem, serverItem, NULL);
 	menu3->alignItemsHorizontally();
 	menu3->setScale(1 / Director::getInstance()->getContentScaleFactor());
 	menu3->setPosition(Vec2(winSize.width / 2.0f, winSize.height - 10.0f) + Director::getInstance()->getVisibleOrigin());
@@ -56,11 +59,6 @@ bool SnapshotInterpolationLayer::init()
 	addChild(menu3);
 
 	createNetworkStatsLabel();
-
-	//std::thread bt(std::bind(&SnapshotInterpolationLayer::setupNetwork, this));
-	//bt.detach();
-
-	setupServer();
 
 	scheduleUpdate();
 
@@ -82,25 +80,25 @@ void SnapshotInterpolationLayer::update(float dt)
 	{
 		_networkTimer -= (1.0f);
 
-		if (server.IsActive()) // Server
+		if (server && server->IsActive()) // Server
 		{
-			server.SendPackets();
+			server->SendPackets();
 
-			//server.WritePackets();
-			//server.ReadPackets();
+			server->WritePackets();
+			server->ReadPackets();
 
-			server.ReceivePackets();
+			server->ReceivePackets();
 
 			debugString.append("Server: ");
 		}
-		else if (client.IsActive()) // Client
+		else if (client && client->IsActive()) // Client
 		{
-			client.SendPackets();
+			client->SendPackets();
 
-			client.WritePackets();
-			client.ReadPackets();
+			client->WritePackets();
+			client->ReadPackets();
 
-			client.ReceivePackets();
+			client->ReceivePackets();
 
 			debugString.append("Client: ");
 		}
@@ -131,9 +129,6 @@ void SnapshotInterpolationLayer::createNetworkStatsLabel()
 
 void SnapshotInterpolationLayer::setupServer()
 {
-	server.Init();
-
-	server.Start();
 }
 
 void SnapshotInterpolationLayer::connectAsClient()
@@ -144,6 +139,7 @@ void SnapshotInterpolationLayer::connectAsClient()
 
 	// IP address field
 	ui::TextField *ipText = ui::TextField::create("IP ADDRESS", "Ariel", 50);
+	ipText->setString("localhost");
 	ipText->setMaxLength(12);
 	ipText->setMaxLengthEnabled(true);
 	ipText->setPosition(Vec2(winSize.width / 2.0f, winSize.height / 2.0f  + 30.0f) + Director::getInstance()->getVisibleOrigin());
@@ -151,6 +147,7 @@ void SnapshotInterpolationLayer::connectAsClient()
 
 	// Port address field
 	ui::TextField *portText = ui::TextField::create("PORT", "Ariel", 50);
+	portText->setString("1500");
 	portText->setMaxLength(12);
 	portText->setMaxLengthEnabled(true);
 	portText->setPosition(Vec2(winSize.width / 2.0f, winSize.height / 2.0f - 20.0f) + Director::getInstance()->getVisibleOrigin());
@@ -165,14 +162,21 @@ void SnapshotInterpolationLayer::connectAsClient()
 	{
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			if (server.IsActive())
+			if (server)
 			{
-				server.Stop();
+				if(server->IsActive())
+					server->Stop();
+
+				//server->destroy
+				delete server;
+				server = nullptr;
 			}
+			if(!client)
+				client = new SnapshotClient();
 
-			client.Init(ipText->getString().c_str(), portText->getString().c_str());
+			client->Init(ipText->getString().c_str(), portText->getString().c_str());
 
-			client.Start();
+			client->Start();
 
 			connectNode->removeFromParentAndCleanup(true);
 		}
@@ -199,6 +203,26 @@ void SnapshotInterpolationLayer::connectAsClient()
 
 }
 
+void SnapshotInterpolationLayer::connectAsServer()
+{
+
+	if (client)
+	{
+		if (client->IsActive())
+			client->Stop();
+
+		//server->destroy
+		delete client;
+		client = nullptr;
+	}
+	if(!server)
+		server = new SnapshotServer();
+
+	server->Init();
+
+	server->Start();
+}
+
 SnapshotClient::SnapshotClient() : 
 	_state(CLIENT_SLEEP), _transport(new SocketTransport(&_packetFactory))
 {
@@ -207,6 +231,9 @@ SnapshotClient::SnapshotClient() :
 
 SnapshotClient::~SnapshotClient()
 {
+	delete _transport;
+	_transport = nullptr;
+
 	_state = CLIENT_SLEEP;
 }
 
@@ -270,6 +297,17 @@ void SnapshotClient::SendPackets()
 
 void SnapshotClient::ReceivePackets()
 {
+	while (true)
+	{
+		Packet* packet = _transport->ReceivePacket();
+		if (!packet)
+			break;
+
+		// Process
+		int type = packet->GetType();
+
+		// Destroy
+	}
 }
 
 void SnapshotClient::WritePackets()
@@ -284,12 +322,7 @@ void SnapshotClient::ReadPackets()
 
 Packet* SnapshotClient::CreateRequestPacket()
 {
-	ConnectionRequestPacket* packet = new ConnectionRequestPacket();
-	
-
-	//packet->data;
-
-	return packet;
+	return _packetFactory.Create(CLIENT_SERVER_PACKET_REQUEST);
 }
 
 Packet * SnapshotClient::CreateConnectionPacket()
@@ -300,16 +333,20 @@ Packet * SnapshotClient::CreateConnectionPacket()
 	return packet;
 }
 
-SnapshotServer::SnapshotServer() : _transport(new SocketTransport(&_packetFactory))
+SnapshotServer::SnapshotServer() : _transport(new SocketTransport(&_packetFactory, 1500))
 {
 }
 
 SnapshotServer::~SnapshotServer()
 {
+	delete _transport;
+	_transport = nullptr;
 }
 
 void SnapshotServer::Init(char * port)
 {
+	//
+
 }
 
 bool SnapshotServer::Start()
@@ -344,9 +381,10 @@ void SnapshotServer::ReceivePackets()
 		if (!packet)
 			break;
 
+		// Process
 		int type = packet->GetType();
 
-		
+		// Destroy
 	}
 
 }

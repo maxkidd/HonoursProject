@@ -69,7 +69,9 @@ public:
 
 enum ClientServerPacketTypes
 {
-	CLIENT_SERVER_PACKET_REQUEST = 0,	// Client request to server
+	CLIENT_SERVER_PACKET_ERROR = -1,
+	CLIENT_SERVER_PACKET_NULL = 0,
+	CLIENT_SERVER_PACKET_REQUEST,		// Client request to server
 	CLIENT_SERVER_PACKET_DENIED,		// Server response to client
 	CLIENT_SERVER_PACKET_ACCEPTED,		// Server response to client
 	CLIENT_SERVER_PACKET_CONNECTION,	// Normal message communication
@@ -78,6 +80,7 @@ enum ClientServerPacketTypes
 };
 
 PACKET_FACTORY_START(SnapshotPacketFactory, PacketFactory, CLIENT_SERVER_MAX_PACKETS);
+	PACKET_FACTORY_TYPE(CLIENT_SERVER_PACKET_NULL, ConnectionRequestPacket);
 	PACKET_FACTORY_TYPE(CLIENT_SERVER_PACKET_REQUEST, ConnectionRequestPacket);
 	PACKET_FACTORY_TYPE(CLIENT_SERVER_PACKET_DENIED, ConnectionDeniedPacket);
 	PACKET_FACTORY_TYPE(CLIENT_SERVER_PACKET_ACCEPTED, ConnectionAcceptPacket);

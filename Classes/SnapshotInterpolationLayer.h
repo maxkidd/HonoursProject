@@ -54,6 +54,13 @@ public:
 
 	bool IsActive() { return _active; }
 protected:
+
+	//void ProcessPacket(Packet* packet, const udp::endpoint& endpoint);
+	//void ProcessAcceptPacket(ConnectionAcceptPacket* packet, const udp::endpoint& endpoint);
+	//void ProcessDeniedPacket(ConnectionDeniedPacket* packet, const udp::endpoint& endpoint);
+	//void ProcessConnectionPacket(ConnectionPacket* packet, const udp::endpoint& endpoint);
+	//void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
+
 	Packet* CreateRequestPacket();
 	Packet* CreateConnectionPacket();
 private:
@@ -95,6 +102,11 @@ public:
 	bool IsActive() { return _active; }
 protected:
 
+	//void ProcessPacket(Packet* packet, udp::endpoint endpoint);
+	//void ProcessRequestPacket(ConnectionRequestPacket* packet, const udp::endpoint& endpoint);
+	//void ProcessConnectionPacket(ConnectionPacket* packet, const udp::endpoint& endpoint);
+	//void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
+
 private:
 	SocketTransport* _transport;
 
@@ -112,8 +124,8 @@ private:
 class SnapshotInterpolationLayer : public cocos2d::Layer
 {
 private:
-	SnapshotServer server;
-	SnapshotClient client;
+	SnapshotServer* server;
+	SnapshotClient* client;
 
 	cocos2d::LabelTTF* _statusLabel;
 
@@ -137,6 +149,7 @@ protected:
 	void setupServer();
 
 	void connectAsClient();
+	void connectAsServer();
 
 };
 #endif

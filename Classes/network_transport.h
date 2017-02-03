@@ -53,7 +53,8 @@ private:
 class SocketTransport : public BaseTransport
 {
 public:
-	SocketTransport(PacketFactory* packetFactory);
+	//SocketTransport(PacketFactory* packetFactory);
+	SocketTransport(PacketFactory* packetFactory, unsigned short port = 0);
 	asio::io_service* GetIOService() { return &io_service_; }
 protected:
 	virtual int InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes);
