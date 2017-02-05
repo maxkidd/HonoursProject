@@ -13,7 +13,12 @@
 #include "network_common.h"
 #include "network_packet.h"
 
-#define MAX_CLIENTS 32;
+#include <stdio.h>
+
+struct ClientData
+{
+
+};
 
 class SnapshotClient 
 {
@@ -102,10 +107,13 @@ public:
 	bool IsActive() { return _active; }
 protected:
 
-	//void ProcessPacket(Packet* packet, udp::endpoint endpoint);
-	//void ProcessRequestPacket(ConnectionRequestPacket* packet, const udp::endpoint& endpoint);
-	//void ProcessConnectionPacket(ConnectionPacket* packet, const udp::endpoint& endpoint);
-	//void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
+	void ProcessPacket(Packet* packet, udp::endpoint endpoint);
+	/* Process connection request packet from client */
+	void ProcessRequestPacket(ConnectionRequestPacket* packet, const udp::endpoint& endpoint);
+	void ProcessConnectionPacket(ConnectionPacket* packet, const udp::endpoint& endpoint);
+	void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
+
+	void SendPacketToClient(uint16_t clientID, Packet* packet);
 
 private:
 	SocketTransport* _transport;
@@ -117,8 +125,15 @@ private:
 	const char* _serverIP;
 	const char* _serverPort;
 
-	int _numClients;
-	Connection* _connections; // MAX 32
+	static const int _maxSlots = 32;
+	//std::vector<Connection> _connections; // 32 connection slots
+
+	// Clients
+	bool _clientConnected[_maxSlots];
+	//uint16_t _clientID[_maxSlots];
+	ClientData _clientData[_maxSlots];
+	Connection* _connections[_maxSlots];
+
 
 };
 class SnapshotInterpolationLayer : public cocos2d::Layer

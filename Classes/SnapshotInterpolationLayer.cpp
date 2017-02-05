@@ -341,6 +341,7 @@ SnapshotServer::~SnapshotServer()
 {
 	delete _transport;
 	_transport = nullptr;
+
 }
 
 void SnapshotServer::Init(char * port)
@@ -397,4 +398,74 @@ void SnapshotServer::WritePackets()
 void SnapshotServer::ReadPackets()
 {
 	_transport->ReadPackets();
+}
+
+void SnapshotServer::ProcessPacket(Packet * packet, udp::endpoint endpoint)
+{
+
+	switch (packet->GetType())
+	{
+	case CLIENT_SERVER_PACKET_REQUEST:
+		ProcessRequestPacket((ConnectionRequestPacket*)packet, endpoint);
+		break;
+	case CLIENT_SERVER_PACKET_CONNECTION:
+		ProcessConnectionPacket((ConnectionPacket*)packet, endpoint);
+		break;
+	case CLIENT_SERVER_PACKET_DISCONNECT:
+		ProcessDisconnectPacket((ConnectionDisconnectPacket*)packet, endpoint);
+		break;
+	default:
+		break;
+	}
+}
+
+void SnapshotServer::ProcessRequestPacket(ConnectionRequestPacket * packet, const udp::endpoint & endpoint)
+{
+
+	// Case: no slots open
+	// Case: alraedy connected
+	uint16_t clientID = -1;
+	for (uint16_t ID = 0; ID < _maxSlots; ID++)
+	{
+		if (_clientConnected[ID])
+		{
+			if (_connections[ID]->Endpoint() == endpoint)
+			{
+				//CLIENT ALREADY CONNECTED
+				return;
+			}
+		}
+		else
+		{
+			if(clientID == -1)
+				clientID = ID;
+		}
+	}
+
+	if (clientID == -1)
+		return;
+
+	// Connect client
+
+	//_connections.push_back(Connection(endpoint));
+	_connections[clientID] = new Connection(endpoint);
+	_clientConnected[clientID] = true;
+	_clientData[clientID] = ClientData();
+
+	Packet* packe = (Packet*)new ConnectionAcceptPacket();
+
+	SendPacketToClient(clientID, packe);
+}
+
+void SnapshotServer::ProcessConnectionPacket(ConnectionPacket * packet, const udp::endpoint & endpoint)
+{
+}
+
+void SnapshotServer::ProcessDisconnectPacket(ConnectionDisconnectPacket * packet, const udp::endpoint & endpoint)
+{
+}
+
+void SnapshotServer::SendPacketToClient(uint16_t clientID, Packet * packet)
+{
+	_transport->SendPacket(_connections[clientID]->Endpoint(), packet);
 }

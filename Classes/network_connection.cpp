@@ -2,7 +2,8 @@
 
 #include "network_common.h"
 
-Connection::Connection()
+
+Connection::Connection(udp::endpoint endpoint) : _endpoint(endpoint)
 {
 }
 
@@ -17,4 +18,9 @@ ConnectionPacket * Connection::GeneratePacket()
 	// Add messages to connection packet
 
 	return packet;
+}
+
+udp::endpoint Connection::Endpoint()
+{
+	return _endpoint;
 }
