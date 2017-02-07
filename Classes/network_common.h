@@ -44,10 +44,13 @@ public:
 class ConnectionAcceptPacket : public Packet
 {
 public:
+	uint32_t test = 0;
+
 	ConnectionAcceptPacket() {}
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
+		stream.SerializeInteger(test);
 
 		return true;
 	}

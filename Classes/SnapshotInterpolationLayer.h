@@ -100,8 +100,6 @@ public:
 	SnapshotServer();
 	virtual ~SnapshotServer();
 
-	void Init(char* port = "1500");
-
 	bool Start();
 	bool Stop();
 
@@ -136,12 +134,7 @@ private:
 
 	bool _active = false;
 
-	const char* _serverIP;
-	const char* _serverPort;
-
 	static const int _maxSlots = 32;
-	//std::vector<Connection> _connections; // 32 connection slots
-
 
 	uint16_t _connectedClients = 0;
 	// Clients

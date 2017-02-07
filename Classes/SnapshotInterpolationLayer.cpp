@@ -217,8 +217,6 @@ void SnapshotInterpolationLayer::connectAsServer()
 	if(!server)
 		server = new SnapshotServer();
 
-	server->Init();
-
 	server->Start();
 }
 
@@ -365,6 +363,9 @@ void SnapshotClient::ProcessAcceptPacket(ConnectionAcceptPacket * packet, const 
 {
 
 	_state = CLIENT_CONNECTED;
+
+	int test = packet->test;
+	test++;
 }
 
 void SnapshotClient::ProcessDeniedPacket(ConnectionDeniedPacket * packet, const udp::endpoint & endpoint)
@@ -403,21 +404,20 @@ SnapshotServer::~SnapshotServer()
 
 }
 
-void SnapshotServer::Init(char * port)
-{
-	//
-
-}
-
 bool SnapshotServer::Start()
 {
 	_active = true;
+	_state = SERVER_ALIVE;
 
 	return true;
 }
 
 bool SnapshotServer::Stop()
 {
+	// Shutdown process
+	//_state = SERVER_SLEEP
+	// Disconnect all clients safely
+
 	_active = false;
 
 	return true;
@@ -476,7 +476,7 @@ std::string SnapshotServer::GetNetworkState()
 	case SERVER_SLEEP:
 		return "Sleeping";
 	case SERVER_ALIVE:
-		return "Alive";
+		return "Alive - No Clients";
 	case SERVER_CONNECTED:
 		return "Connected - Clients: " + _connectedClients;
 	default:
@@ -536,17 +536,23 @@ void SnapshotServer::ProcessRequestPacket(ConnectionRequestPacket * packet, cons
 
 	_connectedClients++;
 
-	Packet* acceptPacket = _packetFactory.Create(CLIENT_SERVER_PACKET_ACCEPTED);
-
+	ConnectionAcceptPacket* acceptPacket = (ConnectionAcceptPacket*)_packetFactory.Create(CLIENT_SERVER_PACKET_ACCEPTED);
+	acceptPacket->test = 1337;
 	SendPacketToClient(clientID, acceptPacket);
 }
 
 void SnapshotServer::ProcessConnectionPacket(ConnectionPacket * packet, const udp::endpoint & endpoint)
 {
+	// Check endpoint is a connected client
+
+	// Process in connection layer
 }
 
 void SnapshotServer::ProcessDisconnectPacket(ConnectionDisconnectPacket * packet, const udp::endpoint & endpoint)
 {
+	// Find clientID for endpoint
+
+	// Remove client from server
 }
 
 void SnapshotServer::SendPacketToClient(uint16_t clientID, Packet * packet)

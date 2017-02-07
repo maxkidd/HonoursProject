@@ -39,6 +39,8 @@ int WritePacket(Packet * packet, void * buffer, int size)
 	// Write packet type to stream
 	stream.SerializeInteger(packetType);
 
+	packet->SerializeInternal(stream);
+
 	// Finished writing bits to stream
 	stream.Flush();
 
