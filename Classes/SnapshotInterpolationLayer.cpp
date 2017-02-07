@@ -298,12 +298,16 @@ void SnapshotClient::ReceivePackets()
 {
 	while (true)
 	{
-		Packet* packet = _transport->ReceivePacket();
+		udp::endpoint endpoint;
+
+		Packet* packet = _transport->ReceivePacket(endpoint);
 		if (!packet)
 			break;
 
 		// Process
 		int type = packet->GetType();
+
+		ProcessPacket(packet, endpoint);
 
 		// Destroy
 	}
@@ -334,6 +338,45 @@ std::string SnapshotClient::GetNetworkState()
 	default:
 		return "ERROR";
 	}
+}
+
+void SnapshotClient::ProcessPacket(Packet * packet, const udp::endpoint & endpoint)
+{
+	switch (packet->GetType())
+	{
+	case CLIENT_SERVER_PACKET_ACCEPTED:
+		ProcessAcceptPacket((ConnectionAcceptPacket*)packet, endpoint);
+		break;
+	case CLIENT_SERVER_PACKET_DENIED:
+		ProcessDeniedPacket((ConnectionDeniedPacket*)packet, endpoint);
+		break;
+	case CLIENT_SERVER_PACKET_CONNECTION:
+		ProcessConnectionPacket((ConnectionPacket*)packet, endpoint);
+		break;
+	case CLIENT_SERVER_PACKET_DISCONNECT:
+		ProcessDisconnectPacket((ConnectionDisconnectPacket*)packet, endpoint);
+		break;
+	default:
+		break;
+	}
+}
+
+void SnapshotClient::ProcessAcceptPacket(ConnectionAcceptPacket * packet, const udp::endpoint & endpoint)
+{
+
+	_state = CLIENT_CONNECTED;
+}
+
+void SnapshotClient::ProcessDeniedPacket(ConnectionDeniedPacket * packet, const udp::endpoint & endpoint)
+{
+}
+
+void SnapshotClient::ProcessConnectionPacket(ConnectionPacket * packet, const udp::endpoint & endpoint)
+{
+}
+
+void SnapshotClient::ProcessDisconnectPacket(ConnectionDisconnectPacket * packet, const udp::endpoint & endpoint)
+{
 }
 
 Packet* SnapshotClient::CreateRequestPacket()
@@ -386,20 +429,30 @@ void SnapshotServer::Reset()
 
 void SnapshotServer::SendPackets()
 {
-	//udp::resolver::query query(udp::v4(), "localhost", "1500");
-	//asio::ip::address::from_string("localhost");
+	for (int i = 0; i < _maxSlots; i++)
+	{
+		if (_clientConnected[i])
+		{
+
+		}
+	}
+
 }
 
 void SnapshotServer::ReceivePackets()
 {
 	while (true)
 	{
-		Packet* packet = _transport->ReceivePacket();
+		udp::endpoint endpoint;
+
+		Packet* packet = _transport->ReceivePacket(endpoint);
 		if (!packet)
 			break;
 
 		// Process
 		int type = packet->GetType();
+
+		ProcessPacket(packet, endpoint);
 
 		// Destroy
 	}
@@ -418,8 +471,6 @@ void SnapshotServer::ReadPackets()
 
 std::string SnapshotServer::GetNetworkState()
 {
-	std::string returnVal;
-
 	switch (_state)
 	{
 	case SERVER_SLEEP:
@@ -427,15 +478,14 @@ std::string SnapshotServer::GetNetworkState()
 	case SERVER_ALIVE:
 		return "Alive";
 	case SERVER_CONNECTED:
-		return "Connected - Clients: " + _clients;
+		return "Connected - Clients: " + _connectedClients;
+	default:
+		return "ERROR";
 	}
-
-	return returnVal;
 }
 
 void SnapshotServer::ProcessPacket(Packet * packet, udp::endpoint endpoint)
 {
-
 	switch (packet->GetType())
 	{
 	case CLIENT_SERVER_PACKET_REQUEST:
@@ -463,10 +513,7 @@ void SnapshotServer::ProcessRequestPacket(ConnectionRequestPacket * packet, cons
 		if (_clientConnected[ID])
 		{
 			if (_connections[ID]->Endpoint() == endpoint)
-			{
-				//CLIENT ALREADY CONNECTED
-				return;
-			}
+				return;// Client already connected
 		}
 		else
 		{
@@ -475,19 +522,23 @@ void SnapshotServer::ProcessRequestPacket(ConnectionRequestPacket * packet, cons
 		}
 	}
 
-	if (clientID == -1)
-		return;
+	if (clientID == -1) 
+		return;// No slots
 
-	// Connect client
+	/* Connect client */
 
 	//_connections.push_back(Connection(endpoint));
 	_connections[clientID] = new Connection(endpoint);
 	_clientConnected[clientID] = true;
+
 	_clientData[clientID] = ClientData();
+	//_clientData;
 
-	Packet* packe = (Packet*)new ConnectionAcceptPacket();
+	_connectedClients++;
 
-	SendPacketToClient(clientID, packe);
+	Packet* acceptPacket = _packetFactory.Create(CLIENT_SERVER_PACKET_ACCEPTED);
+
+	SendPacketToClient(clientID, acceptPacket);
 }
 
 void SnapshotServer::ProcessConnectionPacket(ConnectionPacket * packet, const udp::endpoint & endpoint)

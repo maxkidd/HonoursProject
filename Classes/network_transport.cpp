@@ -41,12 +41,14 @@ Packet * BaseTransport::CreatePacket()
 	return nullptr;
 }
 
-Packet * BaseTransport::ReceivePacket()
+Packet * BaseTransport::ReceivePacket(udp::endpoint & endpoint)
 {
 	if (!receive_queue_.empty())
 	{
 		PacketInfo packetInfo = receive_queue_.front();
 		receive_queue_.pop();
+
+		endpoint = packetInfo.endpoint;
 
 		return packetInfo.packet;
 	}

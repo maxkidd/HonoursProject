@@ -28,7 +28,7 @@ public:
 	virtual ~BaseTransport() {}
 
 	Packet* CreatePacket();
-	Packet* ReceivePacket();
+	Packet* ReceivePacket(udp::endpoint &endpoint);
 
 	void SendPacket(const udp::endpoint & endpoint, Packet * data);
 

@@ -62,27 +62,27 @@ public:
 	bool IsActive() { return _active; }
 protected:
 
-	//void ProcessPacket(Packet* packet, const udp::endpoint& endpoint);
-	//void ProcessAcceptPacket(ConnectionAcceptPacket* packet, const udp::endpoint& endpoint);
-	//void ProcessDeniedPacket(ConnectionDeniedPacket* packet, const udp::endpoint& endpoint);
-	//void ProcessConnectionPacket(ConnectionPacket* packet, const udp::endpoint& endpoint);
-	//void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
+	void ProcessPacket(Packet* packet, const udp::endpoint& endpoint);
+	void ProcessAcceptPacket(ConnectionAcceptPacket* packet, const udp::endpoint& endpoint);
+	void ProcessDeniedPacket(ConnectionDeniedPacket* packet, const udp::endpoint& endpoint);
+	void ProcessConnectionPacket(ConnectionPacket* packet, const udp::endpoint& endpoint);
+	void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
 
 	Packet* CreateRequestPacket();
 	Packet* CreateConnectionPacket();
 private:
-	SocketTransport* _transport;
+	SocketTransport* _transport = nullptr;
 
 	SnapshotPacketFactory _packetFactory;
 
 	bool _active = false;
-	ClientState _state;
+	ClientState _state = CLIENT_SLEEP;
 
 	const char* _serverIP;
 	const char* _serverPort;
 	udp::endpoint _serverEndpoint;
 
-	Connection* _connection;
+	Connection* _connection = nullptr;
 
 };
 
@@ -128,11 +128,11 @@ protected:
 	void SendPacketToClient(uint16_t clientID, Packet* packet);
 
 private:
-	SocketTransport* _transport;
+	SocketTransport* _transport = nullptr;
 
 	SnapshotPacketFactory _packetFactory;
 
-	ServerState _state;
+	ServerState _state = SERVER_SLEEP;
 
 	bool _active = false;
 
@@ -143,9 +143,9 @@ private:
 	//std::vector<Connection> _connections; // 32 connection slots
 
 
-	uint16_t _clients = { 0 };
+	uint16_t _connectedClients = 0;
 	// Clients
-	bool _clientConnected[_maxSlots];
+	bool _clientConnected[_maxSlots] = {false};
 	//uint16_t _clientID[_maxSlots];
 	ClientData _clientData[_maxSlots];
 	Connection* _connections[_maxSlots];
