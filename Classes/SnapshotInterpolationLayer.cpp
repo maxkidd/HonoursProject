@@ -89,7 +89,7 @@ void SnapshotInterpolationLayer::update(float dt)
 
 			server->ReceivePackets();
 
-			debugString.append("Server: ");
+			debugString.append("Server: " + server->GetNetworkState());
 		}
 		else if (client && client->IsActive()) // Client
 		{
@@ -100,17 +100,16 @@ void SnapshotInterpolationLayer::update(float dt)
 
 			client->ReceivePackets();
 
-			debugString.append("Client: ");
+			debugString.append("Client: " + client->GetNetworkState());
 		}
 		else
 		{
-			// Start server
-
 			debugString.append("No Client/Server running");
 		}
+
+		_statusLabel->setString(debugString);
 	}
 
-	_statusLabel->setString(debugString);
 }
 
 void SnapshotInterpolationLayer::createNetworkStatsLabel()
@@ -320,6 +319,23 @@ void SnapshotClient::ReadPackets()
 	_transport->ReadPackets();
 }
 
+std::string SnapshotClient::GetNetworkState()
+{
+	switch (_state)
+	{
+	case CLIENT_SLEEP:
+		return "Sleeping";
+	case CLIENT_REQUESTING:
+		return "Requesting";
+	case CLIENT_REQUEST_DENIED:
+		return "Denied";
+	case CLIENT_CONNECTED:
+		return "Connected";
+	default:
+		return "ERROR";
+	}
+}
+
 Packet* SnapshotClient::CreateRequestPacket()
 {
 	return _packetFactory.Create(CLIENT_SERVER_PACKET_REQUEST);
@@ -398,6 +414,23 @@ void SnapshotServer::WritePackets()
 void SnapshotServer::ReadPackets()
 {
 	_transport->ReadPackets();
+}
+
+std::string SnapshotServer::GetNetworkState()
+{
+	std::string returnVal;
+
+	switch (_state)
+	{
+	case SERVER_SLEEP:
+		return "Sleeping";
+	case SERVER_ALIVE:
+		return "Alive";
+	case SERVER_CONNECTED:
+		return "Connected - Clients: " + _clients;
+	}
+
+	return returnVal;
 }
 
 void SnapshotServer::ProcessPacket(Packet * packet, udp::endpoint endpoint)

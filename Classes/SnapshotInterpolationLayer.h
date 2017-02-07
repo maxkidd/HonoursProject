@@ -30,11 +30,12 @@ class SnapshotClient
 
 	enum ClientState
 	{
-		CLIENT_SLEEP,
-		CLIENT_REQUESTING,
-		CLIENT_REQUEST_DENIED,
-		CLIENT_CONNECTED
+		CLIENT_SLEEP, // Not active
+		CLIENT_REQUESTING, // Requesting connection with server
+		CLIENT_REQUEST_DENIED, // Request denied
+		CLIENT_CONNECTED // Connected after request accepted
 	};
+
 public:
 	SnapshotClient();
 	virtual ~SnapshotClient();
@@ -49,13 +50,14 @@ public:
 	// Send packets from the connection layer
 	void SendPackets();
 
-
 	// Receive packets to connection layer
 	void ReceivePackets();
 
 	// Transport layer
 	void WritePackets();
 	void ReadPackets();
+
+	std::string GetNetworkState();
 
 	bool IsActive() { return _active; }
 protected:
@@ -86,6 +88,14 @@ private:
 
 class SnapshotServer
 {
+
+	enum ServerState
+	{
+		SERVER_SLEEP, // Not active
+		SERVER_ALIVE, // Running and can accept clients
+		SERVER_CONNECTED // Running with 1 or more clients connected
+	};
+
 public:
 	SnapshotServer();
 	virtual ~SnapshotServer();
@@ -104,6 +114,8 @@ public:
 	void WritePackets();
 	void ReadPackets();
 
+	std::string GetNetworkState();
+
 	bool IsActive() { return _active; }
 protected:
 
@@ -120,6 +132,8 @@ private:
 
 	SnapshotPacketFactory _packetFactory;
 
+	ServerState _state;
+
 	bool _active = false;
 
 	const char* _serverIP;
@@ -128,6 +142,8 @@ private:
 	static const int _maxSlots = 32;
 	//std::vector<Connection> _connections; // 32 connection slots
 
+
+	uint16_t _clients = { 0 };
 	// Clients
 	bool _clientConnected[_maxSlots];
 	//uint16_t _clientID[_maxSlots];
