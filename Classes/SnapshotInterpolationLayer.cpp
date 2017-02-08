@@ -11,6 +11,7 @@
 
 using namespace std;
 using namespace cocos2d;
+using namespace cocos2d::extension;
 
 SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr),
 server(nullptr), client(nullptr)
@@ -60,6 +61,14 @@ bool SnapshotInterpolationLayer::init()
 
 	createNetworkStatsLabel();
 
+	_tableView = TableView::create(&_netDebugData, Size(200.0f, winSize.height * 0.9f));
+	_tableView->setPosition(10.0f, winSize.height * 0.1f);
+	//tableView->setContentSize(Size(200.0f, 20.0f));
+	_tableView->setDirection(ScrollView::Direction::VERTICAL);
+	
+	addChild(_tableView);
+	_tableView->reloadData();
+
 	scheduleUpdate();
 
 	return true;
@@ -78,6 +87,8 @@ void SnapshotInterpolationLayer::update(float dt)
 
 	while (_networkTimer > 1.0f) // Client or Server tick
 	{
+		_netDebugData.createEntry("testing", NET_LOG);
+
 		_networkTimer -= (1.0f);
 
 		if (server && server->IsActive()) // Server
@@ -106,6 +117,7 @@ void SnapshotInterpolationLayer::update(float dt)
 		{
 			debugString.append("No Client/Server running");
 		}
+		_tableView->reloadData();
 
 		_statusLabel->setString(debugString);
 	}

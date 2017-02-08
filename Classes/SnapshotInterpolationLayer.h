@@ -2,6 +2,7 @@
 #define _SNAPSHOTINTERPOLATIONLAYER_H_
 
 #include "cocos2d.h"
+#include "cocos-ext.h"
 
 #include "asio\asio.hpp"
 
@@ -12,6 +13,8 @@
 #include "network_connection.h"
 #include "network_common.h"
 #include "network_packet.h"
+
+#include "NetworkDebugDataSource.h"
 
 #include <stdio.h>
 
@@ -152,6 +155,9 @@ private:
 	SnapshotClient* client;
 
 	cocos2d::LabelTTF* _statusLabel;
+
+	NetworkDebugDataSource _netDebugData;
+	TableView* _tableView = nullptr;
 
 	float _networkTimer = 0.0f;
 

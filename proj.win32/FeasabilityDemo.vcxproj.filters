@@ -90,6 +90,9 @@
     <ClCompile Include="..\Classes\SnapshotInterpolationLayer.cpp">
       <Filter>src\Layers</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\NetworkDebugDataSource.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -333,6 +336,9 @@
       <Filter>src\Network</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\network_common.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\NetworkDebugDataSource.h">
       <Filter>src\Network</Filter>
     </ClInclude>
   </ItemGroup>

@@ -160,6 +160,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\ClientLayer.cpp" />
     <ClCompile Include="..\Classes\controller.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\NetworkDebugDataSource.cpp" />
     <ClCompile Include="..\Classes\NetworkDebugView.cpp" />
     <ClCompile Include="..\Classes\NetworkLayer.cpp" />
     <ClCompile Include="..\Classes\network_channel.cpp" />
@@ -235,6 +236,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\controller.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\NetMessage.h" />
+    <ClInclude Include="..\Classes\NetworkDebugDataSource.h" />
     <ClInclude Include="..\Classes\NetworkDebugView.h" />
     <ClInclude Include="..\Classes\NetworkLayer.h" />
     <ClInclude Include="..\Classes\network_bitpack.h" />
