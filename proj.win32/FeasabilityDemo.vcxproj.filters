@@ -22,6 +22,12 @@
     <Filter Include="src\Network">
       <UniqueIdentifier>{67c8a2e8-82ec-4a30-8c6c-7b4dfc1ee698}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\SnapshotInterpolation">
+      <UniqueIdentifier>{83556775-32a5-4cd0-895d-6961955081b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\StateSynchronization">
+      <UniqueIdentifier>{b26e6caa-94fb-438d-ab7a-91486d8d6e5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -92,6 +98,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\NetworkDebugDataSource.cpp">
       <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SnapshotInterpolationServer.cpp">
+      <Filter>src\SnapshotInterpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SnapshotInterpolationClient.cpp">
+      <Filter>src\SnapshotInterpolation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,6 +352,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\NetworkDebugDataSource.h">
       <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SnapshotInterpolationServer.h">
+      <Filter>src\SnapshotInterpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SnapshotInterpolationClient.h">
+      <Filter>src\SnapshotInterpolation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

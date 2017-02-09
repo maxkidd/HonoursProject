@@ -169,7 +169,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\network_packet.cpp" />
     <ClCompile Include="..\Classes\network_transport.cpp" />
     <ClCompile Include="..\Classes\ServerLayer.cpp" />
+    <ClCompile Include="..\Classes\SnapshotInterpolationClient.cpp" />
     <ClCompile Include="..\Classes\SnapshotInterpolationLayer.cpp" />
+    <ClCompile Include="..\Classes\SnapshotInterpolationServer.cpp" />
     <ClCompile Include="..\Classes\VisibleRect.cpp" />
     <ClCompile Include="..\Classes\WorldState.cpp" />
     <ClCompile Include="main.cpp" />
@@ -251,7 +253,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\network_transport.h" />
     <ClInclude Include="..\Classes\Server.h" />
     <ClInclude Include="..\Classes\ServerLayer.h" />
+    <ClInclude Include="..\Classes\SnapshotInterpolationClient.h" />
     <ClInclude Include="..\Classes\SnapshotInterpolationLayer.h" />
+    <ClInclude Include="..\Classes\SnapshotInterpolationServer.h" />
     <ClInclude Include="..\Classes\testResource.h" />
     <ClInclude Include="..\Classes\tests.h" />
     <ClInclude Include="..\Classes\VisibleRect.h" />
