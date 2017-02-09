@@ -14,6 +14,7 @@
 #include "network_common.h"
 #include "network_packet.h"
 
+
 #include "NetworkDebugDataSource.h"
 
 #include <stdio.h>
@@ -40,7 +41,7 @@ class SnapshotClient
 	};
 
 public:
-	SnapshotClient();
+	SnapshotClient(NetworkDebugDataSource* _debugData);// TODO: File out stream for storage
 	virtual ~SnapshotClient();
 
 	void Init(const char* ip = "localhost", const char* port = "1500");
@@ -100,7 +101,7 @@ class SnapshotServer
 	};
 
 public:
-	SnapshotServer();
+	SnapshotServer(NetworkDebugDataSource* _debugData);
 	virtual ~SnapshotServer();
 
 	bool Start();
@@ -137,14 +138,14 @@ private:
 
 	bool _active = false;
 
-	static const int _maxSlots = 32;
-
+	static const int MAX_SLOTS = 32;
+	static const int NULL_CLIENT_ID = MAX_SLOTS;
 	uint16_t _connectedClients = 0;
 	// Clients
-	bool _clientConnected[_maxSlots] = {false};
-	//uint16_t _clientID[_maxSlots];
-	ClientData _clientData[_maxSlots];
-	Connection* _connections[_maxSlots];
+	bool _clientConnected[MAX_SLOTS] = {false};
+	//uint16_t _clientID[MAX_SLOTS];
+	ClientData _clientData[MAX_SLOTS];
+	Connection* _connections[MAX_SLOTS];
 
 
 };

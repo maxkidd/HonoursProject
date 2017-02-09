@@ -6,6 +6,8 @@
 
 #include "network_packet.h"
 
+#include "NetworkDebugDataSource.h"
+
 using asio::ip::udp;
 
 #define MAX_SEND_QUEUE (100)
@@ -35,6 +37,7 @@ public:
 	void WritePackets();
 	void ReadPackets();
 
+	void SetDebugService(NetworkDebugDataSource* dataSource) { _debugData = dataSource; }
 protected:
 	// Internal receive functions to recieve packets from destination
 	virtual int InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes) = 0;
@@ -46,6 +49,8 @@ private:
 	std::queue<PacketInfo> receive_queue_;
 
 	PacketFactory* _packetFactory;
+
+	NetworkDebugDataSource* _debugData;
 
 	int max_packet_size_;
 };
@@ -63,7 +68,6 @@ protected:
 private:
 	asio::io_service io_service_;
 	udp::socket socket_;
-
 };
 
 #endif

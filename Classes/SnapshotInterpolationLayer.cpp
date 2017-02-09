@@ -61,7 +61,7 @@ bool SnapshotInterpolationLayer::init()
 
 	createNetworkStatsLabel();
 
-	_tableView = TableView::create(&_netDebugData, Size(200.0f, winSize.height * 0.9f));
+	_tableView = TableView::create(&_netDebugData, Size(winSize.width, winSize.height * 0.9f));
 	_tableView->setPosition(10.0f, winSize.height * 0.1f);
 	//tableView->setContentSize(Size(200.0f, 20.0f));
 	_tableView->setDirection(ScrollView::Direction::VERTICAL);
@@ -87,8 +87,6 @@ void SnapshotInterpolationLayer::update(float dt)
 
 	while (_networkTimer > 1.0f) // Client or Server tick
 	{
-		_netDebugData.createEntry("testing", NET_LOG);
-
 		_networkTimer -= (1.0f);
 
 		if (server && server->IsActive()) // Server
@@ -183,7 +181,7 @@ void SnapshotInterpolationLayer::connectAsClient()
 				server = nullptr;
 			}
 			if(!client)
-				client = new SnapshotClient();
+				client = new SnapshotClient(&_netDebugData);
 
 			client->Init(ipText->getString().c_str(), portText->getString().c_str());
 
@@ -227,14 +225,15 @@ void SnapshotInterpolationLayer::connectAsServer()
 		client = nullptr;
 	}
 	if(!server)
-		server = new SnapshotServer();
+		server = new SnapshotServer(&_netDebugData);
 
 	server->Start();
 }
 
-SnapshotClient::SnapshotClient() : 
+SnapshotClient::SnapshotClient(NetworkDebugDataSource* _debugData) :
 	_state(CLIENT_SLEEP), _transport(new SocketTransport(&_packetFactory))
 {
+	_transport->SetDebugService(_debugData);
 }
 
 
@@ -405,8 +404,9 @@ Packet * SnapshotClient::CreateConnectionPacket()
 	return packet;
 }
 
-SnapshotServer::SnapshotServer() : _transport(new SocketTransport(&_packetFactory, 1500))
+SnapshotServer::SnapshotServer(NetworkDebugDataSource* _debugData) : _transport(new SocketTransport(&_packetFactory, 1500))
 {
+	_transport->SetDebugService(_debugData);
 }
 
 SnapshotServer::~SnapshotServer()
@@ -441,12 +441,11 @@ void SnapshotServer::Reset()
 
 void SnapshotServer::SendPackets()
 {
-	for (int i = 0; i < _maxSlots; i++)
+	for (int i = 0; i < MAX_SLOTS; i++)
 	{
-		if (_clientConnected[i])
-		{
+		if (!_clientConnected[i])
+			continue;
 
-		}
 	}
 
 }
@@ -519,8 +518,8 @@ void SnapshotServer::ProcessRequestPacket(ConnectionRequestPacket * packet, cons
 
 	// Case: no slots open
 	// Case: alraedy connected
-	uint16_t clientID = -1;
-	for (uint16_t ID = 0; ID < _maxSlots; ID++)
+	uint16_t clientID = NULL_CLIENT_ID;
+	for (uint16_t ID = 0; ID < MAX_SLOTS; ID++)
 	{
 		if (_clientConnected[ID])
 		{
@@ -529,12 +528,12 @@ void SnapshotServer::ProcessRequestPacket(ConnectionRequestPacket * packet, cons
 		}
 		else
 		{
-			if(clientID == -1)
+			if(clientID == NULL_CLIENT_ID)
 				clientID = ID;
 		}
 	}
 
-	if (clientID == -1) 
+	if (clientID == NULL_CLIENT_ID)
 		return;// No slots
 
 	/* Connect client */
