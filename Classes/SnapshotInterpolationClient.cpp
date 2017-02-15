@@ -54,19 +54,19 @@ void SnapshotClient::SendPackets()
 		ConnectionRequestPacket* packet = (ConnectionRequestPacket*)CreateRequestPacket();
 		_transport->SendPacket(_serverEndpoint, packet);
 	}
-							break;
+		break;
 	case(CLIENT_REQUEST_DENIED) :
 	{
-		_error = CLIENT_ERROR_REQUEST_DENIED; // TODO: received request
+		_error = CLIENT_ERROR_REQUEST_DENIED; // TODO: receive error code
 		Stop();
 	}
-								break;
+		break;
 	case(CLIENT_CONNECTED) :
 	{
 		Packet* packet = CreateConnectionPacket();
 		_transport->SendPacket(_serverEndpoint, packet);
 	}
-						   break;
+		break;
 	default:
 		break;
 	}
@@ -144,8 +144,11 @@ void SnapshotClient::ProcessAcceptPacket(ConnectionAcceptPacket * packet, const 
 
 	_state = CLIENT_CONNECTED;
 
-	int test = packet->test;
-	test++;
+	//int test = packet->test;
+	//test++;
+
+	_connection = new Connection(endpoint);
+
 }
 
 void SnapshotClient::ProcessDeniedPacket(ConnectionDeniedPacket * packet, const udp::endpoint & endpoint)
@@ -168,7 +171,6 @@ Packet* SnapshotClient::CreateRequestPacket()
 Packet * SnapshotClient::CreateConnectionPacket()
 {
 	Packet* packet = (Packet*)_connection->GeneratePacket();
-
 
 	return packet;
 }

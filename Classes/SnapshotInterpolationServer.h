@@ -34,6 +34,23 @@ class SnapshotServer
 		SERVER_CONNECTED // Running with 1 or more clients connected
 	};
 
+private:
+	SocketTransport* _transport = nullptr;
+
+	SnapshotPacketFactory _packetFactory;
+
+	ServerState _state = SERVER_SLEEP;
+
+	bool _active = false;
+
+	static const int MAX_SLOTS = 32;
+	static const int NULL_CLIENT_ID = MAX_SLOTS;
+	uint16_t _connectedClients = 0;
+	
+	// Clients
+	bool _clientConnected[MAX_SLOTS] = { false };
+	ClientData _clientData[MAX_SLOTS];
+	Connection* _connections[MAX_SLOTS];
 public:
 	SnapshotServer(NetworkDebugDataSource* _debugData);
 	virtual ~SnapshotServer();
@@ -63,23 +80,6 @@ protected:
 
 	void SendPacketToClient(uint16_t clientID, Packet* packet);
 
-private:
-	SocketTransport* _transport = nullptr;
-
-	SnapshotPacketFactory _packetFactory;
-
-	ServerState _state = SERVER_SLEEP;
-
-	bool _active = false;
-
-	static const int MAX_SLOTS = 32;
-	static const int NULL_CLIENT_ID = MAX_SLOTS;
-	uint16_t _connectedClients = 0;
-	// Clients
-	bool _clientConnected[MAX_SLOTS] = { false };
-	//uint16_t _clientID[MAX_SLOTS];
-	ClientData _clientData[MAX_SLOTS];
-	Connection* _connections[MAX_SLOTS];
 };
 
 

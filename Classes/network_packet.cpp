@@ -1,5 +1,7 @@
 #include "network_packet.h"
 
+#include "network_common.h"
+
 Packet* PacketFactory::Create(int type)
 {
 	Packet* packet = CreatePacket(type);
@@ -37,7 +39,7 @@ int WritePacket(Packet * packet, void * buffer, int size)
 	int packetType = packet->GetType();
 	
 	// Write packet type to stream
-	stream.SerializeInteger(packetType);
+	stream.SerializeInteger(packetType, 0, CLIENT_SERVER_MAX_PACKETS);
 
 	packet->SerializeInternal(stream);
 
@@ -52,7 +54,7 @@ Packet * ReadPacket(PacketFactory* pf, void * buffer, int size)
 	InStream stream{ (uint32_t*)buffer,size };
 
 	uint32_t packetType;
-	stream.SerializeInteger(packetType);
+	stream.SerializeInteger(packetType, 0, CLIENT_SERVER_MAX_PACKETS);
 
 	Packet* packet = pf->Create(packetType);
 	packet->SerializeInternal(stream);

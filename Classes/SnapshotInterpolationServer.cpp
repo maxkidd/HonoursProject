@@ -39,9 +39,12 @@ void SnapshotServer::SendPackets()
 {
 	for (int i = 0; i < MAX_SLOTS; i++)
 	{
-		if (!_clientConnected[i])
+		if (!_clientConnected[i] || !_connections[i])
 			continue;
 
+		Packet* packet = _connections[i]->GeneratePacket();
+
+		SendPacketToClient(i, packet);
 	}
 
 }

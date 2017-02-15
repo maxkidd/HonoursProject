@@ -35,6 +35,19 @@ class SnapshotClient
 		CLIENT_CONNECTED // Connected after request accepted
 	};
 
+private:
+	SocketTransport* _transport = nullptr;
+
+	SnapshotPacketFactory _packetFactory;
+
+	bool _active = false;
+	ClientState _state = CLIENT_SLEEP;
+
+	const char* _serverIP;
+	const char* _serverPort;
+	udp::endpoint _serverEndpoint;
+
+	Connection* _connection = nullptr;
 public:
 	SnapshotClient(NetworkDebugDataSource* _debugData);// TODO: File out stream for storage
 	virtual ~SnapshotClient();
@@ -69,19 +82,6 @@ protected:
 
 	Packet* CreateRequestPacket();
 	Packet* CreateConnectionPacket();
-private:
-	SocketTransport* _transport = nullptr;
-
-	SnapshotPacketFactory _packetFactory;
-
-	bool _active = false;
-	ClientState _state = CLIENT_SLEEP;
-
-	const char* _serverIP;
-	const char* _serverPort;
-	udp::endpoint _serverEndpoint;
-
-	Connection* _connection = nullptr;
 
 };
 
