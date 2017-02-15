@@ -87,9 +87,6 @@
     <ClCompile Include="..\Classes\network_packet.cpp">
       <Filter>src\Network</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\network_message.cpp">
-      <Filter>src\Network</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\network_transport.cpp">
       <Filter>src\Network</Filter>
     </ClCompile>
@@ -104,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SnapshotInterpolationClient.cpp">
       <Filter>src\SnapshotInterpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\network_message.cpp">
+      <Filter>src\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
