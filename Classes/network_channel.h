@@ -5,9 +5,17 @@
 
 #include "network_message.h"
 
-class ChannelData
+class ChannelPacket
 {
+	friend class Channel;
+private:
+
+	int numMessages;
+	std::vector<Message*> messages;
+
 	// Serialize functions
+	template <typename Stream> bool Serialize(Stream& stream, MessageFactory& mf, int channels); 
+	
 };
 
 class ChannelListener
@@ -26,8 +34,9 @@ public:
 	void SendMessage(Message* message);
 	Message* ReceiveMessage();
 
-	//ChannelData* GenerateChannelData();
-	//void ProcessPacketData(const ChannelData& data);
+	ChannelPacket* GeneratePacketData(int freeBits);
+	int GetPacketData(ChannelPacket& data, int bitsFree);
+	void ProcessPacketData(const ChannelPacket& data);
 
 	void SetListener(ChannelListener *  listener);
 protected:
@@ -43,3 +52,4 @@ private:
 };
 
 #endif
+

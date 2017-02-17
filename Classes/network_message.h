@@ -3,6 +3,8 @@
 
 #include "network_serializable.h"
 
+class MessageFactory;
+
 class Message : public Serializable
 {
 private:
@@ -11,11 +13,11 @@ private:
 public:
 	Message() : _factory(nullptr), _type(0) {}
 
-	int GetID() { return _type; }
+	int GetType() { return _type; }
 protected:
 	friend class MessageFactory;
 
-	void SetType(int id) { _type = id; }
+	void SetType(int type) { _type = type; }
 	void SetMessageFactory(MessageFactory& factory)
 	{_factory = &factory;}
 

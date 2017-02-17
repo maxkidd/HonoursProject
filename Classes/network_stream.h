@@ -38,6 +38,17 @@ public:
 		return true;
 	}
 
+	bool SerializeBits(uint32_t value, int bits)
+	{
+		assert(bits > 0);
+		assert(bits <= 32);
+
+		_bitWriter.WriteBits(value, bits);
+
+		return true;
+	}
+
+
 	void Flush() { _bitWriter.FlushBits(); }
 
 	int BytesUsed() { return _bitWriter.GetBytesWritten(); }
@@ -73,6 +84,15 @@ public:
 		uint32_t readValue = _bitReader.ReadBits(bits);
 
 		value = readValue + min_value;
+
+		return true;
+	}
+	bool SerializeBits(uint32_t& value, int bits)
+	{
+		assert(bits > 0);
+		assert(bits <= 32);
+
+		value = _bitReader.ReadBits(bits);
 
 		return true;
 	}
