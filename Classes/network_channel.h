@@ -7,14 +7,18 @@
 
 class ChannelPacket
 {
-	friend class Channel;
-private:
-
-	int numMessages;
-	std::vector<Message*> messages;
-
+public:
 	// Serialize functions
-	template <typename Stream> bool Serialize(Stream& stream, MessageFactory& mf, int channels); 
+	template <typename Stream> bool Serialize(Stream& stream, MessageFactory& mf, int channels);
+
+	bool SerializeInternal(InStream& stream, MessageFactory& mf, int channels);
+	bool SerializeInternal(OStream& stream, MessageFactory& mf, int channels);
+private:
+	friend class Channel;
+
+	uint32_t numMessages;
+	std::vector<NMessage*> messages;
+
 	
 };
 
@@ -28,13 +32,13 @@ public:
 class Channel
 {
 public:
-	Channel(MessageFactory* mf, int id);
+	Channel(MessageFactory* mf);
 	~Channel() {}
 	
-	void SendMessage(Message* message);
-	Message* ReceiveMessage();
+	void SendMsg(NMessage* message);
+	NMessage* ReceiveMsg();
 
-	ChannelPacket* GeneratePacketData(int freeBits);
+	//ChannelPacket* GeneratePacketData(int freeBits);
 	int GetPacketData(ChannelPacket& data, int bitsFree);
 	void ProcessPacketData(const ChannelPacket& data);
 
@@ -45,8 +49,8 @@ private:
 
 	ChannelListener* _listener;
 
-	std::queue<Message*> _recvQueue;
-	std::queue<Message*> _sendQueue;
+	std::queue<NMessage*> _recvQueue;
+	std::queue<NMessage*> _sendQueue;
 
 	MessageFactory* _mf;
 };

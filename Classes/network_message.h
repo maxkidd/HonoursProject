@@ -5,13 +5,13 @@
 
 class MessageFactory;
 
-class Message : public Serializable
+class NMessage : public Serializable
 {
 private:
 	MessageFactory* _factory;
 	int _type;
 public:
-	Message() : _factory(nullptr), _type(0) {}
+	NMessage() : _factory(nullptr), _type(0) {}
 
 	int GetType() { return _type; }
 protected:
@@ -21,8 +21,8 @@ protected:
 	void SetMessageFactory(MessageFactory& factory)
 	{_factory = &factory;}
 
-	virtual bool Serialize(InStream& stream) = 0;
-	virtual bool Serialize(OStream& stream) = 0;
+	//virtual bool Serialize(InStream& stream);
+	//virtual bool Serialize(OStream& stream);
 };
 
 
@@ -32,13 +32,15 @@ public:
 	MessageFactory(int messageTypes) : _messageTypes(messageTypes) {}
 	virtual ~MessageFactory() {}
 
-	Message* Create(int type);
+	NMessage* Create(int type);
 
 protected:
-	void SetMessageType(Message* message, int type);
-	void SetFactory(Message* message);
+	friend class ChannelPacket;
 
-	virtual Message* CreateMessage(int type) { (void)type; return nullptr; }
+	void SetMessageType(NMessage* message, int type);
+	void SetFactory(NMessage* message);
+
+	virtual NMessage* CreateMessage(int type) { (void)type; return nullptr; }
 private:
 	int _messageTypes;
 };
@@ -48,8 +50,8 @@ private:
 class factory_class : public base_class{											\
 public:																				\
 	factory_class(int messageTypes = num_messages) : base_class(messageTypes) {}	\
-	virtual Message* CreateMessage(int type){										\
-		Message* message = base_class::CreateMessage(type);							\
+	virtual NMessage* CreateMessage(int type){										\
+		NMessage* message = base_class::CreateMessage(type);							\
 		switch (type){
 
 #define MESSAGE_FACTORY_TYPE(message_type, message_class)						\

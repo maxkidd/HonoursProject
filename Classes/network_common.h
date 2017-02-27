@@ -2,6 +2,10 @@
 #define _NETWORK_COMMON_H_
 
 #include "network_packet.h"
+#include "network_message.h"
+#include "network_channel.h"
+
+class ChannelPacket;
 
 class ConnectionRequestPacket : public Packet
 {
@@ -33,13 +37,23 @@ public:
 class ConnectionPacket : public Packet
 {
 public:
+	ChannelPacket* _channelEntry; // Channel packet that holds messages
+	MessageFactory* _messageFactory;
+
 	ConnectionPacket() {}
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
+		if (!_channelEntry->Serialize(stream, *_messageFactory, 1));
+		{
+			// Could not serilize
+			return false;
+		}
+
 		return true;
 	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
+
 };
 class ConnectionAcceptPacket : public Packet
 {
@@ -91,5 +105,33 @@ PACKET_FACTORY_START(SnapshotPacketFactory, PacketFactory, CLIENT_SERVER_MAX_PAC
 	PACKET_FACTORY_TYPE(CLIENT_SERVER_PACKET_DISCONNECT, ConnectionDisconnectPacket);
 PACKET_FACTORY_END();
 
+
+class SnapshotBoxMessage : public NMessage
+{
+public:
+	float x, y = 0;
+
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
+		SerializeFloat(stream, x);
+		SerializeFloat(stream, y);
+		
+		return true;
+	}
+	VIRTUAL_SERIALIZE_FUNCTIONS();
+};
+
+enum SnapshotMessageTypes
+{
+	SNAPSHOT_MESSAGE_ERROR = -1,
+	SNAPSHOT_MESSAGE_NULL = 0,
+	SNAPSHOT_MESSAGE_UPDATE_BOX,		// Box message
+	SNAPSHOT_MESSAGE_MAX
+};
+
+MESSAGE_FACTORY_START(SnapshotMessageFactory, MessageFactory, SNAPSHOT_MESSAGE_MAX);
+//	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_NULL, SnapshotBoxMessage);
+//	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_UPDATE_BOX, SnapshotBoxMessage);
+MESSAGE_FACTORY_END();
 
 #endif

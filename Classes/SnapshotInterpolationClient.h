@@ -39,6 +39,7 @@ private:
 	SocketTransport* _transport = nullptr;
 
 	SnapshotPacketFactory _packetFactory;
+	SnapshotMessageFactory _messageFactory;
 
 	bool _active = false;
 	ClientState _state = CLIENT_SLEEP;

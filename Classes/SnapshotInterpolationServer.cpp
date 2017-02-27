@@ -138,7 +138,7 @@ void SnapshotServer::ProcessRequestPacket(ConnectionRequestPacket * packet, cons
 			   /* Connect client */
 
 			   //_connections.push_back(Connection(endpoint));
-	_connections[clientID] = new Connection(endpoint);
+	_connections[clientID] = new Connection(endpoint, _packetFactory, _messageFactory);
 	_clientConnected[clientID] = true;
 
 	_clientData[clientID] = ClientData();
@@ -156,6 +156,24 @@ void SnapshotServer::ProcessConnectionPacket(ConnectionPacket * packet, const ud
 	// Check endpoint is a connected client
 
 	// Process in connection layer
+	
+	for (int i = 0; i < MAX_SLOTS; i++)
+	{
+		if (!_clientConnected[i] || _connections[i])
+			continue;
+
+		if (_connections[i]->Endpoint() == endpoint)
+		{ // connection found
+
+			_connections[i]->ProcessPacket(packet);
+
+			return;
+		}
+	}
+
+	// No connection found error
+
+
 }
 
 void SnapshotServer::ProcessDisconnectPacket(ConnectionDisconnectPacket * packet, const udp::endpoint & endpoint)

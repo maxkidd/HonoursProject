@@ -18,7 +18,7 @@ template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageF
 
 		for (int i = 0; i < numMessages; i++)
 		{
-			int type;
+			uint32_t type;
 			if (Stream::IsWriting)
 				type = messages[i]->GetType();
 
@@ -26,37 +26,37 @@ template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageF
 
 			if (Stream::IsReading) 
 			{
-				Message* message = mf.Create(type);
+				NMessage* message = mf.Create(type);
 				messages.push_back(message);
 			}
-			if(messages[i])
-				messages[i].SerializeInternal(stream)
+			if (messages[i])
+				messages[i]->SerializeInternal(stream);
 		}
 	}
 	
 	return true;
 }
 
-Channel::Channel(MessageFactory * mf, int id) : _mf(mf), _id(id)
+Channel::Channel(MessageFactory * mf) : _mf(mf)
 {
 }
 
-void Channel::SendMessage(Message * message)
+void Channel::SendMsg(NMessage * message)
 {
 	_sendQueue.push(message);
 }
 
-Message * Channel::ReceiveMessage()
+NMessage * Channel::ReceiveMsg()
 {
-	Message* returnMsg = _recvQueue.front();
+	NMessage* returnMsg = _recvQueue.front();
 	_recvQueue.pop();
 	return returnMsg;
 }
 
-ChannelPacket * Channel::GeneratePacketData(int freeBits)
+/*ChannelPacket * Channel::GeneratePacketData(int freeBits)
 {
 	return nullptr;
-}
+}*/
 
 int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 {
@@ -67,7 +67,7 @@ int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 	int numMessages = 0;
 
 
-	std::vector<Message*> messages;
+	std::vector<NMessage*> messages;
 
 	while (true)
 	{
@@ -76,7 +76,7 @@ int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 		if (bitsUsed >= bitsFree)
 			break;
 
-		Message* message = _sendQueue.front();
+		NMessage* message = _sendQueue.front();
 		_sendQueue.pop();
 
 		assert(message);
@@ -97,15 +97,22 @@ int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 
 void Channel::ProcessPacketData(const ChannelPacket & data)
 {
-
 	for (int i = 0; i < data.numMessages; i++)
 	{
-		Message* message = data.messages[i];
+		NMessage* message = data.messages[i];
 
 		assert(message);
 		
 		_recvQueue.push(message);
 	}
-
 }
 
+bool ChannelPacket::SerializeInternal(InStream & stream, MessageFactory & mf, int channels)
+{
+	return Serialize(stream, mf, channels);
+}
+
+bool ChannelPacket::SerializeInternal(OStream & stream, MessageFactory & mf, int channels)
+{
+	return Serialize(stream, mf, channels);
+}

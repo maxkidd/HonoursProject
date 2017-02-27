@@ -1,8 +1,8 @@
 #include "network_message.h"
 
-Message* MessageFactory::Create(int type)
+NMessage* MessageFactory::Create(int type)
 {
-	Message* message = CreateMessage(type);
+	NMessage* message = CreateMessage(type);
 
 	if (!message)
 		return nullptr;
@@ -10,12 +10,12 @@ Message* MessageFactory::Create(int type)
 	return message;
 }
 
-void MessageFactory::SetMessageType(Message* message, int type)
+void MessageFactory::SetMessageType(NMessage* message, int type)
 {
 	message->SetType(type);
 }
 
-void MessageFactory::SetFactory(Message * packet)
+void MessageFactory::SetFactory(NMessage * packet)
 {
 	packet->SetMessageFactory(*this);
 }

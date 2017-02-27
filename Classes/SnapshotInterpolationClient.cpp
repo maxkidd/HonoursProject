@@ -147,7 +147,7 @@ void SnapshotClient::ProcessAcceptPacket(ConnectionAcceptPacket * packet, const 
 	//int test = packet->test;
 	//test++;
 
-	_connection = new Connection(endpoint);
+	_connection = new Connection(endpoint, _packetFactory, _messageFactory);
 
 }
 

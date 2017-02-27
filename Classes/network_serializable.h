@@ -11,12 +11,12 @@ template <typename Stream> bool SerializeFloat(Stream& stream, float& value)
 	if (Stream::IsWriting)
 		memcpy(&int_value, &value, 4);
 
-	bool result = stream.SerializeBits(value, 32);
+	bool result = stream.SerializeBits(int_value, 32);
 
 	if (Stream::IsReading)
-		memcp(&value, &int_value, 4);
+		memcpy(&value, &int_value, 4);
 
-	return result
+	return result;
 }
 template <typename Stream> bool SerializeBool(Stream& stream, bool& value)
 {

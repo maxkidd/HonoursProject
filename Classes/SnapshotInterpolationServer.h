@@ -38,6 +38,7 @@ private:
 	SocketTransport* _transport = nullptr;
 
 	SnapshotPacketFactory _packetFactory;
+	SnapshotMessageFactory _messageFactory;
 
 	ServerState _state = SERVER_SLEEP;
 
