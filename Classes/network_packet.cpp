@@ -36,10 +36,11 @@ int WritePacket(Packet * packet, void * buffer, int size)
 {
 	OStream stream{ (uint32_t*)buffer,size };
 	
-	int packetType = packet->GetType();
+	uint32_t packetType = packet->GetType();
 	
 	// Write packet type to stream
-	stream.SerializeInteger(packetType, 0, CLIENT_SERVER_MAX_PACKETS);
+	stream.SerializeInteger(packetType);
+	//stream.SerializeInteger(packetType, 0, CLIENT_SERVER_MAX_PACKETS - 1);
 
 	packet->SerializeInternal(stream);
 
@@ -54,9 +55,10 @@ Packet * ReadPacket(PacketFactory* pf, void * buffer, int size)
 	InStream stream{ (uint32_t*)buffer,size };
 
 	uint32_t packetType;
-	stream.SerializeInteger(packetType, 0, CLIENT_SERVER_MAX_PACKETS);
+	stream.SerializeInteger(packetType);
+	//stream.SerializeInteger(packetType, 0, CLIENT_SERVER_MAX_PACKETS - 1);
 
-	Packet* packet = pf->Create(packetType);
+	Packet* packet = pf->Create((int)packetType);
 	packet->SerializeInternal(stream);
 
 	return packet;

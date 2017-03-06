@@ -22,7 +22,7 @@ private:
 public:
 	SnapshotInterpolationSimulation();
 
-	bool ProcessSnapshotMessage();
+	bool ProcessSnapshotMessages(Connection * con);
 	void GenerateSnapshotMessages(MessageFactory* mf, Connection* con);
 
 	uint32_t CreateBox();

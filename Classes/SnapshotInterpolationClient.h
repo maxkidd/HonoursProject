@@ -14,6 +14,7 @@
 #include "network_common.h"
 #include "network_packet.h"
 
+#include "SnapshotInterpolationSimulation.h"
 
 #include "NetworkDebugDataSource.h"
 
@@ -36,6 +37,8 @@ class SnapshotClient
 	};
 
 private:
+	SnapshotInterpolationSimulation _simulation;
+
 	SocketTransport* _transport = nullptr;
 
 	SnapshotPacketFactory _packetFactory;
@@ -59,6 +62,8 @@ public:
 	bool Stop();
 
 	void Reset();
+
+	void ProcessSnapshots();
 
 	// Send packets from the connection layer
 	void SendPackets();

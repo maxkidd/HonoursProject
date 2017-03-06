@@ -45,6 +45,12 @@ void SnapshotClient::Reset()
 {
 }
 
+void SnapshotClient::ProcessSnapshots()
+{
+	//if(_state == CLIENT_CONNECTED) // Temp, will cause crashes if connection closed
+		//_simulation.ProcessSnapshotMessages(_connection);
+}
+
 void SnapshotClient::SendPackets()
 {
 	switch (_state)
@@ -83,7 +89,7 @@ void SnapshotClient::ReceivePackets()
 			break;
 
 		// Process
-		int type = packet->GetType();
+		//int type = packet->GetType();
 
 		ProcessPacket(packet, endpoint);
 
@@ -157,6 +163,7 @@ void SnapshotClient::ProcessDeniedPacket(ConnectionDeniedPacket * packet, const 
 
 void SnapshotClient::ProcessConnectionPacket(ConnectionPacket * packet, const udp::endpoint & endpoint)
 {
+	_connection->ProcessPacket(packet);
 }
 
 void SnapshotClient::ProcessDisconnectPacket(ConnectionDisconnectPacket * packet, const udp::endpoint & endpoint)

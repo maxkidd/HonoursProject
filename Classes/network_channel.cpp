@@ -50,6 +50,9 @@ void Channel::SendMsg(NMessage * message)
 
 NMessage * Channel::ReceiveMsg()
 {
+	if (_recvQueue.empty())
+		return nullptr;
+
 	NMessage* returnMsg = _recvQueue.front();
 	_recvQueue.pop();
 	return returnMsg;

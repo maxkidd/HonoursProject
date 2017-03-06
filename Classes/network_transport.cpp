@@ -83,7 +83,7 @@ void BaseTransport::WritePackets()
 		InternalSendPacket(packetInfo.endpoint, buffer, bytesUsed);
 		
 		
-		_debugData->createEntry("Sent " + std::to_string(bytesUsed) + "bytes to " 
+		_debugData->createEntry(to_string(packetInfo.packet->GetType()) + " Sent " + std::to_string(bytesUsed) + "bytes to "
 			+ packetInfo.endpoint.address().to_string(), NET_LOG);
 	}
 }
@@ -112,7 +112,7 @@ void BaseTransport::ReadPackets()
 		receive_queue_.push(packetInfo);
 
 
-		_debugData->createEntry("Received " + std::to_string(bytesReceived) + "bytes from "
+		_debugData->createEntry(to_string(packetInfo.packet->GetType()) + " Received " + std::to_string(bytesReceived) + "bytes from "
 			+ packetInfo.endpoint.address().to_string(), NET_LOG);
 	}
 }

@@ -111,6 +111,8 @@ void SnapshotInterpolationLayer::update(float dt)
 		}
 		else if (client && client->IsActive()) // Client
 		{
+			client->ProcessSnapshots();
+
 			client->SendPackets();
 
 			client->WritePackets();

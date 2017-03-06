@@ -5,9 +5,24 @@ SnapshotInterpolationSimulation::SnapshotInterpolationSimulation() : _world{b2Ve
 
 }
 
-bool SnapshotInterpolationSimulation::ProcessSnapshotMessage()
+bool SnapshotInterpolationSimulation::ProcessSnapshotMessages(Connection * con)
 {
-	return false;
+	NMessage* message;
+	while (message = con->ReceiveMsg()) 
+	{
+		switch (message->GetType())
+		{
+		case SNAPSHOT_MESSAGE_CREATE_BOX:
+			//Process creation
+			break;
+		case SNAPSHOT_MESSAGE_UPDATE_BOX:
+			// Process move
+			SnapshotBoxMove* move = (SnapshotBoxMove*)message;
+			break;
+		}
+	}
+
+	return true;
 }
 
 void SnapshotInterpolationSimulation::GenerateSnapshotMessages(MessageFactory* mf, Connection * con)
