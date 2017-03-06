@@ -96,6 +96,8 @@ void SnapshotInterpolationLayer::update(float dt)
 
 		if (server && server->IsActive()) // Server
 		{
+			server->GenerateSnapshots();
+
 			server->SendPackets();
 
 			server->WritePackets();

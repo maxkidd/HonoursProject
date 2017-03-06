@@ -75,8 +75,8 @@ int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 	{
 		if (_sendQueue.empty())
 			break;
-		if (bitsUsed >= bitsFree)
-			break;
+		/*if (bitsUsed >= bitsFree)
+			break;*/
 
 		NMessage* message = _sendQueue.front();
 		_sendQueue.pop();
@@ -89,7 +89,7 @@ int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 
 
 
-	data.numMessages = { (uint32_t)0 };
+	data.numMessages = { numMessages };
 	data.messages = { messages };
 
 	if (numMessages == 0)

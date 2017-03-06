@@ -20,8 +20,8 @@ public:
 	ConnectionPacket* GeneratePacket();
 	bool ProcessPacket(ConnectionPacket* packet);
 
-	void SendMessage(NMessage* message);
-	NMessage* ReceiveMessage();
+	void SendMsg(NMessage* message);
+	NMessage* ReceiveMsg();
 
 	udp::endpoint Endpoint();
 protected:

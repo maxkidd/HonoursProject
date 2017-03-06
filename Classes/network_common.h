@@ -109,13 +109,33 @@ PACKET_FACTORY_START(SnapshotPacketFactory, PacketFactory, CLIENT_SERVER_MAX_PAC
 PACKET_FACTORY_END();
 
 
-class SnapshotBoxMessage : public NMessage
+class SnapshotBoxCreate : public NMessage
 {
 public:
+	uint32_t id = 0;
 	float x, y = 0;
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
+		stream.SerializeInteger(id);
+
+		SerializeFloat(stream, x);
+		SerializeFloat(stream, y);
+
+		return true;
+	}
+	VIRTUAL_SERIALIZE_FUNCTIONS();
+};
+class SnapshotBoxMove : public NMessage
+{
+public:
+	uint32_t id = 0;
+	float x, y = 0;
+
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
+		stream.SerializeInteger(id);
+
 		SerializeFloat(stream, x);
 		SerializeFloat(stream, y);
 		
@@ -127,14 +147,14 @@ public:
 enum SnapshotMessageTypes
 {
 	SNAPSHOT_MESSAGE_ERROR = -1,
-	SNAPSHOT_MESSAGE_NULL = 0,
+	SNAPSHOT_MESSAGE_CREATE_BOX = 0,		// Box message
 	SNAPSHOT_MESSAGE_UPDATE_BOX,		// Box message
 	SNAPSHOT_MESSAGE_MAX
 };
 
 MESSAGE_FACTORY_START(SnapshotMessageFactory, MessageFactory, SNAPSHOT_MESSAGE_MAX);
-	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_NULL, SnapshotBoxMessage);
-	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_UPDATE_BOX, SnapshotBoxMessage);
+	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_CREATE_BOX, SnapshotBoxCreate);
+	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_UPDATE_BOX, SnapshotBoxMove);
 MESSAGE_FACTORY_END();
 
 #endif

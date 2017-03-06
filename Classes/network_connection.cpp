@@ -19,8 +19,6 @@ ConnectionPacket * Connection::GeneratePacket()
 {
 	ConnectionPacket* packet = new ConnectionPacket();
 
-	// Send message factory
-	//packet->_messageFactory = _messageFactory;
 
 	// Add messages to connection packet
 
@@ -40,12 +38,12 @@ bool Connection::ProcessPacket(ConnectionPacket * packet)
 	return true;
 }
 
-void Connection::SendMessage(NMessage * message)
+void Connection::SendMsg(NMessage * message)
 {
 	_channel->SendMsg(message);
 }
 
-NMessage * Connection::ReceiveMessage()
+NMessage * Connection::ReceiveMsg()
 {
 	return _channel->ReceiveMsg();
 }

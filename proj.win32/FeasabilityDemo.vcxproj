@@ -172,6 +172,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\SnapshotInterpolationClient.cpp" />
     <ClCompile Include="..\Classes\SnapshotInterpolationLayer.cpp" />
     <ClCompile Include="..\Classes\SnapshotInterpolationServer.cpp" />
+    <ClCompile Include="..\Classes\SnapshotInterpolationSimulation.cpp" />
     <ClCompile Include="..\Classes\VisibleRect.cpp" />
     <ClCompile Include="..\Classes\WorldState.cpp" />
     <ClCompile Include="main.cpp" />
@@ -256,6 +257,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\SnapshotInterpolationClient.h" />
     <ClInclude Include="..\Classes\SnapshotInterpolationLayer.h" />
     <ClInclude Include="..\Classes\SnapshotInterpolationServer.h" />
+    <ClInclude Include="..\Classes\SnapshotInterpolationSimulation.h" />
     <ClInclude Include="..\Classes\testResource.h" />
     <ClInclude Include="..\Classes\tests.h" />
     <ClInclude Include="..\Classes\VisibleRect.h" />

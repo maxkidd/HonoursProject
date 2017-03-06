@@ -9,7 +9,6 @@ SnapshotServer::~SnapshotServer()
 {
 	delete _transport;
 	_transport = nullptr;
-
 }
 
 bool SnapshotServer::Start()
@@ -34,6 +33,19 @@ bool SnapshotServer::Stop()
 void SnapshotServer::Reset()
 {
 }
+
+void SnapshotServer::GenerateSnapshots()
+{
+	for (int i = 0; i < MAX_SLOTS; i++)
+	{
+		if (!_clientConnected[i] || !_connections[i])
+			continue;
+
+		_simulation.GenerateSnapshotMessages(&_messageFactory, _connections[i]);
+
+	}
+}
+
 
 void SnapshotServer::SendPackets()
 {
