@@ -44,6 +44,7 @@ void SnapshotServer::SendPackets()
 
 		Packet* packet = _connections[i]->GeneratePacket();
 
+
 		SendPacketToClient(i, packet);
 	}
 
@@ -138,7 +139,7 @@ void SnapshotServer::ProcessRequestPacket(ConnectionRequestPacket * packet, cons
 			   /* Connect client */
 
 			   //_connections.push_back(Connection(endpoint));
-	_connections[clientID] = new Connection(endpoint, _packetFactory, _messageFactory);
+	_connections[clientID] = new Connection(endpoint, _packetFactory, &_messageFactory);
 	_clientConnected[clientID] = true;
 
 	_clientData[clientID] = ClientData();

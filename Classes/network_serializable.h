@@ -20,7 +20,7 @@ template <typename Stream> bool SerializeFloat(Stream& stream, float& value)
 }
 template <typename Stream> bool SerializeBool(Stream& stream, bool& value)
 {
-	uint32_t int_value;
+	uint32_t int_value = 0;
 
 	if (Stream::IsWriting && value)
 		int_value = 1;

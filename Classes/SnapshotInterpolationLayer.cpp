@@ -27,6 +27,8 @@ SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
 	{
 		_statusLabel = nullptr;
 	}
+	//if(_tableView)
+	//	_tableView->release();
 }
 
 cocos2d::Scene * SnapshotInterpolationLayer::scene()
@@ -61,13 +63,16 @@ bool SnapshotInterpolationLayer::init()
 
 	createNetworkStatsLabel();
 
-	_tableView = TableView::create(&_netDebugData, Size(winSize.width, winSize.height * 0.9f));
+	_netDebugData = new NetworkDebugDataSource();
+
+	_tableView = TableView::create(_netDebugData, Size(winSize.width, winSize.height * 0.9f));
 	_tableView->setPosition(10.0f, winSize.height * 0.1f);
 	//tableView->setContentSize(Size(200.0f, 20.0f));
 	_tableView->setDirection(ScrollView::Direction::VERTICAL);
-	
+	_tableView->retain();
+
 	addChild(_tableView);
-	_tableView->reloadData();
+	//_tableView->reloadData();
 
 	scheduleUpdate();
 
@@ -99,6 +104,8 @@ void SnapshotInterpolationLayer::update(float dt)
 			server->ReceivePackets();
 
 			debugString.append("Server: " + server->GetNetworkState());
+
+			_tableView->reloadData();
 		}
 		else if (client && client->IsActive()) // Client
 		{
@@ -110,12 +117,13 @@ void SnapshotInterpolationLayer::update(float dt)
 			client->ReceivePackets();
 
 			debugString.append("Client: " + client->GetNetworkState());
+
+			_tableView->reloadData();
 		}
 		else
 		{
 			debugString.append("No Client/Server running");
 		}
-		_tableView->reloadData();
 
 		_statusLabel->setString(debugString);
 	}
@@ -181,7 +189,7 @@ void SnapshotInterpolationLayer::connectAsClient()
 				server = nullptr;
 			}
 			if(!client)
-				client = new SnapshotClient(&_netDebugData);
+				client = new SnapshotClient(_netDebugData);
 
 			client->Init(ipText->getString().c_str(), portText->getString().c_str());
 
@@ -225,7 +233,7 @@ void SnapshotInterpolationLayer::connectAsServer()
 		client = nullptr;
 	}
 	if(!server)
-		server = new SnapshotServer(&_netDebugData);
+		server = new SnapshotServer(_netDebugData);
 
 	server->Start();
 }

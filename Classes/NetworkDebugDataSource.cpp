@@ -3,6 +3,7 @@
 void NetworkDebugDataSource::createEntry(std::string str, NetworkDebugType type)
 {
 	_debugData.push_back(std::make_pair(type, std::to_string(_debugData.size()) + ": " + str));
+	_numCells++;
 }
 
 Size NetworkDebugDataSource::cellSizeForTable(TableView * table)
@@ -17,12 +18,14 @@ TableViewCell * NetworkDebugDataSource::tableCellAtIndex(TableView * table, ssiz
 
 	std::string str;
 	Color3B col;
-	if (idx >= _debugData.size() || idx < 0)
+	assert(idx < _debugData.size());
+	assert(idx >= 0);
+	/*if (idx >= _debugData.size() || idx < 0)
 	{
 		str = "NULL";
 		col = Color3B::WHITE;
 	}
-	else
+	else*/
 	{
 		str = _debugData.at(idx).second;
 		switch (_debugData.at(idx).first)
@@ -58,6 +61,7 @@ TableViewCell * NetworkDebugDataSource::tableCellAtIndex(TableView * table, ssiz
 		label->setFontFillColor(col);
 
 		viewCell->addChild(label);
+		
 	}
 
 	return viewCell;

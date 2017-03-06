@@ -4,10 +4,10 @@
 
 
 
-Connection::Connection(udp::endpoint endpoint, PacketFactory & pf, MessageFactory & mf)
-	: _endpoint(endpoint), _packetFactory(&pf), _messageFactory(&mf)
+Connection::Connection(udp::endpoint endpoint, PacketFactory & pf, MessageFactory * mf)
+	: _endpoint(endpoint), _packetFactory(&pf), _messageFactory(mf)
 {
-	_channel = new Channel(&mf);
+	_channel = new Channel(mf);
 }
 
 Connection::~Connection()
@@ -20,10 +20,15 @@ ConnectionPacket * Connection::GeneratePacket()
 	ConnectionPacket* packet = new ConnectionPacket();
 
 	// Send message factory
-	packet->_messageFactory = _messageFactory;
-	// Add messages to connection packet
-	memcpy(&packet->_channelEntry, &_channel, sizeof(ChannelPacket));
+	//packet->_messageFactory = _messageFactory;
 
+	// Add messages to connection packet
+
+	ChannelPacket* channel_packet = new ChannelPacket();
+	_channel->GetPacketData(*channel_packet, 0);
+
+	memcpy(&packet->_channelEntry, &channel_packet, sizeof(ChannelPacket*));
+	memcpy(&packet->_messageFactory, &_messageFactory, sizeof(MessageFactory*));
 
 	return packet;
 }

@@ -2,11 +2,13 @@
 
 #include "network_serializable.h"
 
-template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageFactory& mf, int channels)
+template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageFactory* mf, int channels)
 {
 	// Serialize bool if has messages
 	// Serialize number of messages
 	// For each
+
+	//numMessages = 0;
 
 	bool hasMessages = Stream::IsWriting && numMessages > 0;
 
@@ -16,17 +18,17 @@ template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageF
 	{
 		stream.SerializeInteger(numMessages);
 
-		for (int i = 0; i < numMessages; i++)
+		for (uint32_t i = 0; i < numMessages; i++)
 		{
 			uint32_t type;
 			if (Stream::IsWriting)
 				type = messages[i]->GetType();
 
-			stream.SerializeInteger(type, 0, mf._messageTypes);
+			stream.SerializeInteger(type, 0, mf->_messageTypes);
 
 			if (Stream::IsReading) 
 			{
-				NMessage* message = mf.Create(type);
+				NMessage* message = mf->Create(type);
 				messages.push_back(message);
 			}
 			if (messages[i])
@@ -64,7 +66,7 @@ int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 		return 0;
 
 	int bitsUsed = 0;
-	int numMessages = 0;
+	uint32_t numMessages = 0;
 
 
 	std::vector<NMessage*> messages;
@@ -86,18 +88,19 @@ int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 	}
 
 
+
+	data.numMessages = { (uint32_t)0 };
+	data.messages = { messages };
+
 	if (numMessages == 0)
 		return 0;
-
-	data.numMessages = numMessages;
-	data.messages = { messages };
 
 	return 1;
 }
 
 void Channel::ProcessPacketData(const ChannelPacket & data)
 {
-	for (int i = 0; i < data.numMessages; i++)
+	for (uint32_t i = 0; i < data.numMessages; i++)
 	{
 		NMessage* message = data.messages[i];
 
@@ -107,12 +110,12 @@ void Channel::ProcessPacketData(const ChannelPacket & data)
 	}
 }
 
-bool ChannelPacket::SerializeInternal(InStream & stream, MessageFactory & mf, int channels)
+bool ChannelPacket::SerializeInternal(InStream & stream, MessageFactory * mf, int channels)
 {
 	return Serialize(stream, mf, channels);
 }
 
-bool ChannelPacket::SerializeInternal(OStream & stream, MessageFactory & mf, int channels)
+bool ChannelPacket::SerializeInternal(OStream & stream, MessageFactory * mf, int channels)
 {
 	return Serialize(stream, mf, channels);
 }

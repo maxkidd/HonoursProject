@@ -14,7 +14,7 @@ using namespace asio::ip;
 class Connection
 {
 public:
-	Connection(udp::endpoint endpoint, PacketFactory& pf, MessageFactory& mf);
+	Connection(udp::endpoint endpoint, PacketFactory& pf, MessageFactory* mf);
 	~Connection();
 
 	ConnectionPacket* GeneratePacket();

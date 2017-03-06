@@ -9,17 +9,15 @@ class ChannelPacket
 {
 public:
 	// Serialize functions
-	template <typename Stream> bool Serialize(Stream& stream, MessageFactory& mf, int channels);
+	template <typename Stream> bool Serialize(Stream& stream, MessageFactory* mf, int channels);
 
-	bool SerializeInternal(InStream& stream, MessageFactory& mf, int channels);
-	bool SerializeInternal(OStream& stream, MessageFactory& mf, int channels);
+	bool SerializeInternal(InStream& stream, MessageFactory* mf, int channels);
+	bool SerializeInternal(OStream& stream, MessageFactory* mf, int channels);
 private:
 	friend class Channel;
 
-	uint32_t numMessages;
 	std::vector<NMessage*> messages;
-
-	
+	uint32_t numMessages = 0;
 };
 
 class ChannelListener

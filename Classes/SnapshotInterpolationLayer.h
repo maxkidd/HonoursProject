@@ -30,7 +30,7 @@ private:
 
 	cocos2d::LabelTTF* _statusLabel;
 
-	NetworkDebugDataSource _netDebugData;
+	NetworkDebugDataSource* _netDebugData;
 	TableView* _tableView = nullptr;
 
 	float _networkTimer = 0.0f;

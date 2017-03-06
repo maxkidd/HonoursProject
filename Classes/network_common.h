@@ -37,14 +37,17 @@ public:
 class ConnectionPacket : public Packet
 {
 public:
-	ChannelPacket* _channelEntry; // Channel packet that holds messages
-	MessageFactory* _messageFactory;
+	ChannelPacket* _channelEntry = nullptr; // Channel packet that holds messages
+	MessageFactory* _messageFactory = nullptr;
 
 	ConnectionPacket() {}
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
-		if (!_channelEntry->Serialize(stream, *_messageFactory, 1));
+		assert(_channelEntry);
+		assert(_messageFactory);
+
+		if (!_channelEntry->Serialize(stream, _messageFactory, 1));
 		{
 			// Could not serilize
 			return false;
@@ -130,8 +133,8 @@ enum SnapshotMessageTypes
 };
 
 MESSAGE_FACTORY_START(SnapshotMessageFactory, MessageFactory, SNAPSHOT_MESSAGE_MAX);
-//	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_NULL, SnapshotBoxMessage);
-//	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_UPDATE_BOX, SnapshotBoxMessage);
+	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_NULL, SnapshotBoxMessage);
+	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_UPDATE_BOX, SnapshotBoxMessage);
 MESSAGE_FACTORY_END();
 
 #endif

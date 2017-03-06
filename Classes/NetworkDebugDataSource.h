@@ -5,6 +5,7 @@
 #include "cocos-ext.h"
 
 #include <vector>
+#include <list>
 
 using namespace cocos2d;
 using namespace cocos2d::extension;
@@ -18,7 +19,9 @@ enum NetworkDebugType
 class NetworkDebugDataSource : public TableViewDataSource
 {
 private:
-	std::vector<std::pair<NetworkDebugType,std::string>> _debugData;
+	int _numCells = 0;
+
+	std::deque<std::pair<NetworkDebugType,std::string>> _debugData;
 public:
 	void createEntry(std::string str, NetworkDebugType type);
 
