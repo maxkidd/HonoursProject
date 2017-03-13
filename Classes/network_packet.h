@@ -67,10 +67,10 @@ public:																				\
 
 
 // Write packet to buffer
-int WritePacket(Packet* packet, void* buffer, int size);
+int WritePacket(StreamContext* context, Packet* packet, void* buffer, int size);
 
 // Read packet from buffer
-Packet* ReadPacket(PacketFactory* pf, void* buffer, int size);
+Packet* ReadPacket(StreamContext* context, PacketFactory* pf, void* buffer, int size);
 
 
 #endif

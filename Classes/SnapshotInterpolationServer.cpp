@@ -1,6 +1,6 @@
 #include "SnapshotInterpolationServer.h"
 
-SnapshotServer::SnapshotServer(NetworkDebugDataSource* _debugData) : _transport(new SocketTransport(&_packetFactory, 1500))
+SnapshotServer::SnapshotServer(NetworkDebugDataSource* _debugData) : _transport(new SocketTransport(&_packetFactory, &_messageFactory, 1500))
 {
 	_transport->SetDebugService(_debugData);
 }

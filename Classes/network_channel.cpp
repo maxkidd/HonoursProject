@@ -10,15 +10,18 @@ template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageF
 
 	//numMessages = 0;
 
-	bool hasMessages = Stream::IsWriting && numMessages > 0;
+	uint32_t hasMessages = Stream::IsWriting && numMessages > 0;
 
-	SerializeBool(stream, hasMessages);
-
+	stream.SerializeBits(hasMessages, 1);
+	stream.SerializeInteger(numMessages);
 	if (hasMessages)
 	{
-		stream.SerializeInteger(numMessages);
 
-		for (uint32_t i = 0; i < numMessages; i++)
+
+		//stream.SerializeInteger(type, 0, mf->_messageTypes);
+		//messages[i]->SerializeInternal(stream);
+
+		/*for (uint32_t i = 0; i < numMessages; i++)
 		{
 			uint32_t type;
 			if (Stream::IsWriting)
@@ -33,7 +36,7 @@ template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageF
 			}
 			if (messages[i])
 				messages[i]->SerializeInternal(stream);
-		}
+		}*/
 	}
 	
 	return true;
@@ -103,13 +106,13 @@ int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 
 void Channel::ProcessPacketData(const ChannelPacket & data)
 {
-	for (uint32_t i = 0; i < data.numMessages; i++)
+	//for (uint32_t i = 0; i < data.numMessages; i++)
 	{
-		NMessage* message = data.messages[i];
+		//NMessage* message = data.messages[i];
 
-		assert(message);
+		//assert(message);
 		
-		_recvQueue.push(message);
+		//_recvQueue.push(message);
 	}
 }
 

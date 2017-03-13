@@ -5,6 +5,7 @@
 #include "asio\asio.hpp"
 
 #include "network_packet.h"
+#include "network_message.h"
 
 #include "NetworkDebugDataSource.h"
 
@@ -26,7 +27,12 @@ struct PacketInfo
 class BaseTransport
 {
 public:
-	BaseTransport(PacketFactory* packetFactory) : _packetFactory(packetFactory), max_packet_size_(100) {}
+	BaseTransport(PacketFactory* packetFactory, MessageFactory* messageFactory) 
+		: _packetFactory(packetFactory), _messageFactory(messageFactory), max_packet_size_(100)
+	{
+		_context._packetFactory = packetFactory;
+		_context._messageFactory = messageFactory;
+	}
 	virtual ~BaseTransport() {}
 
 	Packet* CreatePacket();
@@ -49,9 +55,10 @@ private:
 	std::queue<PacketInfo> receive_queue_;
 
 	PacketFactory* _packetFactory;
+	MessageFactory* _messageFactory;
 
 	NetworkDebugDataSource* _debugData;
-
+	StreamContext _context;
 	int max_packet_size_;
 };
 
@@ -59,7 +66,7 @@ class SocketTransport : public BaseTransport
 {
 public:
 	//SocketTransport(PacketFactory* packetFactory);
-	SocketTransport(PacketFactory* packetFactory, unsigned short port = 0);
+	SocketTransport(PacketFactory * packetFactory, MessageFactory* messageFactory, unsigned short port = 0);
 	asio::io_service* GetIOService() { return &io_service_; }
 protected:
 	virtual int InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes);

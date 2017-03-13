@@ -1,7 +1,7 @@
 #include "SnapshotInterpolationClient.h"
 
 SnapshotClient::SnapshotClient(NetworkDebugDataSource* _debugData) :
-	_state(CLIENT_SLEEP), _transport(new SocketTransport(&_packetFactory))
+	_state(CLIENT_SLEEP), _transport(new SocketTransport(&_packetFactory, &_messageFactory))
 {
 	_transport->SetDebugService(_debugData);
 }

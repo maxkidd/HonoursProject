@@ -13,6 +13,7 @@ public:
 
 	bool SerializeInternal(InStream& stream, MessageFactory* mf, int channels);
 	bool SerializeInternal(OStream& stream, MessageFactory* mf, int channels);
+
 private:
 	friend class Channel;
 

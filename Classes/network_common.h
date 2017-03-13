@@ -40,14 +40,22 @@ public:
 	ChannelPacket* _channelEntry = nullptr; // Channel packet that holds messages
 	MessageFactory* _messageFactory = nullptr;
 
-	ConnectionPacket() {}
+	ConnectionPacket() { }
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
-		assert(_channelEntry);
-		assert(_messageFactory);
 
-		if (!_channelEntry->Serialize(stream, _messageFactory, 1));
+		if (Stream::IsReading)
+		{
+			StreamContext* streamContext = stream.GetContext();
+			_channelEntry = new ChannelPacket();
+			_messageFactory = streamContext->_messageFactory;
+		}
+
+		assert(_messageFactory);
+		assert(_channelEntry);
+
+		if (!_channelEntry->Serialize(stream, _messageFactory, 1))
 		{
 			// Could not serilize
 			return false;
@@ -56,6 +64,9 @@ public:
 		return true;
 	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
+
+
+	void SetMessageFactory(MessageFactory& mf) { _messageFactory = &mf; }
 
 };
 class ConnectionAcceptPacket : public Packet
@@ -119,8 +130,8 @@ public:
 	{
 		stream.SerializeInteger(id);
 
-		SerializeFloat(stream, x);
-		SerializeFloat(stream, y);
+		//SerializeFloat(stream, x);
+		//SerializeFloat(stream, y);
 
 		return true;
 	}
@@ -136,8 +147,8 @@ public:
 	{
 		stream.SerializeInteger(id);
 
-		SerializeFloat(stream, x);
-		SerializeFloat(stream, y);
+		//SerializeFloat(stream, x);
+		//SerializeFloat(stream, y);
 		
 		return true;
 	}

@@ -2,8 +2,8 @@
 
 #include <cocos2d.h>
 
-SocketTransport::SocketTransport(PacketFactory * packetFactory, unsigned short port) : BaseTransport(packetFactory), io_service_(),
-socket_(io_service_, udp::endpoint(udp::v4(), port))
+SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* messageFactory, unsigned short port) 
+	: BaseTransport(packetFactory, messageFactory), io_service_(), socket_(io_service_, udp::endpoint(udp::v4(), port))
 {
 	socket_.non_blocking(true);
 }
@@ -77,7 +77,7 @@ void BaseTransport::WritePackets()
 		
 		// Write packet to temporary buffer
 		uint8_t* buffer = new uint8_t[max_packet_size_];
-		int bytesUsed = WritePacket(packetInfo.packet, buffer, max_packet_size_);
+		int bytesUsed = WritePacket(&_context, packetInfo.packet, buffer, max_packet_size_);
 
 		// Send packet to address
 		InternalSendPacket(packetInfo.endpoint, buffer, bytesUsed);
@@ -107,7 +107,7 @@ void BaseTransport::ReadPackets()
 		// All is good
 		PacketInfo packetInfo;
 		packetInfo.endpoint = endpoint;
-		packetInfo.packet = ReadPacket(_packetFactory, buffer, bytesReceived);
+		packetInfo.packet = ReadPacket(&_context, _packetFactory, buffer, bytesReceived);
 		
 		receive_queue_.push(packetInfo);
 

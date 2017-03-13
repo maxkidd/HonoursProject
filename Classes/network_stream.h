@@ -6,7 +6,26 @@
 #include <stdint.h>
 using namespace std;
 
-class OStream
+class MessageFactory;
+class PacketFactory;
+
+struct StreamContext
+{
+	MessageFactory* _messageFactory = nullptr;
+	PacketFactory* _packetFactory = nullptr;
+};
+
+class BaseStream
+{
+public:
+	void SetContext(StreamContext* context) { _context = context; };
+	StreamContext* GetContext() { return _context; };
+
+private:
+	StreamContext* _context;
+};
+
+class OStream : public BaseStream
 {
 public:
 	enum { IsWriting = 1 };
@@ -57,7 +76,7 @@ private:
 	BitWrite _bitWriter;
 };
 
-class InStream
+class InStream : public BaseStream
 {
 public:
 	enum { IsWriting = 0 };

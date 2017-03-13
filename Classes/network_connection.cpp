@@ -17,7 +17,7 @@ Connection::~Connection()
 
 ConnectionPacket * Connection::GeneratePacket()
 {
-	ConnectionPacket* packet = (ConnectionPacket*)_packetFactory->Create(CLIENT_SERVER_PACKET_CONNECTION);;
+	ConnectionPacket* packet = (ConnectionPacket*)_packetFactory->Create(CLIENT_SERVER_PACKET_CONNECTION);
 
 
 	// Add messages to connection packet
