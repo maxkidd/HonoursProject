@@ -33,7 +33,7 @@ ConnectionPacket * Connection::GeneratePacket()
 
 bool Connection::ProcessPacket(ConnectionPacket * packet)
 {
-	_channel->ProcessPacketData(*packet->_channelEntry);
+	_channel->ProcessPacketData(*(packet->_channelEntry));
 
 	return true;
 }

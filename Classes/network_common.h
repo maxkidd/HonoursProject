@@ -147,8 +147,8 @@ public:
 	{
 		stream.SerializeInteger(id);
 
-		//SerializeFloat(stream, x);
-		//SerializeFloat(stream, y);
+		SerializeFloat(stream, x);
+		SerializeFloat(stream, y);
 		
 		return true;
 	}

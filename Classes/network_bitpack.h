@@ -19,17 +19,21 @@ public:
 
 	void WriteBits(uint32_t data, int bits)
 	{
+		assert(bits > 0);
+		assert(bits <= 32);
 		assert(_bitsWritten + bits <= _numBits);
+		assert(uint64_t(data) <= ((1ULL << bits) - 1));
 		//_bitsRead += bits;
 
-		data &= (uint64_t(1) << bits) - 1;
+		//data &= (uint64_t(1) << bits) - 1;
+
 
 		_scratch |= uint64_t(data) << _scratchBits;
 		_scratchBits += bits;
 
 		if (_scratchBits >= 32)
 		{
-			_buffer[_wordIndex] = asio::detail::socket_ops::host_to_network_long(uint32_t(_scratch & 0xFFFFFFFF));
+			_buffer[_wordIndex] = asio::detail::socket_ops::host_to_network_short(uint32_t(_scratch & 0xFFFFFFFF));
 			_scratch >>= 32;
 			_scratchBits -= 32;
 			_wordIndex++;
@@ -41,7 +45,7 @@ public:
 	{
 		if (_scratchBits != 0)
 		{
-			_buffer[_wordIndex] = asio::detail::socket_ops::host_to_network_long(uint32_t(_scratch & 0xFFFFFFFF));
+			_buffer[_wordIndex] = asio::detail::socket_ops::host_to_network_short(uint32_t(_scratch & 0xFFFFFFFF));
 			_scratch >>= 32;
 			_scratchBits -= 32;
 			_wordIndex++;
@@ -75,16 +79,22 @@ public:
 
 	uint32_t ReadBits(int bits)
 	{
+		assert(bits > 0);
+		assert(bits <= 32);
 		assert(_bitsRead + bits <= _numBits);
 
 		_bitsRead += bits;
 
+		assert(_scratchBits >= 0 && _scratchBits <= 64);
+
 		if (_scratchBits < bits)
 		{
-			_scratch |= asio::detail::socket_ops::network_to_host_long(_buffer[_wordIndex]) << _scratchBits;
+			_scratch |= uint64_t(asio::detail::socket_ops::network_to_host_short(_buffer[_wordIndex])) << _scratchBits;
 			_scratchBits += 32;
 			_wordIndex++;
 		}
+
+		assert(_scratchBits >= bits);
 
 		const uint32_t returnVal = _scratch & ((uint64_t(1) << bits) - 1);
 

@@ -44,12 +44,7 @@ public:
 		assert(value >= min_value);
 		assert(value <= max_value);
 
-		uint32_t numDiff = (max_value - min_value);
-		int bits = 0;
-		while (numDiff >>= 1)
-		{
-			bits++;
-		}
+		int bits = (min_value == max_value) ? 0 : log2(max_value - min_value) + 1;
 		
 		value -= min_value;
 
@@ -93,16 +88,13 @@ public:
 	{
 		assert(min_value < max_value);
 
-		uint32_t numDiff = (max_value - min_value);
-		int bits = 0;
-		while (numDiff >>= 1)
-		{
-			bits++;
-		}
+
+		int bits = (min_value == max_value) ? 0 : log2(max_value - min_value) + 1;
+
 		assert(bits <= 32);
 		uint32_t readValue = _bitReader.ReadBits(bits);
 
-		value = readValue + min_value;
+		value = (uint32_t) readValue + min_value;
 
 		return true;
 	}
