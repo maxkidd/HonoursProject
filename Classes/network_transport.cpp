@@ -77,6 +77,8 @@ void BaseTransport::WritePackets()
 		
 		// Write packet to temporary buffer
 		uint8_t* buffer = new uint8_t[max_packet_size_];
+		memset(buffer, 0, sizeof(uint8_t)*max_packet_size_);
+
 		int bytesUsed = WritePacket(&_context, packetInfo.packet, buffer, max_packet_size_);
 
 		// Send packet to address
@@ -93,6 +95,8 @@ void BaseTransport::ReadPackets()
 	while (true)
 	{
 		uint8_t* buffer = new uint8_t[max_packet_size_];
+		memset(buffer, 0, sizeof(uint8_t)*max_packet_size_);
+
 		asio::ip::basic_endpoint<udp> endpoint;
 
 		int bytesReceived = InternalReceivePacket(endpoint, buffer, max_packet_size_);

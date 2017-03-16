@@ -2,7 +2,7 @@
 
 #include "network_common.h"
 
-Packet* PacketFactory::Create(int type)
+Packet* PacketFactory::Create(uint32_t type)
 {
 	Packet* packet = CreatePacket(type);
 	
@@ -12,7 +12,7 @@ Packet* PacketFactory::Create(int type)
 	return packet;
 }
 
-void PacketFactory::SetPacketType(Packet* packet, int type)
+void PacketFactory::SetPacketType(Packet* packet, uint32_t type)
 {
 	packet->SetType(type);
 }
@@ -39,11 +39,7 @@ int WritePacket(StreamContext* context, Packet * packet, void * buffer, int size
 	
 	uint32_t packetType = packet->GetType();
 
-	uint32_t r = 1;
-	stream.SerializeInteger(r, 0, 0x0FFF);
-	
 	// Write packet type to stream
-	//stream.SerializeInteger(packetType);
 	stream.SerializeInteger(packetType, 0, CLIENT_SERVER_MAX_PACKETS - 1);
 
 	packet->SerializeInternal(stream);
@@ -59,12 +55,7 @@ Packet * ReadPacket(StreamContext* context, PacketFactory* pf, void * buffer, in
 	InStream stream{ (uint32_t*)buffer,size };
 	stream.SetContext(context);
 
-	uint32_t r;
-	stream.SerializeInteger(r, 0, 0x0FFF);
-
-
 	uint32_t packetType;
-	//stream.SerializeInteger(packetType);
 	stream.SerializeInteger(packetType, 0, CLIENT_SERVER_MAX_PACKETS - 1);
 
 	Packet* packet = pf->Create(packetType);
