@@ -29,7 +29,7 @@ public:
 
 		if (_scratchBits >= 32)
 		{
-			_buffer[_wordIndex] = asio::detail::socket_ops::host_to_network_short(uint32_t(_scratch & 0xFFFFFFFF));
+			_buffer[_wordIndex] = asio::detail::socket_ops::host_to_network_long(uint32_t(_scratch & 0xFFFFFFFF));
 			_scratch >>= 32;
 			_scratchBits -= 32;
 			_wordIndex++;
@@ -43,18 +43,25 @@ public:
 		{
 			assert(_scratchBits <= 32);
 
-			WriteBits((uint32_t)0, GetAlignBits());
+			uint32_t bits = GetAlignBits();
 
-			_buffer[_wordIndex] = asio::detail::socket_ops::host_to_network_short(uint32_t(_scratch & 0xFFFFFFFF));
-			_scratch >>= _scratchBits;
-			_scratchBits = 0;
+			_scratch |= uint64_t(0) << _scratchBits;
+			_scratchBits += bits;
+
+			assert(_scratchBits == 32);
+
+			_buffer[_wordIndex] = asio::detail::socket_ops::host_to_network_long(uint32_t(_scratch & 0xFFFFFFFF));
+			_scratch >>= 32;
+			_scratchBits -= 32;
 			_wordIndex++;
+
+			_bitsWritten += bits;
 		}
 	}
 
 	int GetAlignBits()
 	{
-		return (16 - (_bitsWritten % 16)) % 16;
+		return (32 - (_bitsWritten % 32)) % 32;
 	}
 
 	int GetBytesWritten()
@@ -94,8 +101,9 @@ public:
 
 		if (_scratchBits < bits)
 		{
-			_scratch |= uint64_t(asio::detail::socket_ops::network_to_host_short(_buffer[_wordIndex])) << _scratchBits;
+			_scratch |= uint64_t(asio::detail::socket_ops::network_to_host_long(_buffer[_wordIndex])) << _scratchBits;
 			_scratchBits += 32;
+			_wordIndex++;
 		}
 
 		assert(_scratchBits >= bits);
@@ -105,7 +113,6 @@ public:
 
 		_scratch >>= bits;
 		_scratchBits -= bits;
-		_wordIndex++;
 
 		return returnVal;
 	}

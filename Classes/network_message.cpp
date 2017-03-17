@@ -1,6 +1,6 @@
 #include "network_message.h"
 
-NMessage* MessageFactory::Create(int type)
+NMessage* MessageFactory::Create(uint32_t type)
 {
 	NMessage* message = CreateMessage(type);
 
@@ -10,7 +10,7 @@ NMessage* MessageFactory::Create(int type)
 	return message;
 }
 
-void MessageFactory::SetMessageType(NMessage* message, int type)
+void MessageFactory::SetMessageType(NMessage* message, uint32_t type)
 {
 	message->SetType(type);
 }
@@ -20,3 +20,13 @@ void MessageFactory::SetFactory(NMessage * packet)
 	packet->SetMessageFactory(*this);
 }
 
+
+bool NMessage::Serialize(InStream & stream)
+{
+	return true;
+}
+
+bool NMessage::Serialize(OStream & stream)
+{
+	return true;
+}

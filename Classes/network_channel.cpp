@@ -12,37 +12,37 @@ template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageF
 	uint32_t hasMessages = Stream::IsWriting && numMessages > 0;
 
 	stream.SerializeInteger(hasMessages, 0, 1);
-	stream.SerializeInteger(numMessages);
 
 	if (hasMessages)
 	{
-		//uint32_t numOfMessages = numMessages;
+		stream.SerializeInteger(numMessages, 0, 256);
 
-		//stream.SerializeInteger(type, 0, mf->_messageTypes);
-		//messages[i]->SerializeInternal(stream);
-
-		//int initialMessageSize = messages.size();
-
-		if (Stream::IsReading)
-			messages.clear();
+		//if (Stream::IsReading)
+			//messages.clear();
+		uint32_t type;
 
 		for (uint32_t i = 0; i < numMessages; i++)
 		{
-			uint32_t type = 0;
+			// = -1;
 
 			if (Stream::IsWriting)
 				type = messages[i]->GetType();
 
-			//stream.SerializeInteger(type, 0, mf->_messageTypes);
+			stream.SerializeInteger(type, 0, mf->_messageTypes);
 
-			if (Stream::IsReading) 
-			{
-				NMessage* message = mf->Create(type);
-				messages.push_back(message);
-			}
+			NMessage* message;
+			message = mf->Create(type);
+			if (Stream::IsWriting)
+				message = messages[i];
+			else
+				message = mf->Create(type);
 			
-			assert(messages[i]);
-			//messages[i]->SerializeInternal(stream);
+			assert(message);
+			message->SerializeInternal(stream);
+
+			if (Stream::IsReading)
+				messages.push_back(message);
+
 		}
 	}
 	

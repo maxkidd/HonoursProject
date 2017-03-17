@@ -128,9 +128,9 @@ public:
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
-		stream.SerializeInteger(id);
+		stream.SerializeInteger(id, 0, 255);
 
-		//SerializeFloat(stream, x);
+		SerializeFloat(stream, x);
 		//SerializeFloat(stream, y);
 
 		return true;
@@ -147,7 +147,7 @@ public:
 	{
 		stream.SerializeInteger(id);
 
-		SerializeFloat(stream, x);
+		//SerializeFloat(stream, x);
 		SerializeFloat(stream, y);
 		
 		return true;
@@ -158,14 +158,14 @@ public:
 enum SnapshotMessageTypes
 {
 	SNAPSHOT_MESSAGE_ERROR = -1,
-	SNAPSHOT_MESSAGE_CREATE_BOX = 0,		// Box message
-	SNAPSHOT_MESSAGE_UPDATE_BOX,		// Box message
+	SNAPSHOT_MESSAGE_MOVE_BOX = 0,		// Box message
+	SNAPSHOT_MESSAGE_CREATE_BOX,		// Box message
 	SNAPSHOT_MESSAGE_MAX
 };
 
 MESSAGE_FACTORY_START(SnapshotMessageFactory, MessageFactory, SNAPSHOT_MESSAGE_MAX);
+	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_MOVE_BOX, SnapshotBoxMove);
 	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_CREATE_BOX, SnapshotBoxCreate);
-	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_UPDATE_BOX, SnapshotBoxMove);
 MESSAGE_FACTORY_END();
 
 #endif
