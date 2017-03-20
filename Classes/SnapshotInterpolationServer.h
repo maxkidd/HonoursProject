@@ -36,7 +36,7 @@ class SnapshotServer
 	};
 
 private:
-	SnapshotInterpolationSimulation _simulation;
+	S_SnapshotInterpolationSimulation* _simulation;
 
 	SocketTransport* _transport = nullptr;
 
@@ -56,7 +56,7 @@ private:
 	ClientData _clientData[MAX_SLOTS];
 	Connection* _connections[MAX_SLOTS];
 public:
-	SnapshotServer(NetworkDebugDataSource* _debugData);
+	SnapshotServer(NetworkDebugDataSource* debugData, S_SnapshotInterpolationSimulation* simulation);
 	virtual ~SnapshotServer();
 
 	bool Start();

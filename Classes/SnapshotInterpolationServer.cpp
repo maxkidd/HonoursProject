@@ -1,8 +1,9 @@
 #include "SnapshotInterpolationServer.h"
 
-SnapshotServer::SnapshotServer(NetworkDebugDataSource* _debugData) : _transport(new SocketTransport(&_packetFactory, &_messageFactory, 1500))
+SnapshotServer::SnapshotServer(NetworkDebugDataSource* debugData, S_SnapshotInterpolationSimulation* simulation) 
+	: _transport(new SocketTransport(&_packetFactory, &_messageFactory, 1500)), _simulation(simulation)
 {
-	_transport->SetDebugService(_debugData);
+	_transport->SetDebugService(debugData);
 }
 
 SnapshotServer::~SnapshotServer()
@@ -41,7 +42,7 @@ void SnapshotServer::GenerateSnapshots()
 		if (!_clientConnected[i] || !_connections[i])
 			continue;
 
-		_simulation.GenerateSnapshotMessages(&_messageFactory, _connections[i]);
+		_simulation->GenerateSnapshotMessages(&_messageFactory, _connections[i]);
 
 	}
 }

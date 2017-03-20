@@ -4,30 +4,68 @@
 
 #include <stdint.h>
 #include <vector>
+#include <cocos2d.h>
 #include <Box2D\Box2D.h>
+#include "Box2DTestBed\GLES-Render.h"
 
 #include "network_common.h"
 #include "network_connection.h"
 
 struct WorldSnapshot
 {
-	std::vector<std::pair<uint32_t, b2Vec2>> boxes;
+	std::vector<std::pair<uint32_t, b2Transform*>> boxes; // B2VEC2  -> BoxData
 };
 
-class SnapshotInterpolationSimulation
+class SnapshotInterpolationSimulation : public cocos2d::Layer
 {
 private:
-	b2World _world;
-	std::deque<WorldSnapshot> snapshots;
 public:
 	SnapshotInterpolationSimulation();
 
-	bool ProcessSnapshotMessages(Connection * con);
-	void GenerateSnapshotMessages(MessageFactory* mf, Connection* con);
+	virtual bool ProcessSnapshotMessages(Connection * con);
+	virtual void GenerateSnapshotMessages(MessageFactory* mf, Connection* con);
+	virtual void Step() = 0;
 
 	uint32_t CreateBox();
 	bool MoveBox(uint32_t id, b2Vec2 pos);
 };
 
+// Server
+class S_SnapshotInterpolationSimulation : public SnapshotInterpolationSimulation
+{
+private:
+	b2World* _world; // Box
+	GLESDebugDraw _debugDraw;
+	b2Body* _ground;
+	int _stepCount;
+	const int _count = 10;
+	bool _pause = true;
+	static uint32_t id;
+public:
+	CREATE_FUNC(S_SnapshotInterpolationSimulation);
+	S_SnapshotInterpolationSimulation();
+
+	virtual void GenerateSnapshotMessages(MessageFactory* mf, Connection* con);
+
+	virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags);
+	virtual void Step();
+};
+
+// Client
+class C_SnapshotInterpolationSimulation : public SnapshotInterpolationSimulation
+{
+private:
+	GLESDebugDraw _debugDraw;
+	std::deque<WorldSnapshot> snapshots; // Queue of snapshots
+
+	std::map<uint32_t, b2Transform> _boxes;
+public:
+	C_SnapshotInterpolationSimulation() {};
+
+	virtual bool ProcessSnapshotMessages(Connection * con);
+	virtual void Step() {};
+
+	CREATE_FUNC(C_SnapshotInterpolationSimulation);
+};
 
 #endif

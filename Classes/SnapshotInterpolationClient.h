@@ -37,7 +37,7 @@ class SnapshotClient
 	};
 
 private:
-	SnapshotInterpolationSimulation _simulation;
+	C_SnapshotInterpolationSimulation* _simulation;
 
 	SocketTransport* _transport = nullptr;
 
@@ -53,7 +53,7 @@ private:
 
 	Connection* _connection = nullptr;
 public:
-	SnapshotClient(NetworkDebugDataSource* _debugData);// TODO: File out stream for storage
+	SnapshotClient(NetworkDebugDataSource* debugData, C_SnapshotInterpolationSimulation* simulation);// TODO: File out stream for storage
 	virtual ~SnapshotClient();
 
 	void Init(const char* ip = "localhost", const char* port = "1500");

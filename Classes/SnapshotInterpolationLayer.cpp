@@ -16,7 +16,8 @@ using namespace cocos2d::extension;
 SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr),
 server(nullptr), client(nullptr)
 {
-
+	_simulation = C_SnapshotInterpolationSimulation::create();
+	addChild(_simulation);
 }
 
 SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
@@ -132,6 +133,14 @@ void SnapshotInterpolationLayer::update(float dt)
 		_statusLabel->setString(debugString);
 	}
 
+	_physicsTimer += dt;
+	while (_physicsTimer > 1.0f / 60.0f)
+	{
+		_simulation->Step();
+
+		_physicsTimer -= (1.0f / 60.0f);
+	}
+
 }
 
 void SnapshotInterpolationLayer::createNetworkStatsLabel()
@@ -192,12 +201,26 @@ void SnapshotInterpolationLayer::connectAsClient()
 				delete server;
 				server = nullptr;
 			}
-			if(!client)
-				client = new SnapshotClient(_netDebugData);
+
+
+			if (client)
+			{
+				delete client;
+			}
+
+			if (_simulation)
+				removeChild(_simulation);
+			_simulation = C_SnapshotInterpolationSimulation::create();
+			addChild(_simulation, 9999);
+
+			client = new SnapshotClient(_netDebugData, (C_SnapshotInterpolationSimulation*)_simulation);
 
 			client->Init(ipText->getString().c_str(), portText->getString().c_str());
 
+
 			client->Start();
+
+
 
 			connectNode->removeFromParentAndCleanup(true);
 		}
@@ -236,8 +259,17 @@ void SnapshotInterpolationLayer::connectAsServer()
 		delete client;
 		client = nullptr;
 	}
-	if(!server)
-		server = new SnapshotServer(_netDebugData);
+	if (server)
+	{
+		delete server;
+	}
+	if (_simulation)
+		removeChild(_simulation);
+	_simulation = S_SnapshotInterpolationSimulation::create();
+	addChild(_simulation, 9999);
+	
+	server = new SnapshotServer(_netDebugData,(S_SnapshotInterpolationSimulation*)_simulation);
+
 
 	server->Start();
 }

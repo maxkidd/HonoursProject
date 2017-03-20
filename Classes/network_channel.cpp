@@ -20,18 +20,15 @@ template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageF
 		//if (Stream::IsReading)
 			//messages.clear();
 		uint32_t type;
+		NMessage* message;
 
 		for (uint32_t i = 0; i < numMessages; i++)
 		{
-			// = -1;
-
 			if (Stream::IsWriting)
 				type = messages[i]->GetType();
 
 			stream.SerializeInteger(type, 0, mf->_messageTypes);
 
-			NMessage* message;
-			message = mf->Create(type);
 			if (Stream::IsWriting)
 				message = messages[i];
 			else

@@ -1,9 +1,9 @@
 #include "SnapshotInterpolationClient.h"
 
-SnapshotClient::SnapshotClient(NetworkDebugDataSource* _debugData) :
-	_state(CLIENT_SLEEP), _transport(new SocketTransport(&_packetFactory, &_messageFactory))
+SnapshotClient::SnapshotClient(NetworkDebugDataSource* debugData, C_SnapshotInterpolationSimulation* simulation) :
+	_state(CLIENT_SLEEP), _transport(new SocketTransport(&_packetFactory, &_messageFactory)), _simulation(simulation)
 {
-	_transport->SetDebugService(_debugData);
+	_transport->SetDebugService(debugData);
 }
 
 
@@ -47,8 +47,8 @@ void SnapshotClient::Reset()
 
 void SnapshotClient::ProcessSnapshots()
 {
-	//if(_state == CLIENT_CONNECTED) // Temp, will cause crashes if connection closed
-		//_simulation.ProcessSnapshotMessages(_connection);
+	if(_state == CLIENT_CONNECTED)
+		_simulation->ProcessSnapshotMessages(_connection);
 }
 
 void SnapshotClient::SendPackets()

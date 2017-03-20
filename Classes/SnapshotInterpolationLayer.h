@@ -21,19 +21,21 @@
 
 #include "SnapshotInterpolationClient.h"
 #include "SnapshotInterpolationServer.h"
+#include "SnapshotInterpolationSimulation.h"
 
 class SnapshotInterpolationLayer : public cocos2d::Layer
 {
 private:
 	SnapshotServer* server;
 	SnapshotClient* client;
-
+	SnapshotInterpolationSimulation* _simulation;
 	cocos2d::LabelTTF* _statusLabel;
 
 	NetworkDebugDataSource* _netDebugData;
 	TableView* _tableView = nullptr;
 
 	float _networkTimer = 0.0f;
+	float _physicsTimer = 0.0f;
 
 public:
 	SnapshotInterpolationLayer();

@@ -28,7 +28,7 @@ class BaseTransport
 {
 public:
 	BaseTransport(PacketFactory* packetFactory, MessageFactory* messageFactory) 
-		: _packetFactory(packetFactory), _messageFactory(messageFactory), max_packet_size_(100)
+		: _packetFactory(packetFactory), _messageFactory(messageFactory), max_packet_size_(1400)
 	{
 		_context._packetFactory = packetFactory;
 		_context._messageFactory = messageFactory;
