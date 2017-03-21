@@ -131,7 +131,7 @@ public:
 		stream.SerializeInteger(id, 0, 255);
 
 		SerializeFloat(stream, x);
-		//SerializeFloat(stream, y);
+		SerializeFloat(stream, y);
 
 		return true;
 	}

@@ -1,6 +1,6 @@
 #include "SnapshotInterpolationSimulation.h"
 
-SnapshotInterpolationSimulation::SnapshotInterpolationSimulation() 
+SnapshotInterpolationSimulation::SnapshotInterpolationSimulation()
 {
 
 }
@@ -16,6 +16,8 @@ bool SnapshotInterpolationSimulation::ProcessSnapshotMessages(Connection * con)
 			//Process creation
 		{
 			SnapshotBoxCreate* create = (SnapshotBoxCreate*)message;
+			
+
 		}
 
 			break;
@@ -57,7 +59,7 @@ S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
 	: _debugDraw(15.0f)
 {
 	b2Vec2 gravity;
-	gravity.Set(0.0f, -10.0f);
+	gravity.Set(0.0f, -5.0f);
 	_world = new b2World(gravity);
 
 
@@ -89,7 +91,7 @@ S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
 		b2PolygonShape shape;
 		shape.SetAsBox(boxWidth, boxWidth);
 
-		b2Vec2 x(-7.0f, 0.75f);
+		b2Vec2 x(-7.0f, 100.0f);
 		b2Vec2 y;
 		b2Vec2 deltaX(0.5625f, 1.25f);
 		b2Vec2 deltaY(1.125f, 0.0f);
@@ -124,10 +126,11 @@ void S_SnapshotInterpolationSimulation::GenerateSnapshotMessages(MessageFactory 
 
 		uint32_t* id = (uint32_t*)body->GetUserData();
 		b2Vec2 pos = body->GetPosition();
+		//b2Transform transform = body->GetTransform();
 		
 		create->id = *id;
 		create->x = pos.x;
-		create->y = pos.x;
+		create->y = pos.y;
 		con->SendMsg(create);
 
 		prevBody = body;
@@ -173,10 +176,42 @@ void S_SnapshotInterpolationSimulation::Step()
 	_world->Step(timestep, 8, 3);
 	//_world->DrawDebugData();
 
+
 	if (timestep > 0.0f)
 	{
 		++_stepCount;
 	}
+}
+
+C_SnapshotInterpolationSimulation::C_SnapshotInterpolationSimulation() : _debugDraw(15.0f)
+{
+	_boxVertices[0] = b2Vec2(-0.5f, -0.5f);
+	_boxVertices[1] = b2Vec2(0.5f, -0.5f);
+	_boxVertices[2] = b2Vec2(0.5f, 0.5f);
+	_boxVertices[3] = b2Vec2(-0.5f, 0.5f);
+}
+
+void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
+{
+	// Render boxes
+	for (auto box : _boxes)
+	{
+		b2Transform t = box.second;
+		
+		b2Vec2 verts[4];
+		for (int i = 0; i < 4; ++i)
+		{
+			verts[i] = b2Mul(t, _boxVertices[i]);
+		}
+		//vertices[i] = b2Mul(xf, poly->m_vertices[i]);
+		_debugDraw.DrawPolygon(verts, 4, b2Color(0.5f, 0.5f, 0.9f));
+	}
+
+}
+
+void C_SnapshotInterpolationSimulation::Step()
+{
+	// Interpolation done here
 }
 
 bool C_SnapshotInterpolationSimulation::ProcessSnapshotMessages(Connection * con)
@@ -196,10 +231,10 @@ bool C_SnapshotInterpolationSimulation::ProcessSnapshotMessages(Connection * con
 			float x = create->x;
 			float y = create->y;
 
-			if (_boxes.find(id) != _boxes.end())
-				return false; // Already created
+			//if (_boxes.find(id) != _boxes.end())
+			//	return false; // Already created
 
-			_boxes[id] = b2Transform(b2Vec2(x, y), b2Rot(0));
+			_boxes[id].Set(b2Vec2(x, y), 0.0f);
 
 		}
 
@@ -208,6 +243,15 @@ bool C_SnapshotInterpolationSimulation::ProcessSnapshotMessages(Connection * con
 		{
 			// Process move
 			SnapshotBoxMove* move = (SnapshotBoxMove*)message;
+			uint32_t id = move->id;
+			float x = move->x;
+			float y = move->y;
+
+
+			if (auto box = _boxes.find(id) != _boxes.end())
+			{
+				_boxes[box].Set(b2Vec2(x, y), 0.0f);
+			}
 		}
 		break;
 		default:

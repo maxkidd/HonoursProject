@@ -91,9 +91,9 @@ void SnapshotInterpolationLayer::update(float dt)
 
 	_networkTimer += dt;
 
-	while (_networkTimer > 1.0f) // Client or Server tick
+	while (_networkTimer > (0.1f)) // Client or Server tick
 	{
-		_networkTimer -= (1.0f);
+		_networkTimer -= (0.1f);
 
 		if (server && server->IsActive()) // Server
 		{

@@ -38,8 +38,8 @@ private:
 	GLESDebugDraw _debugDraw;
 	b2Body* _ground;
 	int _stepCount;
-	const int _count = 10;
-	bool _pause = true;
+	const int _count = 15;
+	bool _pause = false;
 	static uint32_t id;
 public:
 	CREATE_FUNC(S_SnapshotInterpolationSimulation);
@@ -59,11 +59,14 @@ private:
 	std::deque<WorldSnapshot> snapshots; // Queue of snapshots
 
 	std::map<uint32_t, b2Transform> _boxes;
-public:
-	C_SnapshotInterpolationSimulation() {};
 
+	b2Vec2 _boxVertices[4];
+public:
+	C_SnapshotInterpolationSimulation();
+
+	virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags);
+	virtual void Step();
 	virtual bool ProcessSnapshotMessages(Connection * con);
-	virtual void Step() {};
 
 	CREATE_FUNC(C_SnapshotInterpolationSimulation);
 };
