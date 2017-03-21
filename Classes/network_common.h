@@ -125,6 +125,7 @@ class SnapshotBoxCreate : public NMessage
 public:
 	uint32_t id = 0;
 	float x, y = 0;
+	uint32_t rot = 0;
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
@@ -132,6 +133,7 @@ public:
 
 		SerializeFloat(stream, x);
 		SerializeFloat(stream, y);
+		stream.SerializeInteger(rot, 0, 360);
 
 		return true;
 	}

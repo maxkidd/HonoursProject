@@ -38,7 +38,7 @@ private:
 	GLESDebugDraw _debugDraw;
 	b2Body* _ground;
 	int _stepCount;
-	const int _count = 15;
+	const int _count = 12;
 	bool _pause = false;
 	static uint32_t id;
 public:

@@ -91,7 +91,7 @@ S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
 		b2PolygonShape shape;
 		shape.SetAsBox(boxWidth, boxWidth);
 
-		b2Vec2 x(-7.0f, 100.0f);
+		b2Vec2 x(0.0f, 50.0f);
 		b2Vec2 y;
 		b2Vec2 deltaX(0.5625f, 1.25f);
 		b2Vec2 deltaY(1.125f, 0.0f);
@@ -126,11 +126,18 @@ void S_SnapshotInterpolationSimulation::GenerateSnapshotMessages(MessageFactory 
 
 		uint32_t* id = (uint32_t*)body->GetUserData();
 		b2Vec2 pos = body->GetPosition();
+		
+		float rads = body->GetAngle();
+		float deg = rads * (180.0f / 3.14f);
+
+		
+
 		//b2Transform transform = body->GetTransform();
 		
 		create->id = *id;
 		create->x = pos.x;
 		create->y = pos.y;
+		create->rot = (uint32_t(deg) % 360);
 		con->SendMsg(create);
 
 		prevBody = body;
@@ -230,11 +237,13 @@ bool C_SnapshotInterpolationSimulation::ProcessSnapshotMessages(Connection * con
 			uint32_t id = create->id;
 			float x = create->x;
 			float y = create->y;
+			float deg = float(create->rot);
+			float rads = deg / (180.0f / 3.14f);
 
 			//if (_boxes.find(id) != _boxes.end())
 			//	return false; // Already created
 
-			_boxes[id].Set(b2Vec2(x, y), 0.0f);
+			_boxes[id].Set(b2Vec2(x, y), rads);
 
 		}
 
