@@ -122,6 +122,9 @@ void S_SnapshotInterpolationSimulation::GenerateSnapshotMessages(MessageFactory 
 
 	while (body)
 	{
+		if (!body->IsAwake()) // Continue to next box if sleeping
+			goto label_end;
+
 		SnapshotBoxCreate* create = (SnapshotBoxCreate*)mf->Create(SNAPSHOT_MESSAGE_CREATE_BOX);
 
 		uint32_t* id = (uint32_t*)body->GetUserData();
@@ -139,6 +142,8 @@ void S_SnapshotInterpolationSimulation::GenerateSnapshotMessages(MessageFactory 
 		create->y = pos.y;
 		create->rot = (uint32_t(deg) % 360);
 		con->SendMsg(create);
+
+	label_end:
 
 		prevBody = body;
 		body = body->GetNext();
