@@ -45,6 +45,18 @@ bool SnapshotInterpolationLayer::init()
 {
 	Layer::init();
 
+	// Listeners
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+
+	listener->onTouchBegan = CC_CALLBACK_2(SnapshotInterpolationLayer::onTouchBegan, this);
+	listener->onTouchMoved = CC_CALLBACK_2(SnapshotInterpolationLayer::onTouchMoved, this);
+	listener->onTouchEnded = CC_CALLBACK_2(SnapshotInterpolationLayer::onTouchEnded, this);
+
+	_eventDispatcher->addEventListenerWithFixedPriority(listener, -10);
+	_touchListener = listener;
+
+
 	Size winSize = Director::getInstance()->getWinSize();
 
 	// Menu
@@ -141,6 +153,24 @@ void SnapshotInterpolationLayer::update(float dt)
 		_physicsTimer -= (1.0f / 60.0f);
 	}
 
+}
+
+bool SnapshotInterpolationLayer::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * event)
+{
+	auto pos = convertToNodeSpace(touch->getLocation());
+	return _simulation->MouseDown(b2Vec2(pos.x / 15.0f, pos.y / 15.0f));;
+}
+
+void SnapshotInterpolationLayer::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
+{
+	auto pos = convertToNodeSpace(touch->getLocation());
+	return _simulation->MouseMove(b2Vec2(pos.x / 15.0f, pos.y / 15.0f));;
+}
+
+void SnapshotInterpolationLayer::onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * event)
+{
+	auto pos = convertToNodeSpace(touch->getLocation());
+	return _simulation->MouseUp(b2Vec2(pos.x / 15.0f, pos.y / 15.0f));;
 }
 
 void SnapshotInterpolationLayer::createNetworkStatsLabel()
