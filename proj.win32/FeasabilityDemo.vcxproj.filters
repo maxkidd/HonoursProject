@@ -108,6 +108,21 @@
     <ClCompile Include="..\Classes\SnapshotInterpolationSimulation.cpp">
       <Filter>src\SnapshotInterpolation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\StateSyncClient.cpp">
+      <Filter>src\StateSynchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\StateSyncLayer.cpp">
+      <Filter>src\StateSynchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\StateSyncServer.cpp">
+      <Filter>src\StateSynchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\StateSyncSimulation.cpp">
+      <Filter>src\StateSynchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\network_clientserver.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -364,6 +379,21 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SnapshotInterpolationSimulation.h">
       <Filter>src\SnapshotInterpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateSyncClient.h">
+      <Filter>src\StateSynchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateSyncLayer.h">
+      <Filter>src\StateSynchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateSyncServer.h">
+      <Filter>src\StateSynchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateSyncSimulation.h">
+      <Filter>src\StateSynchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\network_simulation.h">
+      <Filter>src\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

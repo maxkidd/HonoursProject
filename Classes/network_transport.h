@@ -44,6 +44,7 @@ public:
 	void ReadPackets();
 
 	void SetDebugService(NetworkDebugDataSource* dataSource) { _debugData = dataSource; }
+	asio::io_service* GetIOService() { return &_io_service; }
 protected:
 	// Internal receive functions to recieve packets from destination
 	virtual int InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes) = 0;
@@ -60,6 +61,8 @@ private:
 	NetworkDebugDataSource* _debugData;
 	StreamContext _context;
 	int max_packet_size_;
+protected:
+	asio::io_service _io_service;
 };
 
 class SocketTransport : public BaseTransport
@@ -67,13 +70,11 @@ class SocketTransport : public BaseTransport
 public:
 	//SocketTransport(PacketFactory* packetFactory);
 	SocketTransport(PacketFactory * packetFactory, MessageFactory* messageFactory, unsigned short port = 0);
-	asio::io_service* GetIOService() { return &io_service_; }
 protected:
 	virtual int InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes);
 	virtual bool InternalSendPacket(const udp::endpoint & endpoint, const void * data, int size);
 
 private:
-	asio::io_service io_service_;
 	udp::socket socket_;
 };
 

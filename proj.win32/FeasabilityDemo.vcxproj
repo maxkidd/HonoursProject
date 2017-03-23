@@ -164,6 +164,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\NetworkDebugView.cpp" />
     <ClCompile Include="..\Classes\NetworkLayer.cpp" />
     <ClCompile Include="..\Classes\network_channel.cpp" />
+    <ClCompile Include="..\Classes\network_clientserver.cpp" />
     <ClCompile Include="..\Classes\network_connection.cpp" />
     <ClCompile Include="..\Classes\network_message.cpp" />
     <ClCompile Include="..\Classes\network_packet.cpp" />
@@ -173,6 +174,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\SnapshotInterpolationLayer.cpp" />
     <ClCompile Include="..\Classes\SnapshotInterpolationServer.cpp" />
     <ClCompile Include="..\Classes\SnapshotInterpolationSimulation.cpp" />
+    <ClCompile Include="..\Classes\StateSyncClient.cpp" />
+    <ClCompile Include="..\Classes\StateSyncLayer.cpp" />
+    <ClCompile Include="..\Classes\StateSyncServer.cpp" />
+    <ClCompile Include="..\Classes\StateSyncSimulation.cpp" />
     <ClCompile Include="..\Classes\VisibleRect.cpp" />
     <ClCompile Include="..\Classes\WorldState.cpp" />
     <ClCompile Include="main.cpp" />
@@ -250,6 +255,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\network_message.h" />
     <ClInclude Include="..\Classes\network_packet.h" />
     <ClInclude Include="..\Classes\network_serializable.h" />
+    <ClInclude Include="..\Classes\network_simulation.h" />
     <ClInclude Include="..\Classes\network_stream.h" />
     <ClInclude Include="..\Classes\network_transport.h" />
     <ClInclude Include="..\Classes\Server.h" />
@@ -258,6 +264,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\SnapshotInterpolationLayer.h" />
     <ClInclude Include="..\Classes\SnapshotInterpolationServer.h" />
     <ClInclude Include="..\Classes\SnapshotInterpolationSimulation.h" />
+    <ClInclude Include="..\Classes\StateSyncClient.h" />
+    <ClInclude Include="..\Classes\StateSyncLayer.h" />
+    <ClInclude Include="..\Classes\StateSyncServer.h" />
+    <ClInclude Include="..\Classes\StateSyncSimulation.h" />
     <ClInclude Include="..\Classes\testResource.h" />
     <ClInclude Include="..\Classes\tests.h" />
     <ClInclude Include="..\Classes\VisibleRect.h" />

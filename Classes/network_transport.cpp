@@ -3,7 +3,7 @@
 #include <cocos2d.h>
 
 SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* messageFactory, unsigned short port) 
-	: BaseTransport(packetFactory, messageFactory), io_service_(), socket_(io_service_, udp::endpoint(udp::v4(), port))
+	: BaseTransport(packetFactory, messageFactory), socket_(_io_service, udp::endpoint(udp::v4(), port))
 {
 	socket_.non_blocking(true);
 }

@@ -48,7 +48,7 @@ void SnapshotClient::Reset()
 void SnapshotClient::ProcessSnapshots()
 {
 	if(_state == CLIENT_CONNECTED)
-		_simulation->ProcessSnapshotMessages(_connection);
+		_simulation->ProcessMessages(_connection);
 }
 
 void SnapshotClient::SendPackets()

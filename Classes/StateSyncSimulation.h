@@ -1,5 +1,5 @@
-#ifndef _SNAPSHOTINTERPOLATIONSIMULATION_H_
-#define _SNAPSHOTINTERPOLATIONSIMULATION_H_
+#ifndef _STATESYNCSIMULATION_H_
+#define _STATESYNCSIMULATION_H_
 
 
 #include <stdint.h>
@@ -10,6 +10,7 @@
 
 #include "network_common.h"
 #include "network_connection.h"
+
 #include "network_simulation.h"
 
 
@@ -21,13 +22,13 @@ struct WorldSnapshot
 
 
 
-class SnapshotInterpolationSimulation : public NetworkSimulation
+class StateSyncSimulation : public NetworkSimulation
 {
 private:
 public:
-	SnapshotInterpolationSimulation();
+	StateSyncSimulation();
 
-	virtual bool ProcessMessages(Connection * con);
+	virtual bool ProcessSnapshotMessages(Connection * con);
 	virtual void GenerateSnapshotMessages(MessageFactory* mf, Connection* con);
 	virtual void Step() = 0;
 
@@ -40,7 +41,7 @@ public:
 };
 
 // Server
-class S_SnapshotInterpolationSimulation : public SnapshotInterpolationSimulation
+class S_StateSyncSimulation : public StateSyncSimulation
 {
 private:
 	b2World* _world; // Box
@@ -56,8 +57,8 @@ private:
 	bool _pause = false;
 	static uint32_t id;
 public:
-	S_SnapshotInterpolationSimulation();
-	CREATE_FUNC(S_SnapshotInterpolationSimulation);
+	CREATE_FUNC(S_StateSyncSimulation);
+	S_StateSyncSimulation();
 
 	virtual void GenerateMessages(MessageFactory* mf, Connection* con);
 	virtual bool ProcessMessages(Connection * con);
@@ -71,7 +72,7 @@ public:
 };
 
 // Client
-class C_SnapshotInterpolationSimulation : public SnapshotInterpolationSimulation
+class C_StateSyncSimulation : public StateSyncSimulation
 {
 private:
 	GLESDebugDraw _debugDraw;
@@ -82,14 +83,14 @@ private:
 
 	b2Vec2 _boxVertices[4];
 public:
-	C_SnapshotInterpolationSimulation();
+	C_StateSyncSimulation();
 
 	virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags);
 	virtual void Step();
 	virtual bool ProcessMessages(Connection * con);
 	virtual void GenerateMessages(MessageFactory* mf, Connection* con);
 
-	CREATE_FUNC(C_SnapshotInterpolationSimulation);
+	CREATE_FUNC(C_StateSyncSimulation);
 };
 
 #endif

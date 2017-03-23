@@ -1,11 +1,11 @@
-#include "SnapshotInterpolationSimulation.h"
+#include "StateSyncSimulation.h"
 
-SnapshotInterpolationSimulation::SnapshotInterpolationSimulation()
+StateSyncSimulation::StateSyncSimulation()
 {
 
 }
 
-bool SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
+bool StateSyncSimulation::ProcessSnapshotMessages(Connection * con)
 {
 	NMessage* message;
 	while (message = con->ReceiveMsg()) 
@@ -35,9 +35,28 @@ bool SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 	return true;
 }
 
-uint32_t S_SnapshotInterpolationSimulation::id(0);
+void StateSyncSimulation::GenerateSnapshotMessages(MessageFactory* mf, Connection * con)
+{
+	// Default
+	/*
+	for (int i = 0; i < 2; i++)
+	{
+		SnapshotBoxCreate* create = (SnapshotBoxCreate*)mf->Create(SNAPSHOT_MESSAGE_CREATE_BOX);
+		create->id = 150;
+		create->y = 150.0f;
+		create->x = 150.0f;
+		con->SendMsg(create);
+		SnapshotBoxMove* move = (SnapshotBoxMove*)mf->Create(SNAPSHOT_MESSAGE_MOVE_BOX);
+		move->id = 250;
+		move->x = 250.0f;
+		move->y = 250.0f;
+		con->SendMsg(move);
+	}*/
+}
 
-S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
+uint32_t S_StateSyncSimulation::id(0);
+
+S_StateSyncSimulation::S_StateSyncSimulation()
 	: _debugDraw(15.0f)
 {
 	b2Vec2 gravity;
@@ -116,8 +135,7 @@ S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
 	}
 }
 
-
-void S_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
+void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
 {
 	b2Body* body = _world->GetBodyList();
 	b2Body* prevBody = body;
@@ -157,12 +175,12 @@ void S_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Co
 	}
 }
 
-bool S_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
+bool S_StateSyncSimulation::ProcessMessages(Connection * con)
 {
 	return false;
 }
 
-void S_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
+void S_StateSyncSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
 {
 
 	Layer::draw(renderer, transform, flags);
@@ -170,7 +188,7 @@ void S_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 	_world->DrawDebugData();
 }
 
-void S_SnapshotInterpolationSimulation::Step()
+void S_StateSyncSimulation::Step()
 {
 	float32 timestep = 1.0f / 60.0f;
 
@@ -219,7 +237,7 @@ public:
 	b2Vec2 m_point;
 	b2Fixture* m_fixture;
 };
-bool S_SnapshotInterpolationSimulation::MouseDown(const b2Vec2 & p)
+bool S_StateSyncSimulation::MouseDown(const b2Vec2 & p)
 {
 	_mouseWorld = p;
 
@@ -253,7 +271,7 @@ bool S_SnapshotInterpolationSimulation::MouseDown(const b2Vec2 & p)
 	return false;
 }
 
-void S_SnapshotInterpolationSimulation::MouseMove(const b2Vec2 & p)
+void S_StateSyncSimulation::MouseMove(const b2Vec2 & p)
 {
 	_mouseWorld = p;
 	if (_mouseJoint)
@@ -262,7 +280,7 @@ void S_SnapshotInterpolationSimulation::MouseMove(const b2Vec2 & p)
 	}
 }
 
-void S_SnapshotInterpolationSimulation::MouseUp(const b2Vec2 & p)
+void S_StateSyncSimulation::MouseUp(const b2Vec2 & p)
 {
 	if (_mouseJoint)
 	{
@@ -272,7 +290,7 @@ void S_SnapshotInterpolationSimulation::MouseUp(const b2Vec2 & p)
 
 }
 
-C_SnapshotInterpolationSimulation::C_SnapshotInterpolationSimulation() : _debugDraw(15.0f)
+C_StateSyncSimulation::C_StateSyncSimulation() : _debugDraw(15.0f)
 {
 	_boxVertices[0] = b2Vec2(-0.5f, -0.5f);
 	_boxVertices[1] = b2Vec2(0.5f, -0.5f);
@@ -280,7 +298,7 @@ C_SnapshotInterpolationSimulation::C_SnapshotInterpolationSimulation() : _debugD
 	_boxVertices[3] = b2Vec2(-0.5f, 0.5f);
 }
 
-void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
+void C_StateSyncSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
 {
 	// Render boxes
 	for (auto box : _boxes_interp)
@@ -297,7 +315,7 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 
 }
 
-void C_SnapshotInterpolationSimulation::Step()
+void C_StateSyncSimulation::Step()
 {
 	// Interpolation done here
 	if (snapshots.size() < 3)
@@ -336,11 +354,11 @@ void C_SnapshotInterpolationSimulation::Step()
 	}
 }
 
-void C_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
+void C_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
 {
 }
 
-bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
+bool C_StateSyncSimulation::ProcessMessages(Connection * con)
 {
 	// Receive messages
 	NMessage* message;

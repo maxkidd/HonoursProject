@@ -1,0 +1,28 @@
+#include "StateSyncServer.h"
+
+StateSyncServer::StateSyncServer(NetworkSimulation* simulation, BaseTransport* transport)
+	: Server(simulation, transport)
+{
+	//_transport->SetDebugService(debugData);
+}
+
+StateSyncServer::~StateSyncServer()
+{
+}
+
+
+void StateSyncServer::ProcessMessages()
+{
+
+}
+void StateSyncServer::GenerateMessages()
+{
+	for (int i = 0; i < MAX_SLOTS; i++)
+	{
+		if (!_clientConnected[i] || !_connections[i])
+			continue;
+
+		_simulation->GenerateMessages(&_messageFactory, _connections[i]);
+
+	}
+}
