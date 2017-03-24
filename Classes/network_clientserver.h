@@ -33,7 +33,7 @@ protected:
 
 public:
 	Client(NetworkSimulation* simulation, BaseTransport* transport);
-	~Client();
+	virtual ~Client();
 
 	void Connect(const char* ip = "localhost", const char* port = "1500");
 
@@ -95,7 +95,7 @@ protected:
 	Connection* _connections[MAX_SLOTS];
 public:
 	Server(NetworkSimulation* simulation, BaseTransport* transport);
-	~Server();
+	virtual ~Server();
 
 	bool IsActive() { return _active; }
 

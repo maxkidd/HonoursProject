@@ -17,7 +17,7 @@ using namespace cocos2d::extension;
 
 StateSyncLayer::StateSyncLayer() : _statusLabel(nullptr)
 //server(nullptr), client(nullptr)
-	: _transport(UnreliablePacketFactory(), SnapshotMessageFactory())
+	, _transport(new UnreliablePacketFactory(), new SnapshotMessageFactory())
 {
 	//_simulation = C_StateSyncSimulation::create();
 	//addChild(_simulation);
@@ -246,14 +246,8 @@ void StateSyncLayer::connectAsClient()
 			_simulation = C_StateSyncSimulation::create();
 			addChild(_simulation, 9999);
 
-			client = new StateSyncClient((C_StateSyncSimulation*)_simulation, _transport);
-
-			client->Init(ipText->getString().c_str(), portText->getString().c_str());
-
-
-			client->Start();
-
-
+			client = new StateSyncClient((C_StateSyncSimulation*)_simulation, &_transport);
+			client->Connect(ipText->getString().c_str(), portText->getString().c_str());
 
 			connectNode->removeFromParentAndCleanup(true);
 		}
@@ -285,9 +279,6 @@ void StateSyncLayer::connectAsServer()
 
 	if (client)
 	{
-		if (client->IsActive())
-			client->Stop();
-
 		//server->destroy
 		delete client;
 		client = nullptr;
@@ -301,8 +292,6 @@ void StateSyncLayer::connectAsServer()
 	_simulation = S_StateSyncSimulation::create();
 	addChild(_simulation, 9999);
 	
-	server = new StateSyncServer(_netDebugData,(S_SnapshotInterpolationSimulation*)_simulation);
+	server = new StateSyncServer((S_StateSyncSimulation*)_simulation, &_transport);
 
-
-	server->Start();
 }

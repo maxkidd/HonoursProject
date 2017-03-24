@@ -42,7 +42,7 @@ void SnapshotServer::GenerateSnapshots()
 		if (!_clientConnected[i] || !_connections[i])
 			continue;
 
-		_simulation->GenerateSnapshotMessages(&_messageFactory, _connections[i]);
+		_simulation->GenerateMessages(&_messageFactory, _connections[i]);
 
 	}
 }

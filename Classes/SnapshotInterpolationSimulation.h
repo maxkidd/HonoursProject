@@ -28,7 +28,7 @@ public:
 	SnapshotInterpolationSimulation();
 
 	virtual bool ProcessMessages(Connection * con);
-	virtual void GenerateSnapshotMessages(MessageFactory* mf, Connection* con);
+	//virtual void GenerateMessages(MessageFactory* mf, Connection* con);
 	virtual void Step() = 0;
 
 	virtual bool MouseDown(const b2Vec2& p) { return false; };
