@@ -132,7 +132,7 @@ class SnapshotBoxCreate : public NMessage
 {
 public:
 	uint32_t id = 0;
-	float x, y = 0;
+	float x, y = 0.0f;
 	uint32_t rot = 0;
 
 	template<typename Stream> bool Serialize(Stream& stream)
@@ -147,19 +147,69 @@ public:
 	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
+
 class SnapshotBoxMove : public NMessage
 {
 public:
 	uint32_t id = 0;
-	float x, y = 0;
+	float x, y = 0.0f;
+	uint32_t rot = 0;
+
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
+		stream.SerializeInteger(id, 0, 255);
+
+		SerializeFloat(stream, x);
+		SerializeFloat(stream, y);
+		stream.SerializeInteger(rot, 0, 360);
+		
+		return true;
+	}
+	VIRTUAL_SERIALIZE_FUNCTIONS();
+};
+
+
+class StateSyncBoxCreate : public NMessage
+{
+public:
+	uint32_t id = 0;
+	float x, y = 0.0f;
+	uint32_t rot = 0;
+
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
+		stream.SerializeInteger(id, 0, 255);
+
+		SerializeFloat(stream, x);
+		SerializeFloat(stream, y);
+		stream.SerializeInteger(rot, 0, 360);
+
+		return true;
+	}
+	VIRTUAL_SERIALIZE_FUNCTIONS();
+};
+class StateSyncBoxMove : public NMessage
+{
+public:
+	uint32_t id = 0;
+	float x, y = 0.0f;
+	uint32_t rot = 0;
+
+	float velocityX, velocityY = 0.0f;
+	float rotVel = 0.0f;
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
 		stream.SerializeInteger(id);
 
-		//SerializeFloat(stream, x);
+		SerializeFloat(stream, x);
 		SerializeFloat(stream, y);
 		
+		// Velocity data
+		SerializeFloat(stream, velocityX);
+		SerializeFloat(stream, velocityY);
+		SerializeFloat(stream, rotVel);
+
 		return true;
 	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
@@ -172,14 +222,21 @@ enum SnapshotMessageTypes
 	SNAPSHOT_MESSAGE_CREATE_BOX,		// Box message
 	SNAPSHOT_MESSAGE_MAX
 };
+enum StateSyncMessageTypes
+{
+	STATESYNC_MESSAGE_ERROR = -1,
+	STATESYNC_MESSAGE_UPDATE_BOX = 0,		// Box message
+	STATESYNC_MESSAGE_CREATE_BOX,		// Box message
+	STATESYNC_MESSAGE_MAX
+};
 
 MESSAGE_FACTORY_START(SnapshotMessageFactory, MessageFactory, SNAPSHOT_MESSAGE_MAX);
 	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_MOVE_BOX, SnapshotBoxMove);
 	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_CREATE_BOX, SnapshotBoxCreate);
 MESSAGE_FACTORY_END();
-MESSAGE_FACTORY_START(StateSyncMessageFactory, MessageFactory, SNAPSHOT_MESSAGE_MAX);
-MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_MOVE_BOX, SnapshotBoxMove);
-MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_CREATE_BOX, SnapshotBoxCreate);
+MESSAGE_FACTORY_START(StateSyncMessageFactory, MessageFactory, STATESYNC_MESSAGE_MAX);
+	MESSAGE_FACTORY_TYPE(STATESYNC_MESSAGE_UPDATE_BOX, StateSyncBoxMove);
+	MESSAGE_FACTORY_TYPE(STATESYNC_MESSAGE_CREATE_BOX, StateSyncBoxCreate);
 MESSAGE_FACTORY_END();
 
 #endif

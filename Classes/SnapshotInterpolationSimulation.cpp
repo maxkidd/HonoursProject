@@ -119,41 +119,72 @@ S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
 
 void S_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
 {
-	b2Body* body = _world->GetBodyList();
-	b2Body* prevBody = body;
-
-	while (body)
+	// New connection
+	if (_connectionSynchronized.find(con) == _connectionSynchronized.end())
 	{
-		if (!body->IsAwake()) // Continue to next box if sleeping
-			goto label_end;
-
-		SnapshotBoxCreate* create = (SnapshotBoxCreate*)mf->Create(SNAPSHOT_MESSAGE_CREATE_BOX);
-
-		uint32_t* id = (uint32_t*)body->GetUserData();
-		b2Vec2 pos = body->GetPosition();
-		
-		float rads = body->GetAngle();
-		float deg = rads * (180.0f / M_PI);
-		if (rads > 0.0f)
+		b2Body* body = _world->GetBodyList();
+		b2Body* prevBody = body;
+		while (body)
 		{
-			create->rot = (uint32_t((deg)) % 360);
+			SnapshotBoxCreate* create = (SnapshotBoxCreate*)mf->Create(SNAPSHOT_MESSAGE_CREATE_BOX);
+
+			uint32_t* id = (uint32_t*)body->GetUserData();
+			b2Vec2 pos = body->GetPosition();
+
+			float deg = body->GetAngle() * (180.0f / M_PI);
+			if (deg > 0.0f)
+				create->rot = (uint32_t((deg)) % 360);
+			else
+				create->rot = 360 - (uint32_t(abs(deg)) % 360);
+
+			create->id = *id;
+			create->x = pos.x;
+			create->y = pos.y;
+
+			con->SendMsg(create);
+			
+			// Next body
+			prevBody = body;
+			body = body->GetNext();
+			if (prevBody == body)
+				break;
 		}
-		else
+		_connectionSynchronized[con] = true;
+	}
+	else // Synchronized
+	{
+		b2Body* body = _world->GetBodyList();
+		b2Body* prevBody = body;
+		while (body)
 		{
-			create->rot = 360 - (uint32_t(abs(deg)) % 360);
+			if (!body->IsAwake()) // Continue to next box if sleeping
+				goto label_end;
+
+			SnapshotBoxMove* move = (SnapshotBoxMove*)mf->Create(SNAPSHOT_MESSAGE_MOVE_BOX);
+
+			uint32_t* id = (uint32_t*)body->GetUserData();
+			b2Vec2 pos = body->GetPosition();
+
+			float deg = body->GetAngle() * (180.0f / M_PI);
+
+			if (deg > 0.0f)
+				move->rot = (uint32_t((deg)) % 360);
+			else
+				move->rot = 360 - (uint32_t(abs(deg)) % 360);
+
+			move->id = *id;
+			move->x = pos.x;
+			move->y = pos.y;
+
+			con->SendMsg(move);
+
+		label_end:
+
+			prevBody = body;
+			body = body->GetNext();
+			if (prevBody == body)
+				break;
 		}
-		create->id = *id;
-		create->x = pos.x;
-		create->y = pos.y;
-
-		con->SendMsg(create);
-
-	label_end:
-
-		prevBody = body;
-		body = body->GetNext();
-		if (prevBody == body)
-			break;
 	}
 }
 
@@ -355,11 +386,10 @@ bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 			uint32_t id = create->id;
 			float x = create->x;
 			float y = create->y;
-			float deg = float(create->rot);
-			float rads = deg / (180.0f / M_PI);
+			float rads = float(create->rot) / (180.0f / M_PI);
 
-			//if (_boxes.find(id) != _boxes.end())
-			//	return false; // Already created
+			if (_boxes.find(id) != _boxes.end())
+				continue; // Already created
 
 			_boxes[id].Set(b2Vec2(x, y), rads);
 
@@ -373,12 +403,10 @@ bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 			uint32_t id = move->id;
 			float x = move->x;
 			float y = move->y;
+			float rads = float(move->rot) / (180.0f / M_PI);
 
 
-			if (auto box = _boxes.find(id) != _boxes.end())
-			{
-				_boxes[box].Set(b2Vec2(x, y), 0.0f);
-			}
+			_boxes[id].Set(b2Vec2(x, y), rads);
 		}
 		break;
 		default:

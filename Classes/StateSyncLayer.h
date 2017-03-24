@@ -26,14 +26,14 @@
 class StateSyncLayer : public cocos2d::Layer
 {
 private:
-	StateSyncServer* server;
-	StateSyncClient* client;
-	StateSyncSimulation* _simulation;
-	cocos2d::LabelTTF* _statusLabel;
+	StateSyncServer* server = nullptr;
+	StateSyncClient* client = nullptr;
+	StateSyncSimulation* _simulation = nullptr;
+	cocos2d::LabelTTF* _statusLabel = nullptr;
 
 	SocketTransport _transport;
 
-	NetworkDebugDataSource* _netDebugData;
+	NetworkDebugDataSource* _netDebugData = nullptr;
 	TableView* _tableView = nullptr;
 
 	float _networkTimer = 0.0f;

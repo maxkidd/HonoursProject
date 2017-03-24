@@ -1,24 +1,24 @@
 #ifndef _STATESYNCCLIENT_H_
 #define _STATESYNCCLIENT_H_
 
-#include "cocos2d.h"
-#include "cocos-ext.h"
+//#include "cocos2d.h"
+//#include "cocos-ext.h"
 
-#include "asio\asio.hpp"
+//#include "asio\asio.hpp"
 
 //#include "server.h"
 //#include "NetworkDebugView.h"
 
-#include "network_transport.h"
-#include "network_connection.h"
-#include "network_common.h"
-#include "network_packet.h"
+//#include "network_transport.h"
+//#include "network_connection.h"
+//#include "network_common.h"
+//#include "network_packet.h"
 
 //#include "SnapshotInterpolationSimulation.h"
 
-#include "NetworkDebugDataSource.h"
+//#include "NetworkDebugDataSource.h"
 
-#include <stdio.h>
+// <stdio.h>
 
 #include "network_clientserver.h"
 

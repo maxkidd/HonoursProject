@@ -12,12 +12,6 @@
 
 #include <asio/asio.hpp>
 
-#include "ClientLayer.h"
-#include "ServerLayer.h"
-#include "NetworkLayer.h"
-#include "Box2DTestBed/Box2DTest.h"
-#include "SnapshotInterpolationLayer.h"
-
 class HelloWorld : public cocos2d::Layer
 {
 public:
@@ -36,6 +30,7 @@ public:
 	void LoadNetwork();
 	void LoadBox2DTest();
 	void LoadSnapshot();
+	void LoadStateSync();
 };
 
 #endif // __HELLOWORLD_SCENE_H__

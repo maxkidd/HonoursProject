@@ -1,5 +1,12 @@
 #include "HelloWorldScene.h"
 
+//#include "ClientLayer.h"
+//#include "ServerLayer.h"
+//#include "NetworkLayer.h"
+#include "Box2DTestBed/Box2DTest.h"
+#include "SnapshotInterpolationLayer.h"
+#include "StateSyncLayer.h"
+
 //USING_NS_CC;
 using namespace cocos2d;
 
@@ -78,14 +85,15 @@ bool HelloWorld::init()
 	MenuItemFont::setFontSize(16);
 	MenuItemFont::setFontName("fonts/UbuntuMono-R.ttf");
 
-	auto clientItem = MenuItemFont::create("Client", CC_CALLBACK_0(HelloWorld::LoadClient, this));
-	auto serverItem = MenuItemFont::create("Server", CC_CALLBACK_0(HelloWorld::LoadServer, this));
-	auto networkItem = MenuItemFont::create("Network", CC_CALLBACK_0(HelloWorld::LoadNetwork, this));
+	//auto clientItem = MenuItemFont::create("Client", CC_CALLBACK_0(HelloWorld::LoadClient, this));
+	//auto serverItem = MenuItemFont::create("Server", CC_CALLBACK_0(HelloWorld::LoadServer, this));
+	//auto networkItem = MenuItemFont::create("Network", CC_CALLBACK_0(HelloWorld::LoadNetwork, this));
 	auto box2DItem = MenuItemFont::create("Box2D", CC_CALLBACK_0(HelloWorld::LoadBox2DTest, this));
 	auto snapshotItem = MenuItemFont::create("Snapshot Interpolation", CC_CALLBACK_0(HelloWorld::LoadSnapshot, this));
-	
+	auto stateSyncItem = MenuItemFont::create("State Synchronization", CC_CALLBACK_0(HelloWorld::LoadStateSync, this));
 
-	Menu* menu2 = Menu::create(clientItem, serverItem, networkItem, box2DItem, snapshotItem , NULL);
+
+	Menu* menu2 = Menu::create(box2DItem, snapshotItem, stateSyncItem, NULL);
 	menu2->alignItemsVertically();
 	addChild(menu2);
 
@@ -104,17 +112,17 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 
 void HelloWorld::LoadClient()
 {
-	Director::getInstance()->replaceScene(ClientLayer::scene());
+	//Director::getInstance()->replaceScene(ClientLayer::scene());
 }
 
 void HelloWorld::LoadServer()
 {
-	Director::getInstance()->replaceScene(ServerLayer::scene());
+	//Director::getInstance()->replaceScene(ServerLayer::scene());
 }
 
 void HelloWorld::LoadNetwork()
 {
-	Director::getInstance()->replaceScene(NetworkLayer::create());
+	//Director::getInstance()->replaceScene(NetworkLayer::create());
 }
 
 void HelloWorld::LoadBox2DTest()
@@ -125,4 +133,9 @@ void HelloWorld::LoadBox2DTest()
 void HelloWorld::LoadSnapshot()
 {
 	Director::getInstance()->replaceScene(SnapshotInterpolationLayer::scene());
+}
+
+void HelloWorld::LoadStateSync()
+{
+	Director::getInstance()->replaceScene(StateSyncLayer::scene());
 }

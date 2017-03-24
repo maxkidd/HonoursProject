@@ -19,8 +19,8 @@ StateSyncLayer::StateSyncLayer() : _statusLabel(nullptr)
 //server(nullptr), client(nullptr)
 	, _transport(new UnreliablePacketFactory(), new SnapshotMessageFactory())
 {
-	//_simulation = C_StateSyncSimulation::create();
-	//addChild(_simulation);
+	_simulation = C_StateSyncSimulation::create();
+	addChild(_simulation);
 }
 
 StateSyncLayer::~StateSyncLayer()

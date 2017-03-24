@@ -14,7 +14,7 @@
 #include "network_simulation.h"
 
 
-struct WorldSnapshot
+struct StateSyncSnapshot
 {
 	std::chrono::time_point<std::chrono::high_resolution_clock> time;
 	std::vector<std::pair<uint32_t, b2Transform>> boxes; // B2VEC2  -> BoxData
@@ -24,12 +24,26 @@ struct WorldSnapshot
 
 class StateSyncSimulation : public NetworkSimulation
 {
-private:
+protected:
+	b2World* _world; // Box
+	GLESDebugDraw _debugDraw;
+	b2Body* _ground = nullptr;
+	b2MouseJoint* _mouseJoint = nullptr;
+	b2Vec2 _mouseWorld;
+
+
+	int _stepCount;
+
+	const int _count = 12; // For triangle of boxes
+	bool _pause = false;
+
+	static uint32_t id;
 public:
 	StateSyncSimulation();
 
 	virtual bool ProcessSnapshotMessages(Connection * con);
 	virtual void GenerateSnapshotMessages(MessageFactory* mf, Connection* con);
+	virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags);
 	virtual void Step() = 0;
 
 	virtual bool MouseDown(const b2Vec2& p) { return false; };
@@ -44,18 +58,7 @@ public:
 class S_StateSyncSimulation : public StateSyncSimulation
 {
 private:
-	b2World* _world; // Box
-	GLESDebugDraw _debugDraw;
-	b2Body* _ground = nullptr;
 
-	b2MouseJoint* _mouseJoint = nullptr;
-	b2Vec2 _mouseWorld;
-
-
-	int _stepCount;
-	const int _count = 12;
-	bool _pause = false;
-	static uint32_t id;
 public:
 	CREATE_FUNC(S_StateSyncSimulation);
 	S_StateSyncSimulation();
@@ -63,7 +66,6 @@ public:
 	virtual void GenerateMessages(MessageFactory* mf, Connection* con);
 	virtual bool ProcessMessages(Connection * con);
 
-	virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags);
 	virtual void Step();
 
 	bool MouseDown(const b2Vec2& p);
@@ -75,17 +77,16 @@ public:
 class C_StateSyncSimulation : public StateSyncSimulation
 {
 private:
-	GLESDebugDraw _debugDraw;
-	std::deque<WorldSnapshot> snapshots; // Queue of snapshots
+	//GLESDebugDraw _debugDraw;
+	//std::deque<StateSyncSnapshot> snapshots; // Queue of snapshots
 
-	std::map<uint32_t, b2Transform> _boxes;
-	std::map<uint32_t, b2Transform> _boxes_interp;
+	//std::map<uint32_t, b2Transform> _boxes;
+	//std::map<uint32_t, b2Transform> _boxes_interp;
 
-	b2Vec2 _boxVertices[4];
+	//b2Vec2 _boxVertices[4];
 public:
 	C_StateSyncSimulation();
 
-	virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags);
 	virtual void Step();
 	virtual bool ProcessMessages(Connection * con);
 	virtual void GenerateMessages(MessageFactory* mf, Connection* con);

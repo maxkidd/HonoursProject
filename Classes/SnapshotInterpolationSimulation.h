@@ -43,6 +43,9 @@ public:
 class S_SnapshotInterpolationSimulation : public SnapshotInterpolationSimulation
 {
 private:
+	//std::map<Connection*, std::vector<b2Body*>> _connectionBodyMap;
+	std::map<Connection*, bool> _connectionSynchronized;
+
 	b2World* _world; // Box
 	GLESDebugDraw _debugDraw;
 	b2Body* _ground = nullptr;
