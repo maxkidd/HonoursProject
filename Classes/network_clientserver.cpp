@@ -1,23 +1,38 @@
 #include "network_clientserver.h"
 
 Client::Client(NetworkSimulation * simulation, BaseTransport* transport) :
-	_simulation(simulation), _transport(transport)
+	_simulation(simulation), _transport(transport), _state(CLIENT_SLEEP)
 {
 }
 
 Client::~Client()
 {
+	// Send disconnect packet
+
 }
 
 void Client::Connect(const char * ip, const char * port)
 {
+	_state = CLIENT_REQUESTING;
 	_serverIP = ip;
 	_serverPort = port;
 
 	udp::resolver resolver{ *_transport->GetIOService() };
 	_serverEndpoint = *resolver.resolve({ udp::v4(), ip, port });
+	_active = true;
 
 	// Start
+}
+
+void Client::Disconnect()
+{
+	// Immediately send disconnect packet
+	if (_state == CLIENT_CONNECTED)
+	{
+		ConnectionDisconnectPacket* packet = (ConnectionDisconnectPacket*)CreateDisconnectPacket();
+		_transport->SendPacket(_serverEndpoint, packet);
+		_transport->WritePackets();
+	}
 }
 
 std::string Client::GetNetworkState()
@@ -60,13 +75,11 @@ void Client::ProcessPacket(Packet * packet, const udp::endpoint & endpoint)
 
 void Client::ProcessAcceptPacket(ConnectionAcceptPacket * packet, const udp::endpoint & endpoint)
 {
-
-	_state = CLIENT_CONNECTED;
-
 	//int test = packet->test;
 	//test++;
 
 	_connection = new Connection(endpoint, *GetPacketFactory(), GetMessageFactory());
+	_state = CLIENT_CONNECTED;
 
 }
 
@@ -76,7 +89,8 @@ void Client::ProcessDeniedPacket(ConnectionDeniedPacket * packet, const udp::end
 
 void Client::ProcessConnectionPacket(ConnectionPacket * packet, const udp::endpoint & endpoint)
 {
-	_connection->ProcessPacket(packet);
+	if(_connection)
+		_connection->ProcessPacket(packet);
 }
 
 void Client::ProcessDisconnectPacket(ConnectionDisconnectPacket * packet, const udp::endpoint & endpoint)
@@ -86,6 +100,10 @@ void Client::ProcessDisconnectPacket(ConnectionDisconnectPacket * packet, const 
 Packet* Client::CreateRequestPacket()
 {
 	return GetPacketFactory()->Create(CLIENT_SERVER_PACKET_REQUEST);
+}
+Packet* Client::CreateDisconnectPacket()
+{
+	return GetPacketFactory()->Create(CLIENT_SERVER_PACKET_DISCONNECT);
 }
 
 Packet * Client::CreateConnectionPacket()
@@ -156,7 +174,9 @@ void Client::ReadPackets()
 
 
 Server::Server(NetworkSimulation * simulation, BaseTransport * transport)
+	: _simulation(simulation), _transport(transport)
 {
+	_state = SERVER_ALIVE;
 }
 
 Server::~Server()
@@ -247,9 +267,20 @@ void Server::ProcessConnectionPacket(ConnectionPacket * packet, const udp::endpo
 
 void Server::ProcessDisconnectPacket(ConnectionDisconnectPacket * packet, const udp::endpoint & endpoint)
 {
-	// Find clientID for endpoint
-
-	// Remove client from server
+	// Chekc ID and endpoint match and disconnect
+	for (uint16_t ID = 0; ID < MAX_SLOTS; ID++)
+	{
+		if (!_clientConnected[ID])
+			continue;
+		if (_connections[ID]->Endpoint() == endpoint)// Connected
+		{
+			delete _connections[ID];
+			_connections[ID] = nullptr;
+			_clientConnected[ID] = false;
+			_connectedClients--;
+		}
+			
+	}
 }
 
 void Server::SendPacketToClient(uint16_t clientID, Packet * packet)

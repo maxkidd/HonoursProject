@@ -17,7 +17,7 @@ using namespace cocos2d::extension;
 
 StateSyncLayer::StateSyncLayer() : _statusLabel(nullptr)
 //server(nullptr), client(nullptr)
-	, _transport(new UnreliablePacketFactory(), new SnapshotMessageFactory())
+	,_transport(new UnreliablePacketFactory(), new StateSyncMessageFactory())
 {
 	_simulation = C_StateSyncSimulation::create();
 	addChild(_simulation);
@@ -31,6 +31,20 @@ StateSyncLayer::~StateSyncLayer()
 	{
 		_statusLabel = nullptr;
 	}
+	if (client)
+	{
+		client->Disconnect();
+		delete client;
+		client = nullptr;
+	}
+
+	if (server)
+		delete server;
+
+	if (_simulation)
+		delete _simulation;
+
+
 	//if(_tableView)
 	//	_tableView->release();
 }
@@ -81,7 +95,7 @@ bool StateSyncLayer::init()
 
 	_netDebugData = new NetworkDebugDataSource();
 
-	_tableView = TableView::create(_netDebugData, Size(winSize.width, winSize.height * 0.9f));
+	_tableView = TableView::create(_transport.GetDebugService(), Size(winSize.width, winSize.height * 0.9f));
 	_tableView->setPosition(10.0f, winSize.height * 0.1f);
 	//tableView->setContentSize(Size(200.0f, 20.0f));
 	_tableView->setDirection(ScrollView::Direction::VERTICAL);
@@ -121,7 +135,8 @@ void StateSyncLayer::update(float dt)
 
 			server->ReceivePackets();
 
-			debugString.append("Server: " + server->GetNetworkState());
+			debugString.append("Server: " + server->GetNetworkState()
+				+ " Port: " + std::to_string(_transport.GetPort()));
 
 			_tableView->reloadData();
 		}
@@ -136,7 +151,8 @@ void StateSyncLayer::update(float dt)
 
 			client->ReceivePackets();
 
-			debugString.append("Client: " + client->GetNetworkState());
+			debugString.append("Client: " + client->GetNetworkState() 
+				+ " Port: " + std::to_string(_transport.GetPort()));
 
 			_tableView->reloadData();
 		}
@@ -291,7 +307,7 @@ void StateSyncLayer::connectAsServer()
 		removeChild(_simulation);
 	_simulation = S_StateSyncSimulation::create();
 	addChild(_simulation, 9999);
-	
+
 	server = new StateSyncServer((S_StateSyncSimulation*)_simulation, &_transport);
 
 }

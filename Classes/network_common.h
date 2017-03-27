@@ -206,9 +206,9 @@ public:
 		SerializeFloat(stream, y);
 		
 		// Velocity data
-		SerializeFloat(stream, velocityX);
-		SerializeFloat(stream, velocityY);
-		SerializeFloat(stream, rotVel);
+		//SerializeFloat(stream, velocityX);
+		//SerializeFloat(stream, velocityY);
+		//SerializeFloat(stream, rotVel);
 
 		return true;
 	}

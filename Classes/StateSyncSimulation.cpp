@@ -50,33 +50,6 @@ StateSyncSimulation::StateSyncSimulation() : _debugDraw(15.0f)
 		_ground->SetUserData(new uint32_t(++id));
 		_ground->SetTransform(b2Vec2(70.0f, 20.0f), 0.0f);
 	}
-	{
-		float boxWidth = 0.5f;
-		b2PolygonShape shape;
-		shape.SetAsBox(boxWidth, boxWidth);
-
-		b2Vec2 x(0.0f, 50.0f);
-		b2Vec2 y;
-		b2Vec2 deltaX(0.5625f, 1.25f);
-		b2Vec2 deltaY(1.125f, 0.0f);
-
-		for (int i = 0; i < _count; ++i)
-		{
-			y = x;
-			for (int j = i; j < _count; ++j)
-			{
-				b2BodyDef bodyDef;
-				bodyDef.type = b2_dynamicBody;
-				bodyDef.position = y;
-				b2Body* body = _world->CreateBody(&bodyDef);
-				body->SetUserData(new uint32_t(++id));
-				body->CreateFixture(&shape, 5.0f);
-
-				y += deltaY;
-			}
-			x += deltaX;
-		}
-	}
 }
 
 bool StateSyncSimulation::ProcessSnapshotMessages(Connection * con)
@@ -138,48 +111,111 @@ void StateSyncSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4
 uint32_t S_StateSyncSimulation::id(0);
 
 S_StateSyncSimulation::S_StateSyncSimulation()
-	
 {
+	{
+		float boxWidth = 0.5f;
+		b2PolygonShape shape;
+		shape.SetAsBox(boxWidth, boxWidth);
+
+		b2Vec2 x(0.0f, 50.0f);
+		b2Vec2 y;
+		b2Vec2 deltaX(0.5625f, 1.25f);
+		b2Vec2 deltaY(1.125f, 0.0f);
+
+		for (int i = 0; i < _count; ++i)
+		{
+			y = x;
+			for (int j = i; j < _count; ++j)
+			{
+				b2BodyDef bodyDef;
+				bodyDef.type = b2_dynamicBody;
+				bodyDef.position = y;
+				b2Body* body = _world->CreateBody(&bodyDef);
+				body->SetUserData(new uint32_t(++id));
+				body->CreateFixture(&shape, 5.0f);
+
+				y += deltaY;
+			}
+			x += deltaX;
+		}
+	}
 }
 
 void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
 {
-	b2Body* body = _world->GetBodyList();
-	b2Body* prevBody = body;
 
-	while (body)
+	if (_connectionSynchronized.find(con) == _connectionSynchronized.end())
 	{
-		if (!body->IsAwake()) // Continue to next box if sleeping
-			goto label_end;
 
-		SnapshotBoxCreate* create = (SnapshotBoxCreate*)mf->Create(SNAPSHOT_MESSAGE_CREATE_BOX);
+		b2Body* body = _world->GetBodyList();
+		b2Body* prevBody = body;
 
-		uint32_t* id = (uint32_t*)body->GetUserData();
-		b2Vec2 pos = body->GetPosition();
-		
-		float rads = body->GetAngle();
-		float deg = rads * (180.0f / M_PI);
-		if (rads > 0.0f)
+		while (body)
 		{
-			create->rot = (uint32_t((deg)) % 360);
+			StateSyncBoxCreate* create = (StateSyncBoxCreate*)mf->Create(STATESYNC_MESSAGE_CREATE_BOX);
+
+			uint32_t* id = (uint32_t*)body->GetUserData();
+			b2Vec2 pos = body->GetPosition();
+
+			float rads = body->GetAngle();
+			float deg = rads * (180.0f / M_PI);
+			if (rads > 0.0f)
+			{
+				create->rot = (uint32_t((deg)) % 360);
+			}
+			else
+			{
+				create->rot = 360 - (uint32_t(abs(deg)) % 360);
+			}
+			create->id = *id;
+			create->x = pos.x;
+			create->y = pos.y;
+
+			con->SendMsg(create);
+
+			prevBody = body;
+			body = body->GetNext();
+			if (prevBody == body)
+				break;
 		}
-		else
-		{
-			create->rot = 360 - (uint32_t(abs(deg)) % 360);
-		}
-		create->id = *id;
-		create->x = pos.x;
-		create->y = pos.y;
-
-		con->SendMsg(create);
-
-	label_end:
-
-		prevBody = body;
-		body = body->GetNext();
-		if (prevBody == body)
-			break;
+		_connectionSynchronized[con] = true;
 	}
+	else // Synchronized
+	{
+		b2Body* body = _world->GetBodyList();
+		b2Body* prevBody = body;
+		while (body)
+		{
+			if (!body->IsAwake()) // Continue to next box if sleeping
+				goto label_end;
+
+			StateSyncBoxMove* move = (StateSyncBoxMove*)mf->Create(STATESYNC_MESSAGE_UPDATE_BOX);
+
+			uint32_t* id = (uint32_t*)body->GetUserData();
+			b2Vec2 pos = body->GetPosition();
+
+			float deg = body->GetAngle() * (180.0f / M_PI);
+
+			if (deg > 0.0f)
+				move->rot = (uint32_t((deg)) % 360);
+			else
+				move->rot = 360 - (uint32_t(abs(deg)) % 360);
+
+			move->id = *id;
+			move->x = pos.x;
+			move->y = pos.y;
+
+			con->SendMsg(move);
+
+		label_end:
+
+			prevBody = body;
+			body = body->GetNext();
+			if (prevBody == body)
+				break;
+		}
+	}
+	
 }
 
 bool S_StateSyncSimulation::ProcessMessages(Connection * con)
@@ -297,6 +333,22 @@ C_StateSyncSimulation::C_StateSyncSimulation()
 void C_StateSyncSimulation::Step()
 {
 	// World steps
+	float32 timestep = 1.0f / 60.0f;
+
+	if (_pause)
+	{
+		timestep = 0.0f;
+	}
+
+	_world->Step(timestep, 8, 3);
+
+
+	if (timestep > 0.0f)
+	{
+		++_stepCount;
+	}
+
+	// Synchronize messages
 }
 
 void C_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
@@ -306,7 +358,7 @@ void C_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 bool C_StateSyncSimulation::ProcessMessages(Connection * con)
 {
 	// Receive messages
-	std::vector<std::pair<uint32_t, b2Body*>> _boxes;
+	//std::vector<std::pair<uint32_t, b2Body*>> _boxes;
 
 	NMessage* message;
 	while (message = con->ReceiveMsg())
@@ -318,6 +370,34 @@ bool C_StateSyncSimulation::ProcessMessages(Connection * con)
 		{
 			StateSyncBoxCreate* create = (StateSyncBoxCreate*)message;
 
+			uint32_t id = create->id;
+			float x = create->x;
+			float y = create->y;
+			float rads = float(create->rot) / (180.0f / M_PI);
+
+			if (_boxes.find(id) != _boxes.end())
+				continue; // Already created
+
+			b2BodyDef bodyDef;
+			bodyDef.type = b2_dynamicBody;
+			bodyDef.position = b2Vec2(x, y);
+			bodyDef.angle = rads;
+
+			b2PolygonShape shape;
+			shape.SetAsBox(0.5f, 0.5f);
+
+			b2Body* body = _world->CreateBody(&bodyDef);
+			body->SetUserData(new uint32_t(++id));
+			body->CreateFixture(&shape, 5.0f);
+
+			_boxes[id] = body;
+			//_boxes[id].Set(body);
+
+
+			//if (_boxes.find(id) != _boxes.end())
+			//	continue; // Already created
+
+			//_boxes[id].Set(b2Vec2(x, y), rads);
 
 		}
 
@@ -327,6 +407,15 @@ bool C_StateSyncSimulation::ProcessMessages(Connection * con)
 			// Process move
 			StateSyncBoxMove* move = (StateSyncBoxMove*)message;
 
+			uint32_t id = move->id;
+			float x = move->x;
+			float y = move->y;
+			float rads = float(move->rot) / (180.0f / M_PI);
+
+			if (_boxes.find(id) == _boxes.end())
+				continue; // Not created
+
+			_boxes[id]->SetTransform(b2Vec2(x, y), rads);
 
 		}
 		break;

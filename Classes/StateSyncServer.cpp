@@ -3,7 +3,8 @@
 StateSyncServer::StateSyncServer(NetworkSimulation* simulation, BaseTransport* transport)
 	: Server(simulation, transport)
 {
-	//_transport->SetDebugService(debugData);
+
+
 }
 
 StateSyncServer::~StateSyncServer()

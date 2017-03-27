@@ -31,6 +31,9 @@ protected:
 	b2MouseJoint* _mouseJoint = nullptr;
 	b2Vec2 _mouseWorld;
 
+	std::map<Connection*, bool> _connectionSynchronized;
+	std::map<uint32_t, b2Body*> _boxes;
+
 
 	int _stepCount;
 

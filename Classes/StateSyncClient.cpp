@@ -13,11 +13,13 @@ StateSyncClient::~StateSyncClient()
 void StateSyncClient::ProcessMessages()
 {
 	if (_state == CLIENT_CONNECTED)
-		;//_simulation->ProcessSnapshotMessages(_connection);
+		_simulation->ProcessMessages(_connection);
 }
 
 void StateSyncClient::GenerateMessages()
 {
+	if (_state == CLIENT_CONNECTED)
+		_simulation->GenerateMessages(&_messageFactory, _connection);
 }
 
 

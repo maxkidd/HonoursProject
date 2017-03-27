@@ -37,6 +37,8 @@ public:
 
 	void Connect(const char* ip = "localhost", const char* port = "1500");
 
+	void Disconnect();
+
 	bool IsActive() { return _active; }
 
 
@@ -64,6 +66,7 @@ protected:
 	void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
 
 	Packet* CreateRequestPacket();
+	Packet* CreateDisconnectPacket();
 	Packet* CreateConnectionPacket();
 
 };
@@ -85,7 +88,7 @@ protected:
 	static const int MAX_SLOTS = 32;
 	static const int NULL_CLIENT_ID = MAX_SLOTS;
 
-	bool _active = false;
+	bool _active = true; // Active on create
 
 	uint16_t _connectedClients = 0;
 	

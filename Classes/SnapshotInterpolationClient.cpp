@@ -3,7 +3,7 @@
 SnapshotClient::SnapshotClient(NetworkDebugDataSource* debugData, C_SnapshotInterpolationSimulation* simulation) :
 	_state(CLIENT_SLEEP), _transport(new SocketTransport(&_packetFactory, &_messageFactory)), _simulation(simulation)
 {
-	_transport->SetDebugService(debugData);
+	//_transport->SetDebugService(debugData);
 }
 
 

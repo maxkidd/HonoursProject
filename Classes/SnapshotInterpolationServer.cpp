@@ -3,7 +3,7 @@
 SnapshotServer::SnapshotServer(NetworkDebugDataSource* debugData, S_SnapshotInterpolationSimulation* simulation) 
 	: _transport(new SocketTransport(&_packetFactory, &_messageFactory, 1500)), _simulation(simulation)
 {
-	_transport->SetDebugService(debugData);
+	//_transport->SetDebugService(debugData);
 }
 
 SnapshotServer::~SnapshotServer()

@@ -8,6 +8,11 @@ SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* 
 	socket_.non_blocking(true);
 }
 
+unsigned short SocketTransport::GetPort()
+{
+	return socket_.local_endpoint().port();
+}
+
 
 int SocketTransport::InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes)
 {
@@ -85,7 +90,7 @@ void BaseTransport::WritePackets()
 		InternalSendPacket(packetInfo.endpoint, buffer, bytesUsed);
 		
 		
-		_debugData->createEntry(to_string(packetInfo.packet->GetType()) + " Sent " + std::to_string(bytesUsed) + "bytes to "
+		_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Sent " + std::to_string(bytesUsed) + "bytes to "
 			+ packetInfo.endpoint.address().to_string(), NET_LOG);
 	}
 }
@@ -116,7 +121,7 @@ void BaseTransport::ReadPackets()
 		receive_queue_.push(packetInfo);
 
 
-		_debugData->createEntry(to_string(packetInfo.packet->GetType()) + " Received " + std::to_string(bytesReceived) + "bytes from "
+		_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Received " + std::to_string(bytesReceived) + "bytes from "
 			+ packetInfo.endpoint.address().to_string(), NET_LOG);
 	}
 }
