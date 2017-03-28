@@ -52,55 +52,6 @@ StateSyncSimulation::StateSyncSimulation() : _debugDraw(15.0f)
 	}
 }
 
-bool StateSyncSimulation::ProcessSnapshotMessages(Connection * con)
-{
-	NMessage* message;
-	while (message = con->ReceiveMsg()) 
-	{
-		switch (message->GetType())
-		{
-		case SNAPSHOT_MESSAGE_CREATE_BOX:
-			//Process creation
-		{
-			SnapshotBoxCreate* create = (SnapshotBoxCreate*)message;
-			
-
-		}
-
-			break;
-		case SNAPSHOT_MESSAGE_MOVE_BOX:
-		{
-			// Process move
-			SnapshotBoxMove* move = (SnapshotBoxMove*)message;
-		}
-			break;
-		default:
-			break;
-		}
-	}
-
-	return true;
-}
-
-void StateSyncSimulation::GenerateSnapshotMessages(MessageFactory* mf, Connection * con)
-{
-	// Default
-	/*
-	for (int i = 0; i < 2; i++)
-	{
-		SnapshotBoxCreate* create = (SnapshotBoxCreate*)mf->Create(SNAPSHOT_MESSAGE_CREATE_BOX);
-		create->id = 150;
-		create->y = 150.0f;
-		create->x = 150.0f;
-		con->SendMsg(create);
-		SnapshotBoxMove* move = (SnapshotBoxMove*)mf->Create(SNAPSHOT_MESSAGE_MOVE_BOX);
-		move->id = 250;
-		move->x = 250.0f;
-		move->y = 250.0f;
-		con->SendMsg(move);
-	}*/
-}
-
 void StateSyncSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
 {
 	Layer::draw(renderer, transform, flags);
@@ -152,13 +103,18 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 
 		while (body)
 		{
-			StateSyncBoxCreate* create = (StateSyncBoxCreate*)mf->Create(STATESYNC_MESSAGE_CREATE_BOX);
-
+			
 			uint32_t* id = (uint32_t*)body->GetUserData();
+
+			if (*id == uint32_t(-1))
+				goto next_body;
+
 			b2Vec2 pos = body->GetPosition();
 
 			float rads = body->GetAngle();
 			float deg = rads * (180.0f / M_PI);
+
+			StateSyncBoxCreate* create = (StateSyncBoxCreate*)mf->Create(STATESYNC_MESSAGE_CREATE_BOX);
 			if (rads > 0.0f)
 			{
 				create->rot = (uint32_t((deg)) % 360);
@@ -173,6 +129,7 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 
 			con->SendMsg(create);
 
+		next_body:
 			prevBody = body;
 			body = body->GetNext();
 			if (prevBody == body)
@@ -189,10 +146,13 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 			if (!body->IsAwake()) // Continue to next box if sleeping
 				goto label_end;
 
+			uint32_t* id = (uint32_t*)body->GetUserData();
+			if (*id == uint32_t(-1))
+				goto label_end;
 			StateSyncBoxMove* move = (StateSyncBoxMove*)mf->Create(STATESYNC_MESSAGE_UPDATE_BOX);
 
-			uint32_t* id = (uint32_t*)body->GetUserData();
 			b2Vec2 pos = body->GetPosition();
+			b2Vec2 velocity = body->GetLinearVelocity();
 
 			float deg = body->GetAngle() * (180.0f / M_PI);
 
@@ -204,6 +164,9 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 			move->id = *id;
 			move->x = pos.x;
 			move->y = pos.y;
+			move->velocityX = velocity.x;
+			move->velocityY = velocity.y;
+			move->rotVel = body->GetAngularVelocity();
 
 			con->SendMsg(move);
 
@@ -358,69 +321,68 @@ void C_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 bool C_StateSyncSimulation::ProcessMessages(Connection * con)
 {
 	// Receive messages
-	//std::vector<std::pair<uint32_t, b2Body*>> _boxes;
 
-	NMessage* message;
-	while (message = con->ReceiveMsg())
+	if (_stepCount % 6)// To counter jitter
 	{
-		switch (message->GetType())
+		NMessage* message;
+		while (message = con->ReceiveMsg())
 		{
-		case STATESYNC_MESSAGE_CREATE_BOX:
-			//Process creation
-		{
-			StateSyncBoxCreate* create = (StateSyncBoxCreate*)message;
+			switch (message->GetType())
+			{
+			case STATESYNC_MESSAGE_CREATE_BOX:
+				//Process creation
+			{
+				StateSyncBoxCreate* create = (StateSyncBoxCreate*)message;
 
-			uint32_t id = create->id;
-			float x = create->x;
-			float y = create->y;
-			float rads = float(create->rot) / (180.0f / M_PI);
+				uint32_t id = create->id;
+				float x = create->x;
+				float y = create->y;
+				float rads = float(create->rot) / (180.0f / M_PI);
 
-			if (_boxes.find(id) != _boxes.end())
-				continue; // Already created
+				if (_boxes.find(id) != _boxes.end())
+					continue; // Already created
 
-			b2BodyDef bodyDef;
-			bodyDef.type = b2_dynamicBody;
-			bodyDef.position = b2Vec2(x, y);
-			bodyDef.angle = rads;
+				b2BodyDef bodyDef;
+				bodyDef.type = b2_dynamicBody;
+				bodyDef.position = b2Vec2(x, y);
+				bodyDef.angle = rads;
 
-			b2PolygonShape shape;
-			shape.SetAsBox(0.5f, 0.5f);
+				b2PolygonShape shape;
+				shape.SetAsBox(0.5f, 0.5f);
 
-			b2Body* body = _world->CreateBody(&bodyDef);
-			body->SetUserData(new uint32_t(++id));
-			body->CreateFixture(&shape, 5.0f);
+				b2Body* body = _world->CreateBody(&bodyDef);
+				body->SetUserData(new uint32_t(++id));
+				body->CreateFixture(&shape, 5.0f);
 
-			_boxes[id] = body;
-			//_boxes[id].Set(body);
+				_boxes[id] = body;
+			}
 
-
-			//if (_boxes.find(id) != _boxes.end())
-			//	continue; // Already created
-
-			//_boxes[id].Set(b2Vec2(x, y), rads);
-
-		}
-
-		break;
-		case STATESYNC_MESSAGE_UPDATE_BOX:
-		{
-			// Process move
-			StateSyncBoxMove* move = (StateSyncBoxMove*)message;
-
-			uint32_t id = move->id;
-			float x = move->x;
-			float y = move->y;
-			float rads = float(move->rot) / (180.0f / M_PI);
-
-			if (_boxes.find(id) == _boxes.end())
-				continue; // Not created
-
-			_boxes[id]->SetTransform(b2Vec2(x, y), rads);
-
-		}
-		break;
-		default:
 			break;
+			case STATESYNC_MESSAGE_UPDATE_BOX:
+			{
+				// Process move
+				StateSyncBoxMove* move = (StateSyncBoxMove*)message;
+
+				uint32_t id = move->id;
+				float x = move->x;
+				float y = move->y;
+				float rads = float(move->rot) / (180.0f / M_PI);
+
+				float velocityX = move->velocityX;
+				float velocityY = move->velocityY;
+				float rotVel = move->rotVel;
+
+				if (_boxes.find(id) == _boxes.end())
+					continue; // Not created
+
+				_boxes[id]->SetTransform(b2Vec2(x, y), rads);
+				_boxes[id]->SetLinearVelocity(b2Vec2(velocityX, velocityY));
+				_boxes[id]->SetAngularVelocity(rotVel);
+			}
+			break;
+			default:
+				break;
+			}
 		}
 	}
 

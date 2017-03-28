@@ -31,6 +31,8 @@ protected:
 	const char* _serverPort = nullptr;
 	udp::endpoint _serverEndpoint;
 
+	float jitterBuffer = 0.1f; // 100ms jitter buffer
+
 public:
 	Client(NetworkSimulation* simulation, BaseTransport* transport);
 	virtual ~Client();

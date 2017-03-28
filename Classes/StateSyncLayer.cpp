@@ -93,7 +93,6 @@ bool StateSyncLayer::init()
 
 	createNetworkStatsLabel();
 
-	_netDebugData = new NetworkDebugDataSource();
 
 	_tableView = TableView::create(_transport.GetDebugService(), Size(winSize.width, winSize.height * 0.9f));
 	_tableView->setPosition(10.0f, winSize.height * 0.1f);

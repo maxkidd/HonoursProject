@@ -5,6 +5,8 @@
 #include "network_message.h"
 #include "network_channel.h"
 
+#include <algorithm>
+
 class ChannelPacket;
 
 class ConnectionRequestPacket : public Packet
@@ -204,11 +206,32 @@ public:
 
 		SerializeFloat(stream, x);
 		SerializeFloat(stream, y);
+		stream.SerializeInteger(rot, 0, 360);
 		
 		// Velocity data
-		//SerializeFloat(stream, velocityX);
-		//SerializeFloat(stream, velocityY);
-		//SerializeFloat(stream, rotVel);
+		if (Stream::IsWriting)
+		{
+			// Clamp
+			velocityX = velocityX + 50.0f;
+			velocityX = std::max(std::min(velocityX, 100.0f), 0.0f) * 100.0f;
+
+			velocityY = velocityY + 50.0f;
+			velocityY = std::max(std::min(velocityY, 100.0f), 0.0f) * 100.0f;
+		}
+
+		uint32_t i_velocityX = (uint32_t)floor(velocityX);
+		uint32_t i_velocityY = (uint32_t)floor(velocityY);
+
+		stream.SerializeInteger(i_velocityX, 0, 10000);
+		stream.SerializeInteger(i_velocityY, 0, 10000);
+
+		if (Stream::IsReading)
+		{
+			velocityX = (float(i_velocityX) / 100.0f) - 50.0f;
+			velocityY = (float(i_velocityY) / 100.0f) - 50.0f;
+		}
+
+		SerializeFloat(stream, rotVel);
 
 		return true;
 	}

@@ -9,6 +9,8 @@ StateSyncServer::StateSyncServer(NetworkSimulation* simulation, BaseTransport* t
 
 StateSyncServer::~StateSyncServer()
 {
+
+
 }
 
 

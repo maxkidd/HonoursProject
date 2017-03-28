@@ -44,8 +44,6 @@ protected:
 public:
 	StateSyncSimulation();
 
-	virtual bool ProcessSnapshotMessages(Connection * con);
-	virtual void GenerateSnapshotMessages(MessageFactory* mf, Connection* con);
 	virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags);
 	virtual void Step() = 0;
 
@@ -80,13 +78,7 @@ public:
 class C_StateSyncSimulation : public StateSyncSimulation
 {
 private:
-	//GLESDebugDraw _debugDraw;
-	//std::deque<StateSyncSnapshot> snapshots; // Queue of snapshots
 
-	//std::map<uint32_t, b2Transform> _boxes;
-	//std::map<uint32_t, b2Transform> _boxes_interp;
-
-	//b2Vec2 _boxVertices[4];
 public:
 	C_StateSyncSimulation();
 

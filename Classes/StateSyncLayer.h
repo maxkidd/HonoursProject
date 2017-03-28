@@ -33,7 +33,6 @@ private:
 
 	SocketTransport _transport;
 
-	NetworkDebugDataSource* _netDebugData = nullptr;
 	TableView* _tableView = nullptr;
 
 	float _networkTimer = 0.0f;

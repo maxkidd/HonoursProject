@@ -63,7 +63,7 @@ S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
 		b2EdgeShape shape;
 		shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
 		_ground->CreateFixture(&shape, 0.0f);
-		_ground->SetUserData(new uint32_t(++id));
+		_ground->SetUserData(new uint32_t(-1));
 		_ground->SetTransform(b2Vec2(40.0f, 5.0f), 0.0f);
 		
 	}
@@ -74,7 +74,7 @@ S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
 		b2EdgeShape shape;
 		shape.Set(b2Vec2(0.0f, -40.0f), b2Vec2(0.0f, 40.0f));
 		_ground->CreateFixture(&shape, 0.0f);
-		_ground->SetUserData(new uint32_t(++id));
+		_ground->SetUserData(new uint32_t(-1));
 		_ground->SetTransform(b2Vec2(0.0f, 20.0f), 0.0f);
 	}
 	{
@@ -84,7 +84,7 @@ S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
 		b2EdgeShape shape;
 		shape.Set(b2Vec2(0.0f, -40.0f), b2Vec2(0.0f, 40.0f));
 		_ground->CreateFixture(&shape, 0.0f);
-		_ground->SetUserData(new uint32_t(++id));
+		_ground->SetUserData(new uint32_t(-1));
 		_ground->SetTransform(b2Vec2(70.0f, 20.0f), 0.0f);
 	}
 	{
@@ -129,6 +129,10 @@ void S_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Co
 			SnapshotBoxCreate* create = (SnapshotBoxCreate*)mf->Create(SNAPSHOT_MESSAGE_CREATE_BOX);
 
 			uint32_t* id = (uint32_t*)body->GetUserData();
+
+			if (*id == -1)
+				goto next_body;
+
 			b2Vec2 pos = body->GetPosition();
 
 			float deg = body->GetAngle() * (180.0f / M_PI);
@@ -143,6 +147,7 @@ void S_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Co
 
 			con->SendMsg(create);
 			
+			next_body:
 			// Next body
 			prevBody = body;
 			body = body->GetNext();
@@ -160,9 +165,13 @@ void S_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Co
 			if (!body->IsAwake()) // Continue to next box if sleeping
 				goto label_end;
 
+			uint32_t* id = (uint32_t*)body->GetUserData();
+
+			if (*id == -1)
+				goto label_end;
+
 			SnapshotBoxMove* move = (SnapshotBoxMove*)mf->Create(SNAPSHOT_MESSAGE_MOVE_BOX);
 
-			uint32_t* id = (uint32_t*)body->GetUserData();
 			b2Vec2 pos = body->GetPosition();
 
 			float deg = body->GetAngle() * (180.0f / M_PI);
@@ -346,7 +355,6 @@ void C_SnapshotInterpolationSimulation::Step()
 	auto it1 = first.boxes.begin();
 	auto it2 = second.boxes.begin();
 
-	//std::transform(first.boxes.begin(), first.boxes.end(), second.boxes.begin(), second.boxes.begin(), std::plus<int>());
 	for (auto box : _boxes)
 	{
 		uint32_t id = box.first;
