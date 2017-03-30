@@ -350,8 +350,7 @@ void C_SnapshotInterpolationSimulation::Step()
 
 	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - second.time; // now - second snapshot time
 	float t = std::min(1.0f, elapsed.count() * 10.0f);// between 0 and 1 for every 100ms
-	//CCLOG("Lerp time: %4.2f", t);
-
+	
 	auto it1 = first.boxes.begin();
 	auto it2 = second.boxes.begin();
 

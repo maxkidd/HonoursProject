@@ -2,7 +2,7 @@
 #define _STATESYNCSIMULATION_H_
 
 
-#include <stdint.h>
+//#include <stdint.h>
 #include <vector>
 #include <cocos2d.h>
 #include <Box2D\Box2D.h>
@@ -59,7 +59,7 @@ public:
 class S_StateSyncSimulation : public StateSyncSimulation
 {
 private:
-
+	std::map<Connection*, std::map<uint32_t, float>> _connectionPriorityQueue;
 public:
 	CREATE_FUNC(S_StateSyncSimulation);
 	S_StateSyncSimulation();

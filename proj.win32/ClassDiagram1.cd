@@ -1,0 +1,970 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RootTests" Collapsed="true">
+    <Position X="7.75" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\controller.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AppDelegate" Collapsed="true">
+    <Position X="130.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAACAAQAAAEAAAAAAAAAAAAk=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\AppDelegate.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="b2NetworkWorld" Collapsed="true">
+    <Position X="132.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAIAAAAAAAAAAAAAABAAAAAAgAAAAAAAAQAAAE=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\b2NetworkWorld.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Client" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QACAAgACAgAAAQBgAIAAAAIgAgIIIAAAAAgAAAAEACY=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Client.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestController" Collapsed="true">
+    <Position X="139.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAEIQAAADAAgIgAAAAAIAAAAQQBgKASAAAAKAEBAKAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\controller.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorld" Collapsed="true">
+    <Position X="132.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAIEAAAAQAAAAAAAAAABAIAABAAQAABAQA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\HelloWorldScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAgAAAgAAAQAAAAAAAAIgAAIIIAABAAgAAgAAACA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Server.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VisibleRect" Collapsed="true">
+    <Position X="130.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAABAAAAAABAIAAAAEAgAQAAIAAIQAAEAAAAAgAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\VisibleRect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorldState" Collapsed="true">
+    <Position X="132.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAIAAAAAAAAAAACAAgAAAAAAAQ=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\WorldState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestCustomTableView" Collapsed="true">
+    <Position X="141.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAABAAAABAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\BaseTest.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestCase" Collapsed="true">
+    <Position X="137.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQAAQAAgIpAAAABIAEQAAAIAFCAAAAAAACCk4CA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\BaseTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestBase" Collapsed="true">
+    <Position X="6.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAhEiBAAAABAABAAACQAAAAAgAAAIIgAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\BaseTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestSuite" Collapsed="true">
+    <Position X="5.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgABAACIAgAAAAAAACAAABAABAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\BaseTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestList" Collapsed="true">
+    <Position X="7.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAEAABAiAAAACAAAAQQAgAAAAAABAEAAAAgQAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\BaseTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BaseTest" Collapsed="true">
+    <Position X="134.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAFBAAAAAAAAAAAAAAACCAAg=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\BaseTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClientLayer" Collapsed="true">
+    <Position X="136" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAACAAAAAAUAAICAAAAAAAKAABCABAAEAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\ClientLayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkDebugView" Collapsed="true">
+    <Position X="139.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUAAAAAAAAAAAAAAACAAAAQAAIAAQIAAJABAIAEAEA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\NetworkDebugView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkLayer" Collapsed="true">
+    <Position X="141.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAIAAAEIAEABAAAgAAAAAEAAIAABAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\NetworkLayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerLayer" Collapsed="true">
+    <Position X="141.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAACAAAAAAEAAIAAAgAAAAIAABCAAAAEAAI=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\ServerLayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SnapshotInterpolationLayer" Collapsed="true">
+    <Position X="132.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IgCAAAAgQAAGAAAAAAEAAIAAQwAAAAoAABAAJAAGAAI=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\SnapshotInterpolationLayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryCallback" Collapsed="true">
+    <Position X="134.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIABAAAAQAAAAAQAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Test.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Box2DTest" Collapsed="true">
+    <Position X="139.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IACAAAQAAAACAAgAAAAAAABAAAACAAABABEAABBAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Box2DTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Box2DView" Collapsed="true">
+    <Position X="141.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IiCBAQQAQAAAEEAAAAIoAFAAAAAAAAQAACEAACJAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Box2DTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GLESDebugDraw" Collapsed="true">
+    <Position X="130.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QBCAIAAAABAAQAAAAAQAAAAAAEAAQBAJAAAFAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\GLES-Render.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DestructionListener" Collapsed="true">
+    <Position X="139.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Test.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Test" Collapsed="true">
+    <Position X="12" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YYgAAwIACgMgiEABAAAI0BAAAAgAEAgANBIACACAIIA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Test.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AddPair" Collapsed="true">
+    <Position X="18" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAEAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\AddPair.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ApplyForce" Collapsed="true">
+    <Position X="27" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAABAAAAAAAAAAAAAEAgAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\ApplyForce.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BodyTypes" Collapsed="true">
+    <Position X="36" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAKAAAAkAAJAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\BodyTypes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Breakable" Collapsed="true">
+    <Position X="45" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAgAAAABAAAEAAAAQAAAAEQAIBJEAQAAEAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Breakable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bridge" Collapsed="true">
+    <Position X="56.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEgAABAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Bridge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BulletTest" Collapsed="true">
+    <Position X="67.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAgAAAAAAAAAAAAAQAAAAEAgIAAAAAQAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\BulletTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cantilever" Collapsed="true">
+    <Position X="78.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAABAAAAAQAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Cantilever.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Car" Collapsed="true">
+    <Position X="90" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgKAAAAAAQAAAAAAAAIAAAAAIAAUkAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Car.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Chain" Collapsed="true">
+    <Position X="96.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Chain.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharacterCollision" Collapsed="true">
+    <Position X="105.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAQAAAAEAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\CharacterCollision.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CollisionFiltering" Collapsed="true">
+    <Position X="112.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\CollisionFiltering.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CollisionProcessing" Collapsed="true">
+    <Position X="121.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAEAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\CollisionProcessing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CompoundShapes" Collapsed="true">
+    <Position X="20.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAEAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\CompoundShapes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Confined" Collapsed="true">
+    <Position X="29.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAABAAAAAEAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Confined.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ContinuousTest" Collapsed="true">
+    <Position X="38.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAIAAAQAAAAEAgIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\ContinuousTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConvexHull" Collapsed="true">
+    <Position X="47.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAEAAAAAAAAAAAAAAgAAAAAAEgAIAAAAEQAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\ConvexHull.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConveyorBelt" Collapsed="true">
+    <Position X="58.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAgAAACAAAAEAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\ConveyorBelt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DistanceTest" Collapsed="true">
+    <Position X="69.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAIAAAAAADAAAAAAAAAAAAAAEAGIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\DistanceTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dominos" Collapsed="true">
+    <Position X="81" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Dominos.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DumpShell" Collapsed="true">
+    <Position X="92.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\DumpShell.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DynamicTreeTest" Collapsed="true">
+    <Position X="99" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABgAAABCQAAkAAASQBgABAAAAAgAAHgAJAgAQAAAAAY=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\DynamicTreeTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EdgeShapesCallback" Collapsed="true">
+    <Position X="141.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIABAAAAQAAQAAAEAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\EdgeShapes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EdgeShapes" Collapsed="true">
+    <Position X="114.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAIAAIAAAAEAEAAEAAAAAAAAAAAEAAIAAAAAAgAIA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\EdgeShapes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EdgeTest" Collapsed="true">
+    <Position X="123.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\EdgeTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gears" Collapsed="true">
+    <Position X="22.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAQAAAAAAAAAAAAAAgAAAAAEAAKAACAQCAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Gears.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mobile" Collapsed="true">
+    <Position X="31.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAECAAAAAAAAIAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Mobile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MobileBalanced" Collapsed="true">
+    <Position X="40.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAQAIAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\MobileBalanced.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MotorJoint" Collapsed="true">
+    <Position X="49.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABgAAAAAAgAAAAAAAAAAAAAAAAAAAMQAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\MotorJoint.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OneSidedPlatform" Collapsed="true">
+    <Position X="60.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAJAAAAAAAAgAAASAAAAEAgIAAAAAAAgAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\OneSidedPlatform.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinball" Collapsed="true">
+    <Position X="72" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgEAAAQAAAgAAAAAAAAEgAAgAAAAEAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Pinball.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PolyCollision" Collapsed="true">
+    <Position X="83.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAIAAAAAADAAAAAAAAAAAAAAEACoAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\PolyCollision.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PolyShapesCallback" Collapsed="true">
+    <Position X="132.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAQAEAAAAAIAAAAEAAABAAAAAQAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\PolyShapes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PolyShapes" Collapsed="true">
+    <Position X="101.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAIAAIAAAAAAEAAEAAAAAAIAAAAEAAIAAAAAAgAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\PolyShapes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prismatic" Collapsed="true">
+    <Position X="108" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAgAAAAAAAAAAAAAAAAAAAEQAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Prismatic.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pulleys" Collapsed="true">
+    <Position X="117" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAgAAAAAAAAAAAAAAAAAAAAAEAAKAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Pulleys.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pyramid" Collapsed="true">
+    <Position X="126" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAEAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Pyramid.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayCastClosestCallback" Collapsed="true">
+    <Position X="137.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAIAQAAAAQAAAAAAEAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\RayCast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayCastAnyCallback" Collapsed="true">
+    <Position X="136" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAABAIAAAAAAQAAAAAAEAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\RayCast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayCastMultipleCallback" Collapsed="true">
+    <Position X="139.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAIAAAAAAgAAAAAAEQAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\RayCast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayCast" Collapsed="true">
+    <Position X="51.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAIAAIAAAAEAEAAEAAAAAQAAAIAEAgIAAAAAAgAAI=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\RayCast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Revolute" Collapsed="true">
+    <Position X="63" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAgAAAAAAAgAAAAEQAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Revolute.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rope" Collapsed="true">
+    <Position X="74.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAIAAAAAAEAAAEAAAAAAAAAAAAEAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Rope.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RopeJoint" Collapsed="true">
+    <Position X="85.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAIAAAIAAAAAAAAAAAAAAAAAAAEAAIAAAAAAABAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\RopeJoint.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SensorTest" Collapsed="true">
+    <Position X="94.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAABAgAAAAQAAAAACAAAAAEAAMAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\SensorTest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShapeEditing" Collapsed="true">
+    <Position X="103.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAQQAAAAAAAAAAGAgIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\ShapeEditing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SliderCrank" Collapsed="true">
+    <Position X="110.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAABAAAAAAAAAAAAAEAAKAAAAQAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\SliderCrank.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SphereStack" Collapsed="true">
+    <Position X="119.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAIAAAAAAAAAAAAAAAAAAAAAAAAEAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\SphereStack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheoJansen" Collapsed="true">
+    <Position X="128.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEgAAQAAAAAAAAAAQACAAAAAAAAAIEACIAAAAAAAAEA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\TheoJansen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tiles" Collapsed="true">
+    <Position X="24.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAABAAAAAAAAAEIAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Tiles.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeOfImpact" Collapsed="true">
+    <Position X="33.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAgAAAIAAEAAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\TimeOfImpact.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tumbler" Collapsed="true">
+    <Position X="42.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQAICAAAAQAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Tumbler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VaryingFriction" Collapsed="true">
+    <Position X="54" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\VaryingFriction.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VaryingRestitution" Collapsed="true">
+    <Position X="65.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAABAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\VaryingRestitution.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VerticalStack" Collapsed="true">
+    <Position X="76.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAIAAAAAAAAAAAAAAQAAAAAAAAAEAAIAAIAAQAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\VerticalStack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Web" Collapsed="true">
+    <Position X="87.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIgAIAAAAAAAQAAAAAAAAAAAAAAAAEgAIAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Tests\Web.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkDebugDataSource" Collapsed="true">
+    <Position X="137.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAEEAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAACQAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\NetworkDebugDataSource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BitWrite" Collapsed="true">
+    <Position X="137.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgACAEgAAAAAAAIhAAABAAAAAACIAAACAAAAAAAAAE=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_bitpack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BitRead" Collapsed="true">
+    <Position X="136" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAgABAAABAIgAAABAQAAAACAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_bitpack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChannelPacket" Collapsed="true">
+    <Position X="134.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAABAACAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_channel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChannelListener" Collapsed="true">
+    <Position X="132.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_channel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Channel" Collapsed="true">
+    <Position X="130.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAIAQBAgAAACIAAAAABgAAIAAAAAAAAABAAAAAAEAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_channel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConnectionRequestPacket" Collapsed="true">
+    <Position X="10.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAACBAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConnectionDeniedPacket" Collapsed="true">
+    <Position X="12.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAACAAAAgAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConnectionPacket" Collapsed="true">
+    <Position X="14.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAACACAAAAAAAAAAAACAAAAACAABAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConnectionAcceptPacket" Collapsed="true">
+    <Position X="17" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAACAAAAAKAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConnectionDisconnectPacket" Collapsed="true">
+    <Position X="19.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAACAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SnapshotBoxCreate" Collapsed="true">
+    <Position X="1.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACACAAAAACAABgAAAAAgA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SnapshotBoxMove" Collapsed="true">
+    <Position X="3.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACACAAAAACAABgAAAAAgA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateSyncBoxCreate" Collapsed="true">
+    <Position X="5.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACACAAAAACAABgAAAAAgA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateSyncBoxMove" Collapsed="true">
+    <Position X="8" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACACAAEAACAARgAAAAAgA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Connection" Collapsed="true">
+    <Position X="137.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAABACAAAgCAEAAGAAAAAAAIAAAAAAAAAAAAAECAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_connection.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NMessage" Collapsed="true">
+    <Position X="4.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAACAQAAAAAAAAAACAAAAEQAAACAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_message.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MessageFactory" Collapsed="true">
+    <Position X="134.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAQAAAAAAAAAACBFCAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_message.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Packet" Collapsed="true">
+    <Position X="14.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAACAAAAEQAAACAAABACA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_packet.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PacketFactory" Collapsed="true">
+    <Position X="130.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAIAQgAAAAAAAAAAQAAAAAAAAAAAEAAAAAAgAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_packet.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Serializable" Collapsed="true">
+    <Position X="10.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAABAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_serializable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkSimulation" Collapsed="true">
+    <Position X="4" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAACAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_simulation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BaseStream" Collapsed="true">
+    <Position X="1.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIABAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_stream.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OStream" Collapsed="true">
+    <Position X="2.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAQACAAAIAAAAAAgAAIAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_stream.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InStream" Collapsed="true">
+    <Position X="0.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgBAAAAAAAAAAAQAAAAAAAgAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_stream.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BaseTransport">
+    <Position X="10.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAQAEAAEAggDAEAAAAACBgAAGAEAAAFAAAAgAAACAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_transport.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SocketTransport">
+    <Position X="10.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAQAAAgAAAAAAAAAAACAAAACAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_transport.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MouseQueryCallback" Collapsed="true">
+    <Position X="136" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIABAAAAQAAAEAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\SnapshotInterpolationSimulation.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SnapshotClient" Collapsed="true">
+    <Position X="130.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACiAAcCBgTAgAEACQKAQAAIAQoAQAIAAyAAEABAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\SnapshotInterpolationClient.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SnapshotServer" Collapsed="true">
+    <Position X="134.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAUyCgTAgAEACAKBAAAIQggAIAIAAQCAAABBg=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\SnapshotInterpolationServer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SnapshotInterpolationSimulation" Collapsed="true">
+    <Position X="6.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAEAAAAAAAAAAAAAEEABgIAAAAACAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\SnapshotInterpolationSimulation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="S_SnapshotInterpolationSimulation" Collapsed="true">
+    <Position X="5.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgEAAAAAAAAEAACAIAEAAAAAAEMAAAILCAAECAAkA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\SnapshotInterpolationSimulation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_SnapshotInterpolationSimulation" Collapsed="true">
+    <Position X="7.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAIAAAAgAAAEAAAAIDDAAAAAAIA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\SnapshotInterpolationSimulation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateSyncClient" Collapsed="true">
+    <Position X="7.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAgCQAAAAAIAAAAAAAUAAAAACAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\StateSyncClient.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateSyncLayer" Collapsed="true">
+    <Position X="136" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IgCAAAAgQAACAAAAAAEAAIAAQAAAgAoAADAApAAGAAI=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\StateSyncLayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateSyncServer" Collapsed="true">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAgCAAAAAAIAAAAAAAUAAAAACAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\StateSyncServer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateSyncSimulation" Collapsed="true">
+    <Position X="1.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgkAAAAAAAAEAACAIAEAAAAAAAOAAgIJCAAACAAkA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\StateSyncSimulation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="S_StateSyncSimulation" Collapsed="true">
+    <Position X="0.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEgAAAAEAAAAAAAEEAAAIDAAAACAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\StateSyncSimulation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_StateSyncSimulation" Collapsed="true">
+    <Position X="3" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAgIDAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\StateSyncSimulation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="M_InitBegin" Collapsed="true">
+    <Position X="134.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\NetMessage.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="M_InitResponse" Collapsed="true">
+    <Position X="137.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\NetMessage.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="M_InitFinalise" Collapsed="true">
+    <Position X="136" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\NetMessage.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="M_Ping" Collapsed="true">
+    <Position X="139.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\NetMessage.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="BodyState" Collapsed="true">
+    <Position X="130.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAIAAAAAAAAQAAAAAAAABAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\WorldState.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Settings" Collapsed="true">
+    <Position X="130.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACgAAQAAAICgRABAAAAAoAAACAAACAAgAEAAGAkIAg=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Test.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TestEntry" Collapsed="true">
+    <Position X="136" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Test.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ContactPoint" Collapsed="true">
+    <Position X="132.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAIIgAAAAAAAAEAAQAAAAAAgI=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Test.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StreamContext" Collapsed="true">
+    <Position X="134.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_stream.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PacketInfo" Collapsed="true">
+    <Position X="141.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAgAAAAIAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_transport.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WorldSnapshot" Collapsed="true">
+    <Position X="137.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\SnapshotInterpolationSimulation.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StateSyncSnapshot" Collapsed="true">
+    <Position X="132.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\StateSyncSimulation.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="TestCreateFcn" Collapsed="true">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\Box2DTestBed\Test.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="Message" Collapsed="true">
+    <Position X="132.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAQAAAAAAAAAAAAEAgAQAAAAEAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\NetMessage.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkDebugType" Collapsed="true">
+    <Position X="134.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\NetworkDebugDataSource.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ClientServerPacketTypes" Collapsed="true">
+    <Position X="130.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAEBAABAQAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SnapshotMessageTypes" Collapsed="true">
+    <Position X="136" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAACBAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="StateSyncMessageTypes" Collapsed="true">
+    <Position X="137.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEBAAAAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>M:\VisualStudio2015\Projects\HonoursProject\Classes\network_common.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

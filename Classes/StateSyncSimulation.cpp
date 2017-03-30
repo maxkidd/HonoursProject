@@ -59,7 +59,7 @@ void StateSyncSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4
 	_world->DrawDebugData();
 }
 
-uint32_t S_StateSyncSimulation::id(0);
+uint32_t StateSyncSimulation::id(0);
 
 S_StateSyncSimulation::S_StateSyncSimulation()
 {
@@ -139,7 +139,51 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 	}
 	else // Synchronized
 	{
-		b2Body* body = _world->GetBodyList();
+		// Priority queue for this connection
+		auto priorityQueue = _connectionPriorityQueue[con];
+
+		// Vector to copy to and sort
+		std::vector<std::pair<uint32_t, float>> priority;
+
+		// Copy
+		for (auto it = priorityQueue.begin(); it != priorityQueue.end(); ++it)
+			priority.push_back(*it);
+		
+		// Sort priority
+		std::sort(priority.begin(), priority.end(), [&](auto a, auto  b)
+		{
+			return a.second > b.second;
+		});
+
+
+		for (auto p : priority)
+		{
+			b2Body* body = _boxes[p.first];
+
+			StateSyncBoxMove* move = (StateSyncBoxMove*)mf->Create(STATESYNC_MESSAGE_UPDATE_BOX);
+
+			b2Vec2 pos = body->GetPosition();
+			b2Vec2 velocity = body->GetLinearVelocity();
+
+			float deg = body->GetAngle() * (180.0f / M_PI);
+
+			if (deg > 0.0f)
+				move->rot = (uint32_t((deg)) % 360);
+			else
+				move->rot = 360 - (uint32_t(abs(deg)) % 360);
+
+			uint32_t* id = (uint32_t*)body->GetUserData();
+
+			move->id = *id;
+			move->x = pos.x;
+			move->y = pos.y;
+			move->velocityX = velocity.x;
+			move->velocityY = velocity.y;
+			move->rotVel = body->GetAngularVelocity();
+
+			con->SendMsg(move);
+		}
+		/*b2Body* body = _world->GetBodyList();
 		b2Body* prevBody = body;
 		while (body)
 		{
@@ -176,7 +220,7 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 			body = body->GetNext();
 			if (prevBody == body)
 				break;
-		}
+		}*/
 	}
 	
 }
@@ -202,6 +246,12 @@ void S_StateSyncSimulation::Step()
 	{
 		++_stepCount;
 	}
+
+
+
+
+
+
 }
 
 class MouseQueryCallback : public b2QueryCallback
