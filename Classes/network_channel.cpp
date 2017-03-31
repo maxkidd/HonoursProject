@@ -52,6 +52,9 @@ Channel::Channel(MessageFactory * mf) : _mf(mf)
 
 void Channel::SendMsg(NMessage * message)
 {
+	
+
+
 	_sendQueue.push(message);
 }
 

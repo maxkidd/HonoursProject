@@ -94,7 +94,6 @@ S_StateSyncSimulation::S_StateSyncSimulation()
 
 void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
 {
-
 	if (_connectionSynchronized.find(con) == _connectionSynchronized.end())
 	{
 
@@ -127,7 +126,11 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 			create->x = pos.x;
 			create->y = pos.y;
 
+
 			con->SendMsg(create);
+
+			// Add priority object to connection
+			_connectionPriorityQueue[con][body] = 0.0f;
 
 		next_body:
 			prevBody = body;
@@ -136,6 +139,7 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 				break;
 		}
 		_connectionSynchronized[con] = true;
+
 	}
 	else // Synchronized
 	{
@@ -143,7 +147,7 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 		auto priorityQueue = _connectionPriorityQueue[con];
 
 		// Vector to copy to and sort
-		std::vector<std::pair<uint32_t, float>> priority;
+		std::vector<std::pair<b2Body*, float>> priority;
 
 		// Copy
 		for (auto it = priorityQueue.begin(); it != priorityQueue.end(); ++it)
@@ -158,7 +162,7 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 
 		for (auto p : priority)
 		{
-			b2Body* body = _boxes[p.first];
+			b2Body* body = p.first;
 
 			StateSyncBoxMove* move = (StateSyncBoxMove*)mf->Create(STATESYNC_MESSAGE_UPDATE_BOX);
 

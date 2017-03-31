@@ -111,4 +111,42 @@ public:
 private:
 	BitRead _bitReader;
 };
+
+
+class MeasureStream : public BaseStream
+{
+private:
+	int bitsWritten;
+public:
+	enum { IsWriting = 1 };
+	enum { IsReading = 0 };
+
+
+	bool SerializeInteger(uint32_t& value)
+	{
+		bitsWritten += 32;
+		return true;
+	}
+	bool SerializeInteger(uint32_t& value, uint32_t min_value, uint32_t max_value)
+	{
+		assert(min_value < max_value);
+
+		int bits = (min_value == max_value) ? 0 : log2(max_value - min_value) + 1;
+
+		assert(bits <= 32);
+		bitsWritten += bits;
+
+		return true;
+	}
+	bool SerializeBits(uint32_t& value, int bits)
+	{
+		assert(bits > 0);
+		assert(bits <= 32);
+
+		bitsWritten += bits;
+		return true;
+	}
+
+};
+
 #endif

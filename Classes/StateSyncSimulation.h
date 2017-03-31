@@ -59,7 +59,7 @@ public:
 class S_StateSyncSimulation : public StateSyncSimulation
 {
 private:
-	std::map<Connection*, std::map<uint32_t, float>> _connectionPriorityQueue;
+	std::map<Connection*, std::map<b2Body*, float>> _connectionPriorityQueue;
 public:
 	CREATE_FUNC(S_StateSyncSimulation);
 	S_StateSyncSimulation();

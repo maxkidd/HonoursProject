@@ -3,7 +3,6 @@
 
 #include "network_serializable.h"
 
-#define MAX_PACKET_SIZE 1024;
 
 class PacketFactory;
 
@@ -47,7 +46,7 @@ private:
 class factory_class : public base_class{											\
 public:																				\
 	factory_class(int packetTypes = num_packets) : base_class(packetTypes) {}		\
-	virtual Packet* CreatePacket(uint32_t type){													\
+	virtual Packet* CreatePacket(uint32_t type){									\
 		Packet* packet = base_class::CreatePacket(type);							\
 		switch (type){
 

@@ -44,6 +44,7 @@ public:
 	void SetListener(ChannelListener *  listener);
 protected:
 private:
+
 	int _id;
 
 	ChannelListener* _listener;
