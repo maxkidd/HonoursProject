@@ -19,9 +19,7 @@ ConnectionPacket * Connection::GeneratePacket()
 {
 	ConnectionPacket* packet = (ConnectionPacket*)_packetFactory->Create(CLIENT_SERVER_PACKET_CONNECTION);
 
-
-	// Add messages to connection packet
-
+	// Add messages to connection packet from channel layer
 	ChannelPacket* channel_packet = new ChannelPacket();
 	_channel->GetPacketData(*channel_packet, 0);
 

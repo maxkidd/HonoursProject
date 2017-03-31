@@ -1,27 +1,7 @@
 #ifndef _STATESYNCSERVER_H_
 #define _STATESYNCSERVER_H_
 
-#include "cocos2d.h"
-#include "cocos-ext.h"
-
-#include "asio\asio.hpp"
-
-//#include "server.h"
-//#include "NetworkDebugView.h"
-
-#include "network_transport.h"
-#include "network_connection.h"
-#include "network_common.h"
-#include "network_packet.h"
-
-
 #include "network_clientserver.h"
-
-#include "StateSyncSimulation.h"
-
-#include "NetworkDebugDataSource.h"
-
-#include <stdio.h>
 
 class StateSyncServer : public Server
 {

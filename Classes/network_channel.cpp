@@ -7,8 +7,6 @@ template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageF
 	// Serialize bool if has messages
 	// Serialize number of messages
 	// For each
-
-
 	uint32_t hasMessages = Stream::IsWriting && numMessages > 0;
 
 	stream.SerializeInteger(hasMessages, 0, 1);
@@ -17,8 +15,6 @@ template<typename Stream> bool ChannelPacket::Serialize(Stream& stream, MessageF
 	{
 		stream.SerializeInteger(numMessages, 0, 256);
 
-		//if (Stream::IsReading)
-			//messages.clear();
 		uint32_t type;
 		NMessage* message;
 
@@ -52,9 +48,6 @@ Channel::Channel(MessageFactory * mf) : _mf(mf)
 
 void Channel::SendMsg(NMessage * message)
 {
-	
-
-
 	_sendQueue.push(message);
 }
 
@@ -67,11 +60,6 @@ NMessage * Channel::ReceiveMsg()
 	_recvQueue.pop();
 	return returnMsg;
 }
-
-/*ChannelPacket * Channel::GeneratePacketData(int freeBits)
-{
-	return nullptr;
-}*/
 
 int Channel::GetPacketData(ChannelPacket & data, int bitsFree)
 {

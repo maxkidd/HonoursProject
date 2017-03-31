@@ -26,9 +26,6 @@ public:
 	udp::endpoint Endpoint();
 protected:
 private:
-	//QUEUE(MESSAGES) sentqueue
-	//queue(MESSAGES) receivedqueue
-
 	udp::endpoint _endpoint;
 
 	Channel* _channel;

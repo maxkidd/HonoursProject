@@ -37,16 +37,12 @@ public:
 	void SendMsg(NMessage* message);
 	NMessage* ReceiveMsg();
 
-	//ChannelPacket* GeneratePacketData(int freeBits);
 	int GetPacketData(ChannelPacket& data, int bitsFree);
 	void ProcessPacketData(const ChannelPacket& data);
 
 	void SetListener(ChannelListener *  listener);
 protected:
 private:
-
-	int _id;
-
 	ChannelListener* _listener;
 
 	std::queue<NMessage*> _recvQueue;

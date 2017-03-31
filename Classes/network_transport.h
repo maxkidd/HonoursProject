@@ -45,7 +45,7 @@ public:
 
 	//void SetDebugService(NetworkDebugDataSource* dataSource) { _debugData = dataSource; }
 	NetworkDebugDataSource* GetDebugService() { return &_debugData; }
-	asio::io_service* GetIOService() { return &_io_service; }
+	asio::io_service* GetIOService() { return &_IOService; }
 protected:
 	// Internal receive functions to recieve packets from destination
 	virtual int InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes) = 0;
@@ -53,8 +53,8 @@ protected:
 	virtual bool InternalSendPacket(const udp::endpoint & endpoint, const void * data, int size) = 0;
 
 private:
-	std::queue<PacketInfo> send_queue_;
-	std::queue<PacketInfo> receive_queue_;
+	std::queue<PacketInfo> _sendQueue;
+	std::queue<PacketInfo> _receiveQueue;
 
 	PacketFactory* _packetFactory;
 	MessageFactory* _messageFactory;
@@ -63,7 +63,7 @@ private:
 	StreamContext _context;
 	int max_packet_size_;
 protected:
-	asio::io_service _io_service;
+	asio::io_service _IOService;
 };
 
 class SocketTransport : public BaseTransport
@@ -78,7 +78,7 @@ protected:
 	virtual bool InternalSendPacket(const udp::endpoint & endpoint, const void * data, int size);
 
 private:
-	udp::socket socket_;
+	udp::socket _socket;
 };
 
 #endif

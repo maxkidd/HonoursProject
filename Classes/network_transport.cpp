@@ -3,23 +3,22 @@
 #include <cocos2d.h>
 
 SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* messageFactory, unsigned short port) 
-	: BaseTransport(packetFactory, messageFactory), socket_(_io_service, udp::endpoint(udp::v4(), port))
+	: BaseTransport(packetFactory, messageFactory), _socket(_IOService, udp::endpoint(udp::v4(), port))
 {
-	socket_.non_blocking(true);
+	_socket.non_blocking(true);
 }
 
 unsigned short SocketTransport::GetPort()
 {
-	return socket_.local_endpoint().port();
+	return _socket.local_endpoint().port();
 }
 
 
 int SocketTransport::InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes)
 {
-	//int result = socket_.receive(asio::buffer(data, bytes));
 	asio::error_code ec;
 
-	size_t result = socket_.receive_from(asio::buffer(data, bytes), endpoint, 0, ec);
+	size_t result = _socket.receive_from(asio::buffer(data, bytes), endpoint, 0, ec);
 	if(!result)
 		CCLOG("InternalReceivePacket : %s", ec.message());
 
@@ -33,7 +32,7 @@ bool SocketTransport::InternalSendPacket(const udp::endpoint & endpoint, const v
 	asio::error_code ec;
 	int flags = 0;
 
-	int bytesSent = socket_.send_to(asio::buffer(data, size), endpoint, flags, ec);
+	int bytesSent = _socket.send_to(asio::buffer(data, size), endpoint, flags, ec);
 
 	if(!bytesSent)
 		CCLOG("InternalSendPacket : %s", ec.message());
@@ -48,10 +47,10 @@ Packet * BaseTransport::CreatePacket()
 
 Packet * BaseTransport::ReceivePacket(udp::endpoint & endpoint)
 {
-	if (!receive_queue_.empty())
+	if (!_receiveQueue.empty())
 	{
-		PacketInfo packetInfo = receive_queue_.front();
-		receive_queue_.pop();
+		PacketInfo packetInfo = _receiveQueue.front();
+		_receiveQueue.pop();
 
 		endpoint = packetInfo.endpoint;
 
@@ -62,23 +61,23 @@ Packet * BaseTransport::ReceivePacket(udp::endpoint & endpoint)
 
 void BaseTransport::SendPacket(const udp::endpoint & endpoint, Packet* data)
 {
-	if (send_queue_.size() <= MAX_SEND_QUEUE)
+	if (_sendQueue.size() <= MAX_SEND_QUEUE)
 	{
 		PacketInfo packetInfo;
 		packetInfo.packet = data;
 		packetInfo.endpoint = endpoint;
-		send_queue_.push(packetInfo);
+		_sendQueue.push(packetInfo);
 	}
 }
 
 void BaseTransport::WritePackets()
 {
 	// Iterate through all send queue
-	while (!send_queue_.empty())
+	while (!_sendQueue.empty())
 	{
 		// Pop next packet to send
-		PacketInfo packetInfo = send_queue_.front();
-		send_queue_.pop();
+		PacketInfo packetInfo = _sendQueue.front();
+		_sendQueue.pop();
 		
 		// Write packet to temporary buffer
 		uint8_t* buffer = new uint8_t[max_packet_size_];
@@ -110,7 +109,7 @@ void BaseTransport::ReadPackets()
 		if (!bytesReceived)
 			break;
 
-		if (receive_queue_.size() >= MAX_RECEIVE_QUEUE)
+		if (_receiveQueue.size() >= MAX_RECEIVE_QUEUE)
 			break;
 
 		// All is good
@@ -118,7 +117,7 @@ void BaseTransport::ReadPackets()
 		packetInfo.endpoint = endpoint;
 		packetInfo.packet = ReadPacket(&_context, _packetFactory, buffer, bytesReceived);
 		
-		receive_queue_.push(packetInfo);
+		_receiveQueue.push(packetInfo);
 
 
 		_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Received " + std::to_string(bytesReceived) + "bytes from "
