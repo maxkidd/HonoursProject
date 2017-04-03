@@ -82,6 +82,7 @@ private:
 
 	std::map<uint32_t, b2Transform> _boxes;
 	std::map<uint32_t, b2Transform> _boxes_interp;
+	std::map<uint32_t, b2Transform> _boxes_interp2;
 
 	b2Vec2 _boxVertices[4];
 public:

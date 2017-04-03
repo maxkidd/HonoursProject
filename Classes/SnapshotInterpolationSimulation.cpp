@@ -322,6 +322,60 @@ C_SnapshotInterpolationSimulation::C_SnapshotInterpolationSimulation() : _debugD
 
 void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
 {
+	// Interpolation done here
+	if (snapshots.size() < 4)
+		return;
+
+
+	// Linear interolation test
+	WorldSnapshot first = snapshots.end()[-1];
+	WorldSnapshot second = snapshots.end()[-2];
+	WorldSnapshot third = snapshots.end()[-3];
+	WorldSnapshot fourth = snapshots.end()[-4];
+
+	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - first.time; // now - second snapshot time
+	
+	float t = std::min(1.0f, elapsed.count()* 10.0f);// between 0 and 1 for every 100ms
+	float t2 = std::min(1.0f, (elapsed.count()+0.3f)/4.0f* 10.0f);// between 0 and 1 for every 100ms
+
+	auto it1 = first.boxes.begin();
+	auto it2 = second.boxes.begin();
+	auto it3 = third.boxes.begin();
+	auto it4 = fourth.boxes.begin();
+
+	for (auto box : _boxes)
+	{
+		uint32_t id = box.first;
+		while (id != it1->first)
+		{
+			it1++;
+		}
+		while (id != it2->first)
+		{
+			it2++;
+		}
+		while (id != it3->first)
+		{
+			it3++;
+		}
+		while (id != it4->first)
+		{
+			it4++;
+		}
+		b2Vec2 firstVec = it1->second.p;
+		b2Vec2 secondVec = it2->second.p;
+		b2Vec2 thirdVec = it3->second.p;
+		b2Vec2 fourthVec = it4->second.p;
+		float firstRot = it1->second.q.GetAngle();
+		float secondRot = it2->second.q.GetAngle();
+
+		float x = Cubic(fourthVec.x, thirdVec.x, secondVec.x, firstVec.x, t2);
+		float y = Cubic(fourthVec.y, thirdVec.y, secondVec.y, firstVec.y, t2);
+
+		_boxes_interp[box.first].Set(Lerp(secondVec, firstVec, t), LerpRad(secondRot, firstRot, t));
+		_boxes_interp2[box.first].Set(b2Vec2(x, y), LerpRad(secondRot, firstRot, t));
+	}
+
 	// Render boxes
 	for (auto box : _boxes_interp)
 	{
@@ -332,27 +386,42 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 		{
 			verts[i] = b2Mul(t, _boxVertices[i]);
 		}
-		_debugDraw.DrawPolygon(verts, 4, b2Color(0.5f, 0.5f, 0.9f));
+		_debugDraw.DrawPolygon(verts, 4, b2Color(0.5f, 0.3f, 0.9f));
+	}
+	for (auto box : _boxes_interp2)
+	{
+		b2Transform t = box.second;
+
+		b2Vec2 verts[4];
+		for (int i = 0; i < 4; ++i)
+		{
+			verts[i] = b2Mul(t, _boxVertices[i]);
+		}
+		_debugDraw.DrawPolygon(verts, 4, b2Color(0.9f, 0.3f, 0.5f));
 	}
 
 }
 
 void C_SnapshotInterpolationSimulation::Step()
 {
-	// Interpolation done here
-	if (snapshots.size() < 3)
+	/*// Interpolation done here
+	if (snapshots.size() < 4)
 		return;
 	
 
 	// Linear interolation test
-	WorldSnapshot first = snapshots.end()[-2];
-	WorldSnapshot second = snapshots.end()[-1];
+	WorldSnapshot first = snapshots.end()[-1];
+	WorldSnapshot second = snapshots.end()[-2];
+	WorldSnapshot third = snapshots.end()[-3];
+	WorldSnapshot fourth = snapshots.end()[-4];
 
 	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - second.time; // now - second snapshot time
-	float t = std::min(1.0f, elapsed.count() * 10.0f);// between 0 and 1 for every 100ms
+	float t = std::min(1.0f, (elapsed.count())* 10.0f);// between 0 and 1 for every 100ms
 	
 	auto it1 = first.boxes.begin();
 	auto it2 = second.boxes.begin();
+	auto it3 = third.boxes.begin();
+	auto it4 = fourth.boxes.begin();
 
 	for (auto box : _boxes)
 	{
@@ -365,13 +434,26 @@ void C_SnapshotInterpolationSimulation::Step()
 		{
 			it2++;
 		}
+		while (id != it3->first)
+		{
+			it3++;
+		}
+		while (id != it4->first)
+		{
+			it4++;
+		}
 		b2Vec2 firstVec = it1->second.p;
 		b2Vec2 secondVec = it2->second.p;
+		b2Vec2 thirdVec = it3->second.p;
+		b2Vec2 fourthVec = it4->second.p;
 		float firstRot = it1->second.q.GetAngle();
 		float secondRot = it2->second.q.GetAngle();
 
-		_boxes_interp[box.first].Set(Lerp(firstVec, secondVec, t), LerpRad(firstRot, secondRot, t));
-	}
+		float x = CubicHermite(fourthVec.x, thirdVec.x, secondVec.x, firstVec.x, t);
+		float y = CubicHermite(fourthVec.y, thirdVec.y, secondVec.y, firstVec.y, t);
+
+		_boxes_interp[box.first].Set(Lerp(secondVec, firstVec,t), LerpRad(secondRot, firstRot, t));
+	}*/
 }
 
 void C_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
@@ -422,7 +504,7 @@ bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 	}
 
 	// Remove old snapshot
-	if (snapshots.size() > 4)
+	if (snapshots.size() > 6)
 		snapshots.pop_front();
 
 	// Create new snapshot and push to the queue
