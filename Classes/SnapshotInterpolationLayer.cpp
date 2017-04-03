@@ -14,7 +14,7 @@ using namespace cocos2d;
 using namespace cocos2d::extension;
 
 SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr),
-server(nullptr), client(nullptr)
+server(nullptr), client(nullptr), _transport(new UnreliablePacketFactory(), new SnapshotMessageFactory())
 {
 	_simulation = C_SnapshotInterpolationSimulation::create();
 	addChild(_simulation);
@@ -27,6 +27,22 @@ SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
 	if (_statusLabel)
 	{
 		_statusLabel = nullptr;
+	}
+	if (client)
+	{
+		client->Disconnect();
+		delete client;
+		client = nullptr;
+	}
+	if (server)
+	{
+		delete server;
+		server = nullptr;
+	}
+	if (_simulation)
+	{
+		delete _simulation;
+		_simulation = nullptr;
 	}
 	//if(_tableView)
 	//	_tableView->release();
@@ -76,9 +92,8 @@ bool SnapshotInterpolationLayer::init()
 
 	createNetworkStatsLabel();
 
-	_netDebugData = new NetworkDebugDataSource();
 
-	_tableView = TableView::create(_netDebugData, Size(winSize.width, winSize.height * 0.9f));
+	_tableView = TableView::create(_transport.GetDebugService(), Size(winSize.width, winSize.height * 0.9f));
 	_tableView->setPosition(10.0f, winSize.height * 0.1f);
 	//tableView->setContentSize(Size(200.0f, 20.0f));
 	_tableView->setDirection(ScrollView::Direction::VERTICAL);
@@ -109,7 +124,7 @@ void SnapshotInterpolationLayer::update(float dt)
 
 		if (server && server->IsActive()) // Server
 		{
-			server->GenerateSnapshots();
+			server->GenerateMessages();
 
 			server->SendPackets();
 
@@ -118,13 +133,13 @@ void SnapshotInterpolationLayer::update(float dt)
 
 			server->ReceivePackets();
 
-			debugString.append("Server: " + server->GetNetworkState());
+			debugString.append("Server: " + server->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
 
 			_tableView->reloadData();
 		}
 		else if (client && client->IsActive()) // Client
 		{
-			client->ProcessSnapshots();
+			client->ProcessMessages();
 
 			client->SendPackets();
 
@@ -133,7 +148,7 @@ void SnapshotInterpolationLayer::update(float dt)
 
 			client->ReceivePackets();
 
-			debugString.append("Client: " + client->GetNetworkState());
+			debugString.append("Client: " + client->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
 
 			_tableView->reloadData();
 		}
@@ -224,8 +239,8 @@ void SnapshotInterpolationLayer::connectAsClient()
 		{
 			if (server)
 			{
-				if(server->IsActive())
-					server->Stop();
+				//if(server->IsActive())
+					//server->Stop();
 
 				//server->destroy
 				delete server;
@@ -243,14 +258,9 @@ void SnapshotInterpolationLayer::connectAsClient()
 			_simulation = C_SnapshotInterpolationSimulation::create();
 			addChild(_simulation, 9999);
 
-			client = new SnapshotClient(_netDebugData, (C_SnapshotInterpolationSimulation*)_simulation);
+			client = new SnapshotClient((C_SnapshotInterpolationSimulation*)_simulation, &_transport);
 
-			client->Init(ipText->getString().c_str(), portText->getString().c_str());
-
-
-			client->Start();
-
-
+			client->Connect(ipText->getString().c_str(), portText->getString().c_str());
 
 			connectNode->removeFromParentAndCleanup(true);
 		}
@@ -282,9 +292,6 @@ void SnapshotInterpolationLayer::connectAsServer()
 
 	if (client)
 	{
-		if (client->IsActive())
-			client->Stop();
-
 		//server->destroy
 		delete client;
 		client = nullptr;
@@ -298,8 +305,5 @@ void SnapshotInterpolationLayer::connectAsServer()
 	_simulation = S_SnapshotInterpolationSimulation::create();
 	addChild(_simulation, 9999);
 	
-	server = new SnapshotServer(_netDebugData,(S_SnapshotInterpolationSimulation*)_simulation);
-
-
-	server->Start();
+	server = new SnapshotServer((S_SnapshotInterpolationSimulation*)_simulation, &_transport);
 }

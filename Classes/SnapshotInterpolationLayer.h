@@ -26,12 +26,14 @@
 class SnapshotInterpolationLayer : public cocos2d::Layer
 {
 private:
-	SnapshotServer* server;
-	SnapshotClient* client;
+	SnapshotServer* server = nullptr;
+	SnapshotClient* client = nullptr;
+
 	SnapshotInterpolationSimulation* _simulation;
 	cocos2d::LabelTTF* _statusLabel;
 
-	NetworkDebugDataSource* _netDebugData;
+	SocketTransport _transport;
+
 	TableView* _tableView = nullptr;
 
 	float _networkTimer = 0.0f;

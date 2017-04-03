@@ -18,77 +18,26 @@
 
 #include "NetworkDebugDataSource.h"
 
+#include "network_clientserver.h"
+
 #include <stdio.h>
 
-class SnapshotClient
+class SnapshotClient : public Client
 {
-	enum ClientError
-	{
-		CLIENT_ERROR_NONE = 0,
-		CLIENT_ERROR_REQUEST_DENIED
-	} _error;
-
-	enum ClientState
-	{
-		CLIENT_SLEEP, // Not active
-		CLIENT_REQUESTING, // Requesting connection with server
-		CLIENT_REQUEST_DENIED, // Request denied
-		CLIENT_CONNECTED // Connected after request accepted
-	};
-
 private:
-	C_SnapshotInterpolationSimulation* _simulation;
-
-	SocketTransport* _transport = nullptr;
-
-	SnapshotPacketFactory _packetFactory;
+	UnreliablePacketFactory _packetFactory;
 	SnapshotMessageFactory _messageFactory;
-
-	bool _active = false;
-	ClientState _state = CLIENT_SLEEP;
-
-	const char* _serverIP;
-	const char* _serverPort;
-	udp::endpoint _serverEndpoint;
-
-	Connection* _connection = nullptr;
 public:
-	SnapshotClient(NetworkDebugDataSource* debugData, C_SnapshotInterpolationSimulation* simulation);// TODO: File out stream for storage
+	SnapshotClient(NetworkSimulation* simulation, BaseTransport* transport);// TODO: File out stream for storage
 	virtual ~SnapshotClient();
 
-	void Init(const char* ip = "localhost", const char* port = "1500");
+	// Process messages to the simulation layer
+	virtual void ProcessMessages();
+	virtual void GenerateMessages();
 
-	bool Start();
-	bool Stop();
-
-	void Reset();
-
-	void ProcessSnapshots();
-
-	// Send packets from the connection layer
-	void SendPackets();
-
-	// Receive packets to connection layer
-	void ReceivePackets();
-
-	// Transport layer
-	void WritePackets();
-	void ReadPackets();
-
-	std::string GetNetworkState();
-
-	bool IsActive() { return _active; }
-protected:
-
-	void ProcessPacket(Packet* packet, const udp::endpoint& endpoint);
-	void ProcessAcceptPacket(ConnectionAcceptPacket* packet, const udp::endpoint& endpoint);
-	void ProcessDeniedPacket(ConnectionDeniedPacket* packet, const udp::endpoint& endpoint);
-	void ProcessConnectionPacket(ConnectionPacket* packet, const udp::endpoint& endpoint);
-	void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
-
-	Packet* CreateRequestPacket();
-	Packet* CreateConnectionPacket();
-
+	// Overrides
+	virtual PacketFactory* GetPacketFactory() { return &_packetFactory; };
+	virtual MessageFactory* GetMessageFactory() { return &_messageFactory; };
 };
 
 #endif
