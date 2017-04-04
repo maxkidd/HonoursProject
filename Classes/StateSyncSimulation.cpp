@@ -26,7 +26,7 @@ StateSyncSimulation::StateSyncSimulation() : _debugDraw(15.0f)
 		b2EdgeShape shape;
 		shape.Set(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
 		_ground->CreateFixture(&shape, 0.0f);
-		_ground->SetUserData(new uint32_t(++id));
+		_ground->SetUserData(new uint32_t(-1));
 		_ground->SetTransform(b2Vec2(40.0f, 5.0f), 0.0f);
 
 	}
@@ -37,7 +37,7 @@ StateSyncSimulation::StateSyncSimulation() : _debugDraw(15.0f)
 		b2EdgeShape shape;
 		shape.Set(b2Vec2(0.0f, -40.0f), b2Vec2(0.0f, 40.0f));
 		_ground->CreateFixture(&shape, 0.0f);
-		_ground->SetUserData(new uint32_t(++id));
+		_ground->SetUserData(new uint32_t(-1));
 		_ground->SetTransform(b2Vec2(0.0f, 20.0f), 0.0f);
 	}
 	{
@@ -47,7 +47,7 @@ StateSyncSimulation::StateSyncSimulation() : _debugDraw(15.0f)
 		b2EdgeShape shape;
 		shape.Set(b2Vec2(0.0f, -40.0f), b2Vec2(0.0f, 40.0f));
 		_ground->CreateFixture(&shape, 0.0f);
-		_ground->SetUserData(new uint32_t(++id));
+		_ground->SetUserData(new uint32_t(-1));
 		_ground->SetTransform(b2Vec2(70.0f, 20.0f), 0.0f);
 	}
 }
@@ -59,7 +59,7 @@ void StateSyncSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4
 	_world->DrawDebugData();
 }
 
-uint32_t StateSyncSimulation::id(0);
+uint32_t StateSyncSimulation::id(1);
 
 S_StateSyncSimulation::S_StateSyncSimulation()
 {
@@ -68,7 +68,7 @@ S_StateSyncSimulation::S_StateSyncSimulation()
 		b2PolygonShape shape;
 		shape.SetAsBox(boxWidth, boxWidth);
 
-		b2Vec2 x(0.0f, 50.0f);
+		b2Vec2 x(0.0f, 10.0f);
 		b2Vec2 y;
 		b2Vec2 deltaX(0.5625f, 1.25f);
 		b2Vec2 deltaY(1.125f, 0.0f);
@@ -96,7 +96,6 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 {
 	if (_connectionSynchronized.find(con) == _connectionSynchronized.end())
 	{
-
 		b2Body* body = _world->GetBodyList();
 		b2Body* prevBody = body;
 
@@ -143,6 +142,10 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 	}
 	else // Synchronized
 	{
+		int bytesTarget = _kbpsTarget * 10; 
+
+		MeasureStream stream;
+
 		// Priority queue for this connection
 		auto priorityQueue = _connectionPriorityQueue[con];
 
@@ -166,65 +169,35 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 
 			StateSyncBoxMove* move = (StateSyncBoxMove*)mf->Create(STATESYNC_MESSAGE_UPDATE_BOX);
 
-			b2Vec2 pos = body->GetPosition();
-			b2Vec2 velocity = body->GetLinearVelocity();
-
-			float deg = body->GetAngle() * (180.0f / M_PI);
-
-			if (deg > 0.0f)
-				move->rot = (uint32_t((deg)) % 360);
-			else
-				move->rot = 360 - (uint32_t(abs(deg)) % 360);
-
-			uint32_t* id = (uint32_t*)body->GetUserData();
-
-			move->id = *id;
-			move->x = pos.x;
-			move->y = pos.y;
-			move->velocityX = velocity.x;
-			move->velocityY = velocity.y;
-			move->rotVel = body->GetAngularVelocity();
-
-			con->SendMsg(move);
-		}
-		/*b2Body* body = _world->GetBodyList();
-		b2Body* prevBody = body;
-		while (body)
-		{
-			if (!body->IsAwake()) // Continue to next box if sleeping
-				goto label_end;
-
-			uint32_t* id = (uint32_t*)body->GetUserData();
-			if (*id == uint32_t(-1))
-				goto label_end;
-			StateSyncBoxMove* move = (StateSyncBoxMove*)mf->Create(STATESYNC_MESSAGE_UPDATE_BOX);
-
-			b2Vec2 pos = body->GetPosition();
-			b2Vec2 velocity = body->GetLinearVelocity();
-
-			float deg = body->GetAngle() * (180.0f / M_PI);
-
-			if (deg > 0.0f)
-				move->rot = (uint32_t((deg)) % 360);
-			else
-				move->rot = 360 - (uint32_t(abs(deg)) % 360);
-
-			move->id = *id;
-			move->x = pos.x;
-			move->y = pos.y;
-			move->velocityX = velocity.x;
-			move->velocityY = velocity.y;
-			move->rotVel = body->GetAngularVelocity();
-
-			con->SendMsg(move);
-
-		label_end:
-
-			prevBody = body;
-			body = body->GetNext();
-			if (prevBody == body)
+			move->Serialize(stream);
+			// Don't send anymore messages once reaching target
+			if (stream.BytesUsed() > bytesTarget)
 				break;
-		}*/
+
+
+			b2Vec2 pos = body->GetPosition();
+			b2Vec2 velocity = body->GetLinearVelocity();
+
+			float deg = body->GetAngle() * (180.0f / M_PI);
+
+			if (deg > 0.0f)
+				move->rot = (uint32_t((deg)) % 360);
+			else
+				move->rot = 360 - (uint32_t(abs(deg)) % 360);
+
+			uint32_t* id = (uint32_t*)body->GetUserData();
+
+			move->id = *id;
+			move->x = pos.x;
+			move->y = pos.y;
+			move->velocityX = velocity.x;
+			move->velocityY = velocity.y;
+			move->rotVel = body->GetAngularVelocity();
+
+			con->SendMsg(move);
+
+			_connectionPriorityQueue[con][p.first] = 0.0f; // Reset priority
+		}
 	}
 	
 }
@@ -251,8 +224,15 @@ void S_StateSyncSimulation::Step()
 		++_stepCount;
 	}
 
-
-
+	// For each connection
+	for (auto it1 = _connectionPriorityQueue.begin(); it1 != _connectionPriorityQueue.end(); ++it1)
+	{
+		// For each body-priority map
+		for (auto it2 = it1->second.begin(); it2 != it1->second.end(); ++it2)
+		{
+			it2->second += it2->first->IsAwake() ? 0.1f : 0.0f; // Basic increase of priority over time if awake
+		}
+	}
 
 
 
@@ -310,6 +290,8 @@ bool S_StateSyncSimulation::MouseDown(const b2Vec2 & p)
 	if (callback.m_fixture)
 	{
 		b2Body* body = callback.m_fixture->GetBody();
+
+		uint32_t* test = (uint32_t*)body->GetUserData();
 		b2MouseJointDef def;
 		def.bodyA = _ground;
 		def.bodyB = body;
@@ -405,7 +387,7 @@ bool C_StateSyncSimulation::ProcessMessages(Connection * con)
 				shape.SetAsBox(0.5f, 0.5f);
 
 				b2Body* body = _world->CreateBody(&bodyDef);
-				body->SetUserData(new uint32_t(++id));
+				body->SetUserData(new uint32_t(id));
 				body->CreateFixture(&shape, 5.0f);
 
 				_boxes[id] = body;

@@ -22,8 +22,9 @@
 #include "SnapshotInterpolationClient.h"
 #include "SnapshotInterpolationServer.h"
 #include "SnapshotInterpolationSimulation.h"
+#include "GameLayer.h"
 
-class SnapshotInterpolationLayer : public cocos2d::Layer
+class SnapshotInterpolationLayer : public GameLayer
 {
 private:
 	SnapshotServer* server = nullptr;

@@ -116,7 +116,7 @@ private:
 class MeasureStream : public BaseStream
 {
 private:
-	int bitsWritten;
+	int bitsWritten = 0;
 public:
 	enum { IsWriting = 1 };
 	enum { IsReading = 0 };
@@ -134,6 +134,7 @@ public:
 		int bits = (min_value == max_value) ? 0 : log2(max_value - min_value) + 1;
 
 		assert(bits <= 32);
+		assert(bits > 0);
 		bitsWritten += bits;
 
 		return true;
@@ -145,6 +146,10 @@ public:
 
 		bitsWritten += bits;
 		return true;
+	}
+
+	int BytesUsed() { 
+		return (bitsWritten + 7) / 8;
 	}
 
 };

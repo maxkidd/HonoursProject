@@ -3,6 +3,8 @@
 #include <thread>
 #include <utility>
 
+#include "HelloWorldScene.h"
+
 #include "cocos\ui\UITextField.h"
 #include "cocos\ui\UIButton.h"
 #include "cocos\ui\UIWidget.h"
@@ -12,6 +14,7 @@
 using namespace std;
 using namespace cocos2d;
 using namespace cocos2d::extension;
+
 
 SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr),
 server(nullptr), client(nullptr), _transport(new UnreliablePacketFactory(), new SnapshotMessageFactory())
@@ -44,8 +47,12 @@ SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
 		delete _simulation;
 		_simulation = nullptr;
 	}
-	//if(_tableView)
-	//	_tableView->release();
+	if (_tableView)
+	{
+		//_tableView->release();
+		delete _tableView;
+		_tableView = nullptr;
+	}
 }
 
 cocos2d::Scene * SnapshotInterpolationLayer::scene()
@@ -97,7 +104,7 @@ bool SnapshotInterpolationLayer::init()
 	_tableView->setPosition(10.0f, winSize.height * 0.1f);
 	//tableView->setContentSize(Size(200.0f, 20.0f));
 	_tableView->setDirection(ScrollView::Direction::VERTICAL);
-	_tableView->retain();
+	//_tableView->retain();
 
 	addChild(_tableView);
 	//_tableView->reloadData();

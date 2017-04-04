@@ -28,6 +28,9 @@
     <Filter Include="src\StateSynchronization">
       <UniqueIdentifier>{b26e6caa-94fb-438d-ab7a-91486d8d6e5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\ImGUI">
+      <UniqueIdentifier>{cf7e9cad-1484-4ecf-80e9-4fb538790c23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -90,9 +93,6 @@
     <ClCompile Include="..\Classes\network_transport.cpp">
       <Filter>src\Network</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SnapshotInterpolationLayer.cpp">
-      <Filter>src\Layers</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\NetworkDebugDataSource.cpp">
       <Filter>src\Network</Filter>
     </ClCompile>
@@ -122,6 +122,33 @@
     </ClCompile>
     <ClCompile Include="..\Classes\network_clientserver.cpp">
       <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SnapshotInterpolationLayer.cpp">
+      <Filter>src\SnapshotInterpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ImGUI\CCIMGUI.cpp">
+      <Filter>src\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ImGUI\imgui.cpp">
+      <Filter>src\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ImGUI\imgui_demo.cpp">
+      <Filter>src\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ImGUI\imgui_draw.cpp">
+      <Filter>src\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ImGUI\imgui_impl_glfw_win32.cpp">
+      <Filter>src\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ImGUI\IMGUIGLViewImpl.cpp">
+      <Filter>src\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ImGUI\ImGuiLayer.cpp">
+      <Filter>src\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -356,9 +383,6 @@
     <ClInclude Include="..\Classes\network_transport.h">
       <Filter>src\Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SnapshotInterpolationLayer.h">
-      <Filter>src\Layers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\network_clientserver.h">
       <Filter>src\Network</Filter>
     </ClInclude>
@@ -394,6 +418,42 @@
     </ClInclude>
     <ClInclude Include="..\Classes\network_simulation.h">
       <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameLayer.h">
+      <Filter>src\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SnapshotInterpolationLayer.h">
+      <Filter>src\SnapshotInterpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\CCIMGUI.h">
+      <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\imconfig.h">
+      <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\imgui.h">
+      <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\imgui_impl_glfw.h">
+      <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\imgui_internal.h">
+      <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\IMGUIGLViewImpl.h">
+      <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\ImGuiLayer.h">
+      <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\stb_rect_pack.h">
+      <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\stb_textedit.h">
+      <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ImGUI\stb_truetype.h">
+      <Filter>src\ImGUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

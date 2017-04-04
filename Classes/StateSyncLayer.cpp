@@ -99,6 +99,7 @@ bool StateSyncLayer::init()
 	//tableView->setContentSize(Size(200.0f, 20.0f));
 	_tableView->setDirection(ScrollView::Direction::VERTICAL);
 	_tableView->retain();
+	
 
 	addChild(_tableView);
 	//_tableView->reloadData();

@@ -3,6 +3,11 @@
 
 USING_NS_CC;
 
+#if(CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+	#include "ImGUI\IMGUIGLViewImpl.h"
+	#include "ImGUI\ImGuiLayer.h"
+#endif
+
 static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
@@ -40,7 +45,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("BoostTest", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+		glview = IMGUIGLViewImpl::createWithRect("Synchronizing Physics Simulation", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        //glview = GLViewImpl::createWithRect("BoostTest", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
 #else
         glview = GLViewImpl::create("BoostTest");
 #endif
@@ -51,7 +57,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
-    director->setAnimationInterval(1.0 / 60);
+    director->setAnimationInterval(1.0f / 60.0f);
 
     // Set the design resolution
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
@@ -80,6 +86,17 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // run
     director->runWithScene(scene);
 
+	// ImGUI
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+	director->getScheduler()->schedule([=](float dt)
+	{
+		Scene* scene = director->getRunningScene();
+		if (scene->getChildByName("ImGUILayer") == nullptr)
+		{
+			scene->addChild(ImGuiLayer::create(), INT_MAX, "ImGUILayer");
+		}
+	}, this, 0, false, "checkImGUI");
+#endif
     return true;
 }
 

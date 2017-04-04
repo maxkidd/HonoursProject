@@ -132,10 +132,10 @@ void HelloWorld::LoadBox2DTest()
 
 void HelloWorld::LoadSnapshot()
 {
-	Director::getInstance()->replaceScene(SnapshotInterpolationLayer::scene());
+	Director::getInstance()->replaceScene(TransitionFadeBL::create(1.0f, SnapshotInterpolationLayer::scene()));
 }
 
 void HelloWorld::LoadStateSync()
 {
-	Director::getInstance()->replaceScene(StateSyncLayer::scene());
+	Director::getInstance()->replaceScene(TransitionFadeBL::create(1.0f, StateSyncLayer::scene()));
 }

@@ -23,7 +23,9 @@
 #include "StateSyncServer.h"
 #include "StateSyncSimulation.h"
 
-class StateSyncLayer : public cocos2d::Layer
+#include "GameLayer.h"
+
+class StateSyncLayer : public GameLayer
 {
 private:
 	StateSyncServer* server = nullptr;

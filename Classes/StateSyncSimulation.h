@@ -25,6 +25,8 @@ struct StateSyncSnapshot
 class StateSyncSimulation : public NetworkSimulation
 {
 protected:
+	int _kbpsTarget = 100;
+
 	b2World* _world; // Box
 	GLESDebugDraw _debugDraw;
 	b2Body* _ground = nullptr;
