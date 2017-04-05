@@ -240,6 +240,26 @@ public:
 	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
+class UserCMD : public NMessage
+{
+public:
+	uint32_t mDown = false;
+	float mX, mY = 0;
+
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
+		stream.SerializeBits(mDown, 1);
+		if (mDown)
+		{
+			SerializeFloat(stream, mX);
+			SerializeFloat(stream, mY);
+		}
+
+		return true;
+	}
+	VIRTUAL_SERIALIZE_FUNCTIONS();
+};
+
 enum SnapshotMessageTypes
 {
 	SNAPSHOT_MESSAGE_ERROR = -1,
@@ -252,6 +272,7 @@ enum StateSyncMessageTypes
 	STATESYNC_MESSAGE_ERROR = -1,
 	STATESYNC_MESSAGE_UPDATE_BOX = 0,		// Box message
 	STATESYNC_MESSAGE_CREATE_BOX,		// Box message
+	STATESYNC_MESSAGE_USER_CMD,
 	STATESYNC_MESSAGE_MAX
 };
 
@@ -262,6 +283,7 @@ MESSAGE_FACTORY_END();
 MESSAGE_FACTORY_START(StateSyncMessageFactory, MessageFactory, STATESYNC_MESSAGE_MAX);
 	MESSAGE_FACTORY_TYPE(STATESYNC_MESSAGE_UPDATE_BOX, StateSyncBoxMove);
 	MESSAGE_FACTORY_TYPE(STATESYNC_MESSAGE_CREATE_BOX, StateSyncBoxCreate);
+	MESSAGE_FACTORY_TYPE(STATESYNC_MESSAGE_USER_CMD, UserCMD);
 MESSAGE_FACTORY_END();
 
 #endif

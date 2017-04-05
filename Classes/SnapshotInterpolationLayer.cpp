@@ -25,6 +25,9 @@ server(nullptr), client(nullptr), _transport(new UnreliablePacketFactory(), new 
 
 SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
 {
+	_eventDispatcher->removeEventListener(_touchListener);
+
+
 	unscheduleUpdate();
 
 	if (_statusLabel)

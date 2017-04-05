@@ -57,6 +57,7 @@ static float LerpRad(float a, float b, float t)
 class NetworkSimulation : public cocos2d::Layer
 {
 public:
+	virtual ~NetworkSimulation() {};
 	virtual bool ProcessMessages(Connection* con) = 0;
 	virtual void GenerateMessages(MessageFactory* mf, Connection* con) = 0;
 };

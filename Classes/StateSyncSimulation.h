@@ -19,7 +19,12 @@ struct StateSyncSnapshot
 	std::chrono::time_point<std::chrono::high_resolution_clock> time;
 	std::vector<std::pair<uint32_t, b2Transform>> boxes; // B2VEC2  -> BoxData
 };
-
+struct PlayerData
+{
+	b2Body* body = nullptr;
+	b2Color col = b2Color(0.5f, 0.5f, 0.1f);
+	bool mState = false;
+};
 
 
 class StateSyncSimulation : public NetworkSimulation
@@ -45,6 +50,7 @@ protected:
 	static uint32_t id;
 public:
 	StateSyncSimulation();
+	virtual ~StateSyncSimulation();
 
 	virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags);
 	virtual void Step() = 0;
@@ -62,6 +68,8 @@ class S_StateSyncSimulation : public StateSyncSimulation
 {
 private:
 	std::map<Connection*, std::map<b2Body*, float>> _connectionPriorityQueue;
+
+	std::map<Connection*, PlayerData> _playerData;
 public:
 	CREATE_FUNC(S_StateSyncSimulation);
 	S_StateSyncSimulation();
@@ -80,15 +88,23 @@ public:
 class C_StateSyncSimulation : public StateSyncSimulation
 {
 private:
+	bool mDown = false;
+	b2Vec2 mPos;
 
+
+	bool isShowDemo;
 public:
+	CREATE_FUNC(C_StateSyncSimulation);
 	C_StateSyncSimulation();
 
 	virtual void Step();
 	virtual bool ProcessMessages(Connection * con);
 	virtual void GenerateMessages(MessageFactory* mf, Connection* con);
 
-	CREATE_FUNC(C_StateSyncSimulation);
+
+	bool MouseDown(const b2Vec2& p);
+	void MouseMove(const b2Vec2& p);
+	void MouseUp(const b2Vec2& p);
 };
 
 #endif

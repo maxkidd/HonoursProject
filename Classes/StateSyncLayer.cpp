@@ -25,6 +25,8 @@ StateSyncLayer::StateSyncLayer() : _statusLabel(nullptr)
 
 StateSyncLayer::~StateSyncLayer()
 {
+	_eventDispatcher->removeEventListener(_touchListener);
+
 	unscheduleUpdate();
 
 	if (_statusLabel)
@@ -98,7 +100,7 @@ bool StateSyncLayer::init()
 	_tableView->setPosition(10.0f, winSize.height * 0.1f);
 	//tableView->setContentSize(Size(200.0f, 20.0f));
 	_tableView->setDirection(ScrollView::Direction::VERTICAL);
-	_tableView->retain();
+	//_tableView->retain();
 	
 
 	addChild(_tableView);

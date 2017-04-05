@@ -1,5 +1,9 @@
 #include "StateSyncSimulation.h"
 
+
+#include "SnapshotInterpolationLayer.h"
+#include "StateSyncLayer.h"
+
 StateSyncSimulation::StateSyncSimulation() : _debugDraw(15.0f)
 {
 
@@ -50,6 +54,10 @@ StateSyncSimulation::StateSyncSimulation() : _debugDraw(15.0f)
 		_ground->SetUserData(new uint32_t(-1));
 		_ground->SetTransform(b2Vec2(70.0f, 20.0f), 0.0f);
 	}
+}
+
+StateSyncSimulation::~StateSyncSimulation()
+{
 }
 
 void StateSyncSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
@@ -204,7 +212,79 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 
 bool S_StateSyncSimulation::ProcessMessages(Connection * con)
 {
-	return false;
+	NMessage* message;
+	while (message = con->ReceiveMsg())
+	{
+		switch (message->GetType())
+		{
+		case STATESYNC_MESSAGE_USER_CMD:
+		{
+			UserCMD* userInput = (UserCMD*)message;
+
+			if (userInput->mDown ) // Mouse Down
+			{
+				b2Vec2 p = b2Vec2(userInput->mX, userInput->mY);
+				if (!_playerData[con].mState)// New touch
+				{
+
+
+					_mouseWorld = p;
+
+					if (_mouseJoint) // If exists
+						return false;
+
+					CCLOG("Mousepoint: %f, %f", p.x, p.y);
+
+					b2AABB aabb;
+					b2Vec2 d;
+					d.Set(0.001f, 0.001f);
+					aabb.lowerBound = p - d;
+					aabb.upperBound = p + d;
+
+					MouseQueryCallback callback(p);
+					_world->QueryAABB(&callback, aabb);
+
+					if (callback.m_fixture)
+					{
+						b2Body* body = callback.m_fixture->GetBody();
+
+						uint32_t* test = (uint32_t*)body->GetUserData();
+						b2MouseJointDef def;
+						def.bodyA = _ground;
+						def.bodyB = body;
+						def.target = p;
+						def.maxForce = 1000.0f * body->GetMass();
+						_mouseJoint = (b2MouseJoint*)_world->CreateJoint(&def);
+						body->SetAwake(true);
+						return true;
+					}
+				}
+				else // Continueing touch
+				{
+
+					_mouseWorld = p;
+					if (_mouseJoint)
+					{
+						_mouseJoint->SetTarget(p);
+					}
+				}
+			}
+			if (_playerData[con].mState && !userInput->mDown)// Release mouse
+			{
+				if (_mouseJoint)
+				{
+					_world->DestroyJoint(_mouseJoint);
+					_mouseJoint = nullptr;
+				}
+			}
+			
+
+		} 
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void S_StateSyncSimulation::Step()
@@ -321,7 +401,6 @@ void S_StateSyncSimulation::MouseUp(const b2Vec2 & p)
 		_world->DestroyJoint(_mouseJoint);
 		_mouseJoint = nullptr;
 	}
-
 }
 
 C_StateSyncSimulation::C_StateSyncSimulation()
@@ -352,13 +431,37 @@ void C_StateSyncSimulation::Step()
 
 void C_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
 {
+	// Client data
+	/*UserCMD* userCMD = (UserCMD*)mf->Create(STATESYNC_MESSAGE_USER_CMD);
+
+	userCMD->mDown = mDown;
+	userCMD->mX = mPos.x;
+	userCMD->mY = mPos.y;*/
+}
+
+bool C_StateSyncSimulation::MouseDown(const b2Vec2 & p)
+{
+	mDown = true;
+	mPos = p;
+	return true;
+}
+
+void C_StateSyncSimulation::MouseMove(const b2Vec2 & p)
+{
+	mPos = p;
+}
+
+void C_StateSyncSimulation::MouseUp(const b2Vec2 & p)
+{
+	mDown = false;
+	mPos = p;
 }
 
 bool C_StateSyncSimulation::ProcessMessages(Connection * con)
 {
 	// Receive messages
 
-	if (_stepCount % 6)// To counter jitter
+	//if (_stepCount % 6)// To counter jitter
 	{
 		NMessage* message;
 		while (message = con->ReceiveMsg())

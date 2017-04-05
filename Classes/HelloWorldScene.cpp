@@ -7,6 +7,8 @@
 #include "SnapshotInterpolationLayer.h"
 #include "StateSyncLayer.h"
 
+#include "ImGUI\CCIMGUI.h"
+
 //USING_NS_CC;
 using namespace cocos2d;
 
@@ -96,6 +98,51 @@ bool HelloWorld::init()
 	Menu* menu2 = Menu::create(box2DItem, snapshotItem, stateSyncItem, NULL);
 	menu2->alignItemsVertically();
 	addChild(menu2);
+
+
+	//ImGUI
+	
+	CCIMGUI::getInstance()->addImGUI([=]() {
+		//ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_Always);
+		//ImGui::ShowTestWindow(&isShowDemo);
+
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				ImGui::MenuItem("(State Sync menu)", NULL, false, false);
+				if (ImGui::MenuItem("Debug menu", "")) {}
+				if (ImGui::BeginMenu("Open..."))
+				{
+
+					if (ImGui::MenuItem("Snapshot Interpolation"))
+					{
+						Director::getInstance()->replaceScene(TransitionFadeBL::create(1.0f, SnapshotInterpolationLayer::scene()));
+					}
+					if (ImGui::MenuItem("State Synchronization"))
+					{
+						Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, StateSyncLayer::scene()));
+					}
+					ImGui::EndMenu();
+				}
+				if (ImGui::MenuItem("Back", "F3")) 
+				{
+					Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, HelloWorld::createScene()));;
+				}
+				if (ImGui::MenuItem("Quit", "F4")) 
+				{
+					Director::getInstance()->end();
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Game"))
+			{
+				//if (ImGui::MenuItem("Quit", "Alt+F4")) {}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+	}, "MainMenu");
 
     return true;
 }
