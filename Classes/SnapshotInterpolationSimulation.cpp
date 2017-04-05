@@ -7,32 +7,7 @@ SnapshotInterpolationSimulation::SnapshotInterpolationSimulation()
 
 bool SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 {
-	NMessage* message;
-	while (message = con->ReceiveMsg()) 
-	{
-		switch (message->GetType())
-		{
-		case SNAPSHOT_MESSAGE_CREATE_BOX:
-			//Process creation
-		{
-			SnapshotBoxCreate* create = (SnapshotBoxCreate*)message;
-			
-
-		}
-
-			break;
-		case SNAPSHOT_MESSAGE_MOVE_BOX:
-		{
-			// Process move
-			SnapshotBoxMove* move = (SnapshotBoxMove*)message;
-		}
-			break;
-		default:
-			break;
-		}
-	}
-
-	return true;
+	return false;
 }
 
 uint32_t S_SnapshotInterpolationSimulation::id(0);
@@ -314,6 +289,15 @@ void S_SnapshotInterpolationSimulation::MouseUp(const b2Vec2 & p)
 
 C_SnapshotInterpolationSimulation::C_SnapshotInterpolationSimulation() : _debugDraw(15.0f)
 {
+
+	uint32 flags = 0;
+	flags += b2Draw::e_shapeBit;
+	//flags += b2Draw::e_jointBit;
+	//flags += b2Draw::e_aabbBit;
+	//flags += b2Draw::e_pairBit;
+	//flags += b2Draw::e_centerOfMassBit;
+	_debugDraw.SetFlags(flags);
+
 	_boxVertices[0] = b2Vec2(-0.5f, -0.5f);
 	_boxVertices[1] = b2Vec2(0.5f, -0.5f);
 	_boxVertices[2] = b2Vec2(0.5f, 0.5f);
@@ -386,7 +370,7 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 		{
 			verts[i] = b2Mul(t, _boxVertices[i]);
 		}
-		_debugDraw.DrawPolygon(verts, 4, b2Color(0.5f, 0.3f, 0.9f));
+		_debugDraw.DrawSolidPolygon(verts, 4, b2Color(0.5f, 0.5f, 0.3f));
 	}
 	for (auto box : _boxes_interp2)
 	{

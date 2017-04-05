@@ -31,6 +31,9 @@
     <Filter Include="src\ImGUI">
       <UniqueIdentifier>{cf7e9cad-1484-4ecf-80e9-4fb538790c23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Old">
+      <UniqueIdentifier>{4a9848db-19a8-4a4c-9e7f-a69a036b6bfe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,15 +44,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\ServerLayer.cpp">
-      <Filter>src\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\ClientLayer.cpp">
-      <Filter>src\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\NetworkLayer.cpp">
-      <Filter>src\Layers</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\NetworkDebugView.cpp">
       <Filter>src\Layers</Filter>
@@ -150,6 +144,15 @@
     <ClCompile Include="..\Classes\ImGUI\ImGuiLayer.cpp">
       <Filter>src\ImGUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\ServerLayer.cpp">
+      <Filter>src\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\NetworkLayer.cpp">
+      <Filter>src\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ClientLayer.cpp">
+      <Filter>src\Old</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -169,15 +172,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Server.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\ServerLayer.h">
-      <Filter>src\Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\ClientLayer.h">
-      <Filter>src\Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\NetworkLayer.h">
-      <Filter>src\Layers</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\NetworkDebugView.h">
       <Filter>src\Layers</Filter>
@@ -454,6 +448,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\ImGUI\stb_truetype.h">
       <Filter>src\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ServerLayer.h">
+      <Filter>src\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\NetworkLayer.h">
+      <Filter>src\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ClientLayer.h">
+      <Filter>src\Old</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

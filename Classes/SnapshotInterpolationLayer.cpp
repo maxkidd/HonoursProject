@@ -96,7 +96,7 @@ bool SnapshotInterpolationLayer::init()
 	Menu* menu3 = Menu::create(connectItem, serverItem, NULL);
 	menu3->alignItemsHorizontally();
 	menu3->setScale(1 / Director::getInstance()->getContentScaleFactor());
-	menu3->setPosition(Vec2(winSize.width / 2.0f, winSize.height - 10.0f) + Director::getInstance()->getVisibleOrigin());
+	menu3->setPosition(Vec2(winSize.width / 2.0f, winSize.height - 30.0f) + Director::getInstance()->getVisibleOrigin());
 
 	addChild(menu3);
 
