@@ -337,7 +337,7 @@ bool S_SnapshotInterpolationSimulation::MouseDown(const b2Vec2 & p)
 		def.bodyA = _ground;
 		def.bodyB = body;
 		def.target = p;
-		def.maxForce = 1000.0f * body->GetMass();
+		def.maxForce = _mForce * body->GetMass();
 		_mouseJoint = (b2MouseJoint*)_world->CreateJoint(&def);
 		body->SetAwake(true);
 		return true;
@@ -390,20 +390,18 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 
 
 	// Linear interolation test
-	WorldSnapshot first = snapshots.end()[-1];
-	WorldSnapshot second = snapshots.end()[-2];
-	WorldSnapshot third = snapshots.end()[-3];
-	WorldSnapshot fourth = snapshots.end()[-4];
+	WorldSnapshot first = snapshots[0];
+	WorldSnapshot second = snapshots[1];
+	WorldSnapshot third = snapshots[2];
+	WorldSnapshot fourth = snapshots[3];
 
 	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - first.time; // now - second snapshot time
 	
 	float t = std::min(1.0f, elapsed.count()* 10.0f);// between 0 and 1 for every 100ms
-	float t2 = std::min(1.0f, (elapsed.count()+0.3f)/4.0f* 10.0f);// between 0 and 1 for every 100ms
 
 	auto it1 = first.boxes.begin();
 	auto it2 = second.boxes.begin();
 	auto it3 = third.boxes.begin();
-	auto it4 = fourth.boxes.begin();
 
 	for (auto box : _boxes)
 	{
@@ -420,22 +418,19 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 		{
 			it3++;
 		}
-		while (id != it4->first)
-		{
-			it4++;
-		}
 		b2Vec2 firstVec = it1->second.p;
 		b2Vec2 secondVec = it2->second.p;
 		b2Vec2 thirdVec = it3->second.p;
-		b2Vec2 fourthVec = it4->second.p;
 		float firstRot = it1->second.q.GetAngle();
 		float secondRot = it2->second.q.GetAngle();
 
-		float x = Cubic(fourthVec.x, thirdVec.x, secondVec.x, firstVec.x, t2);
-		float y = Cubic(fourthVec.y, thirdVec.y, secondVec.y, firstVec.y, t2);
+		float x = Cubic(firstVec.x, secondVec.x, firstVec.x + (firstVec.x - secondVec.x) / 10.0f,
+			secondVec.x + (secondVec.x - thirdVec.x) / 10.0f, t);
+		float y = Cubic(firstVec.y, secondVec.y, firstVec.y + (firstVec.y - secondVec.y)/10.0f,
+			secondVec.y + (secondVec.y - thirdVec.y)/10.0f, t);
 
-		_boxes_interp[box.first].Set(Lerp(secondVec, firstVec, t), LerpRad(secondRot, firstRot, t));
-		_boxes_interp2[box.first].Set(b2Vec2(x, y), LerpRad(secondRot, firstRot, t));
+		//_boxes_interp[box.first].Set(Lerp(secondVec, firstVec, t), LerpRad(secondRot, firstRot, t));
+		_boxes_interp[box.first].Set(b2Vec2(x, y), LerpRad(secondRot, firstRot, t));
 	}
 
 	// Render boxes
@@ -451,7 +446,7 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 
 		_debugDraw.DrawSolidPolygon(verts, 4, b2Color(0.9f, 0.7f, 0.7f));
 	}
-	for (auto box : _boxes_interp2)
+	/*for (auto box : _boxes_interp2)
 	{
 		b2Transform t = box.second;
 
@@ -461,7 +456,7 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 			verts[i] = b2Mul(t, _boxVertices[i]);
 		}
 		_debugDraw.DrawPolygon(verts, 4, b2Color(0.9f, 0.3f, 0.5f));
-	}
+	}*/
 
 }
 
@@ -593,7 +588,7 @@ bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 
 	// Remove old snapshot
 	if (snapshots.size() > 6)
-		snapshots.pop_front();
+		snapshots.pop_back();
 
 	// Create new snapshot and push to the queue
 	WorldSnapshot newSnapshot;
@@ -602,7 +597,7 @@ bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 	{
 		newSnapshot.boxes.push_back(b);
 	}
-	snapshots.push_back(newSnapshot);
+	snapshots.push_front(newSnapshot);
 
 	return true;
 }

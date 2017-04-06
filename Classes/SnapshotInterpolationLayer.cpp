@@ -128,57 +128,71 @@ void SnapshotInterpolationLayer::update(float dt)
 	std::string debugString;
 
 	_networkTimer += dt;
+	_physicsTimer += dt;
+	static float snapshotTimer = 0.0f;
+	static float inputTimer = 0.0f;
+	snapshotTimer += dt;
+	inputTimer += dt;
 
-	while (_networkTimer > (0.1f)) // Client or Server tick
+
+
+
+
+	////////////////////////////////////////////////////////////
+	
+	if (server && server->IsActive()) // Server
 	{
-		_networkTimer -= (0.1f);
+		server->ProcessMessages();
 
-		if (server && server->IsActive()) // Server
+		while (snapshotTimer > 0.1f)
 		{
-			server->ProcessMessages();
 			server->GenerateMessages();
-
 			server->SendPackets();
-
-			server->WritePackets();
-			server->ReadPackets();
-
-			server->ReceivePackets();
-
-			debugString.append("Server: " + server->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
-
-			_tableView->reloadData();
+			snapshotTimer -= 0.1f;
 		}
-		else if (client && client->IsActive()) // Client
+
+
+		server->WritePackets();
+		server->ReadPackets();
+
+		server->ReceivePackets();
+
+		debugString.append("Server: " + server->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
+
+		_tableView->reloadData();
+	}
+	if (client && client->IsActive()) // Client
+	{
+		client->ProcessMessages();
+
+		while (inputTimer > const(1.0f / 60.0f))
 		{
-			client->ProcessMessages();
 			client->GenerateMessages();
-
 			client->SendPackets();
-
-			client->WritePackets();
-			client->ReadPackets();
-
-			client->ReceivePackets();
-
-			debugString.append("Client: " + client->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
-
-			_tableView->reloadData();
-		}
-		else
-		{
-			debugString.append("No Client/Server running");
 		}
 
-		_statusLabel->setString(debugString);
+
+		client->WritePackets();
+		client->ReadPackets();
+
+		client->ReceivePackets();
+
+		debugString.append("Client: " + client->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
+
+		_tableView->reloadData();
+	}
+	else
+	{
+		debugString.append("No Client/Server running");
 	}
 
-	_physicsTimer += dt;
-	while (_physicsTimer > 1.0f / 60.0f)
+	_statusLabel->setString(debugString);
+
+	while (_physicsTimer > const(1.0f / 60.0f))
 	{
 		_simulation->Step();
 
-		_physicsTimer -= (1.0f / 60.0f);
+		_physicsTimer -= const(1.0f / 60.0f);
 	}
 
 }

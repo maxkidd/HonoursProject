@@ -8,14 +8,18 @@
 class Connection;
 class MessageFactory;
 
-static float CubicHermite(float p0, float p1, float p2, float p3, float t)
+static float CubicHermite(float p0, float p1, float v0, float v1, float t)
 {
-	float a = -p0 / 2.0f + (3.0f*p1) / 2.0f - (3.0f*p2) / 2.0f + p3 / 2.0f;
-	float b = p0 - (5.0f*p1) / 2.0f + 2.0f*p2 - p3 / 2.0f;
-	float c = -p0 / 2.0f + p2 / 2.0f;
+	float t2 = t*t;
+	//float a = -p0 / 2.0f + (3.0f*p1) / 2.0f - (3.0f*v1) / 2.0f + v2 / 2.0f;
+	//float b = p0 - (5.0f*p1) / 2.0f + 2.0f*v1 - v2 / 2.0f;
+	//float c = -p0 / 2.0f + v2 / 2.0f;
+	float a = 1.0f - (3.0f*t2) + (2.0f*t2*t);
+	float b = t2*(3.0f - 2.0f*t);
+	float c = t*pow(t - 1.0f, 2.0f);
+	float d = t2*(t - 1);
 
-
-	return a*t*t*t + b*t*t + c*t + p3;
+	return a*p0 + b*p1 + c*v0 + d*v1;
 }
 
 static float Cubic(float p0, float p1, float p2, float p3, float t)
@@ -69,6 +73,8 @@ struct PlayerData
 
 class NetworkSimulation : public cocos2d::Layer
 {
+protected:
+	const float _mForce = 100.0f;
 public:
 	virtual ~NetworkSimulation() {};
 	virtual bool ProcessMessages(Connection* con) = 0;
