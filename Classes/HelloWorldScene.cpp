@@ -9,6 +9,8 @@
 
 #include "ImGUI\CCIMGUI.h"
 
+#include "asio\asio.hpp"
+
 //USING_NS_CC;
 using namespace cocos2d;
 
@@ -140,6 +142,41 @@ bool HelloWorld::init()
 				//if (ImGui::MenuItem("Quit", "Alt+F4")) {}
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Info"))
+			{
+				try {
+					asio::io_service netService;
+					udp::resolver   resolver(netService);
+					udp::resolver::query query(udp::v4(), "google.com", "");
+					udp::resolver::iterator endpoints = resolver.resolve(query);
+					udp::endpoint ep = *endpoints;
+					udp::socket socket(netService);
+					socket.connect(ep);
+					asio::ip::address addr = socket.local_endpoint().address();
+					//std::cout << "My IP according to google is: " << addr.to_string() << std::endl;
+					ImGui::MenuItem(addr.to_string().c_str(), NULL, false, false);
+				}
+				catch (std::exception& e) {
+
+				}
+				try {
+					asio::io_service netService;
+					udp::resolver   resolver(netService);
+					udp::resolver::query query(udp::v4(), "uaddns02.uad.ac.uk", "");
+					udp::resolver::iterator endpoints = resolver.resolve(query);
+					udp::endpoint ep = *endpoints;
+					udp::socket socket(netService);
+					socket.connect(ep);
+					asio::ip::address addr = socket.local_endpoint().address();
+					//std::cout << "My IP according to google is: " << addr.to_string() << std::endl;
+					ImGui::MenuItem(addr.to_string().c_str(), NULL, false, false);
+				}
+				catch (std::exception& e) {
+
+				}
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMainMenuBar();
 		}
 	}, "MainMenu");
