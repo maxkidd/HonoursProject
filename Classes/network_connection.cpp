@@ -8,11 +8,20 @@ Connection::Connection(udp::endpoint endpoint, PacketFactory & pf, MessageFactor
 	: _endpoint(endpoint), _packetFactory(&pf), _messageFactory(mf)
 {
 	_channel = new Channel(mf);
+	_lastProcessedPacket = std::chrono::high_resolution_clock::now();
 }
 
 Connection::~Connection()
 {
 	delete _channel;
+}
+
+bool Connection::HasTimedOut()
+{
+	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - _lastProcessedPacket;
+	if (elapsed.count() > TIMEOUT)
+		return true;
+	return false;
 }
 
 ConnectionPacket * Connection::GeneratePacket()
@@ -31,6 +40,9 @@ ConnectionPacket * Connection::GeneratePacket()
 
 bool Connection::ProcessPacket(ConnectionPacket * packet)
 {
+	// Chrono timepoint
+	_lastProcessedPacket = std::chrono::high_resolution_clock::now();
+
 	_channel->ProcessPacketData(*(packet->_channelEntry));
 
 	return true;

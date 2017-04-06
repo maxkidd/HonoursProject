@@ -16,7 +16,8 @@ public:
 		CLIENT_SLEEP, // Not active
 		CLIENT_REQUESTING, // Requesting connection with server
 		CLIENT_REQUEST_DENIED, // Request denied
-		CLIENT_CONNECTED // Connected after request accepted
+		CLIENT_CONNECTED, // Connected after request accepted
+		CLIENT_TIMEDOUT // Timed out
 	} _state;
 protected:
 

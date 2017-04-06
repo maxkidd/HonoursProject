@@ -7,15 +7,21 @@
 
 #include "asio\asio.hpp"
 
+#include <chrono>
+
 class ConnectionPacket;
 
 using namespace asio::ip;
+
+#define TIMEOUT 2.0f
 
 class Connection
 {
 public:
 	Connection(udp::endpoint endpoint, PacketFactory& pf, MessageFactory* mf);
 	~Connection();
+
+	bool HasTimedOut();
 
 	ConnectionPacket* GeneratePacket();
 	bool ProcessPacket(ConnectionPacket* packet);
@@ -32,6 +38,8 @@ private:
 
 	PacketFactory* _packetFactory;
 	MessageFactory* _messageFactory;
+
+	std::chrono::high_resolution_clock::time_point _lastProcessedPacket;
 };
 
 #endif

@@ -133,6 +133,14 @@ void Client::SendPackets()
 								break;
 	case(CLIENT_CONNECTED) :
 	{
+		// Disconnect if timed out
+		if (_connection->HasTimedOut())
+		{
+			Disconnect();
+			_state = CLIENT_TIMEDOUT;
+		}
+
+		
 		Packet* packet = CreateConnectionPacket();
 		_transport->SendPacket(_serverEndpoint, packet);
 	}
@@ -323,9 +331,14 @@ void Server::SendPackets()
 		if (!_clientConnected[i] || !_connections[i])
 			continue;
 
+		// Disconnect if timed out
+		if (_connections[i]->HasTimedOut())
+			Disconnect(i);
+
+		// Generate packet
 		Packet* packet = _connections[i]->GeneratePacket();
 
-
+		// Send packet
 		SendPacketToClient(i, packet);
 	}
 
