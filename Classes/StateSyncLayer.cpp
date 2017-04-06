@@ -70,7 +70,7 @@ bool StateSyncLayer::init()
 
 	// Listeners
 	auto listener = EventListenerTouchOneByOne::create();
-	listener->setSwallowTouches(true);
+	listener->setSwallowTouches(false);
 
 	listener->onTouchBegan = CC_CALLBACK_2(StateSyncLayer::onTouchBegan, this);
 	listener->onTouchMoved = CC_CALLBACK_2(StateSyncLayer::onTouchMoved, this);
@@ -104,6 +104,7 @@ bool StateSyncLayer::init()
 	_tableView->setPosition(10.0f, winSize.height * 0.1f);
 	//tableView->setContentSize(Size(200.0f, 20.0f));
 	_tableView->setDirection(ScrollView::Direction::VERTICAL);
+	_tableView->setTouchEnabled(false);
 	//_tableView->retain();
 	
 
@@ -132,6 +133,7 @@ void StateSyncLayer::update(float dt)
 
 		if (server && server->IsActive()) // Server
 		{
+			server->ProcessMessages();
 			server->GenerateMessages();
 
 			server->SendPackets();
@@ -149,6 +151,7 @@ void StateSyncLayer::update(float dt)
 		else if (client && client->IsActive()) // Client
 		{
 			client->ProcessMessages();
+			client->GenerateMessages();
 
 			client->SendPackets();
 

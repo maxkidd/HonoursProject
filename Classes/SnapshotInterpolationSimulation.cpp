@@ -1,5 +1,36 @@
 #include "SnapshotInterpolationSimulation.h"
 
+class MouseQueryCallback : public b2QueryCallback
+{
+public:
+	MouseQueryCallback(const b2Vec2& point)
+	{
+		m_point = point;
+		m_fixture = nullptr;
+	}
+
+	bool ReportFixture(b2Fixture* fixture)
+	{
+		b2Body* body = fixture->GetBody();
+		if (body->GetType() == b2_dynamicBody)
+		{
+			bool inside = fixture->TestPoint(m_point);
+			if (inside)
+			{
+				m_fixture = fixture;
+
+				// We are done, terminate the query.
+				return false;
+			}
+		}
+
+		// Continue the query.
+		return true;
+	}
+
+	b2Vec2 m_point;
+	b2Fixture* m_fixture;
+};
 SnapshotInterpolationSimulation::SnapshotInterpolationSimulation()
 {
 
@@ -174,7 +205,85 @@ void S_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Co
 
 bool S_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 {
-	return false;
+	NMessage* message;
+	while (message = con->ReceiveMsg())
+	{
+		switch (message->GetType())
+		{
+		case SNAPSHOT_MESSAGE_USER_CMD:
+		{
+			UserCMD* userInput = (UserCMD*)message;
+
+			if (userInput->mDown) // Mouse Down
+			{
+				b2Vec2 p = b2Vec2(userInput->mX, userInput->mY);
+				_playerData[con].mPos = p;
+				if (!_playerData[con].mState)// New touch
+				{
+
+
+					if (_mouseJoint) // If exists
+						return false;
+
+					CCLOG("Mousepoint: %f, %f", p.x, p.y);
+
+					b2AABB aabb;
+					b2Vec2 d;
+					d.Set(0.001f, 0.001f);
+					aabb.lowerBound = p - d;
+					aabb.upperBound = p + d;
+
+					MouseQueryCallback callback(p);
+					_world->QueryAABB(&callback, aabb);
+
+					if (callback.m_fixture)
+					{
+						b2Body* body = callback.m_fixture->GetBody();
+
+						uint32_t* test = (uint32_t*)body->GetUserData();
+						b2MouseJointDef def;
+						def.bodyA = _ground;
+						def.bodyB = body;
+						def.target = p;
+						def.maxForce = 1000.0f * body->GetMass();
+						body->SetAwake(true);
+
+						// 
+						_playerData[con].body = body;
+						_playerData[con].mJoint = (b2MouseJoint*)_world->CreateJoint(&def);
+						_playerData[con].mState = true;
+						//_mouseJoint = (b2MouseJoint*)_world->CreateJoint(&def);
+						return true;
+					}
+				}
+				else // Continueing touch
+				{
+
+					_playerData[con].mPos = p;
+					if (_playerData[con].mJoint)
+					{
+						_playerData[con].mJoint->SetTarget(p);
+					}
+				}
+			}
+			if (!userInput->mDown)// Release mouse
+			{
+				if (_playerData[con].mJoint)
+				{
+					_world->DestroyJoint(_playerData[con].mJoint);
+					_playerData[con].mJoint = nullptr;
+				}
+				_playerData[con].mState = false;
+			}
+
+
+		}
+		break;
+		default:
+			break;
+		}
+	}
+	return true;
 }
 
 void S_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
@@ -203,37 +312,6 @@ void S_SnapshotInterpolationSimulation::Step()
 	}
 }
 
-class MouseQueryCallback : public b2QueryCallback
-{
-public:
-	MouseQueryCallback(const b2Vec2& point)
-	{
-		m_point = point;
-		m_fixture = nullptr;
-	}
-
-	bool ReportFixture(b2Fixture* fixture)
-	{
-		b2Body* body = fixture->GetBody();
-		if (body->GetType() == b2_dynamicBody)
-		{
-			bool inside = fixture->TestPoint(m_point);
-			if (inside)
-			{
-				m_fixture = fixture;
-
-				// We are done, terminate the query.
-				return false;
-			}
-		}
-
-		// Continue the query.
-		return true;
-	}
-
-	b2Vec2 m_point;
-	b2Fixture* m_fixture;
-};
 bool S_SnapshotInterpolationSimulation::MouseDown(const b2Vec2 & p)
 {
 	_mouseWorld = p;
@@ -370,7 +448,8 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 		{
 			verts[i] = b2Mul(t, _boxVertices[i]);
 		}
-		_debugDraw.DrawSolidPolygon(verts, 4, b2Color(0.5f, 0.5f, 0.3f));
+
+		_debugDraw.DrawSolidPolygon(verts, 4, b2Color(0.9f, 0.7f, 0.7f));
 	}
 	for (auto box : _boxes_interp2)
 	{
@@ -442,6 +521,31 @@ void C_SnapshotInterpolationSimulation::Step()
 
 void C_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
 {
+	UserCMD* userCMD = (UserCMD*)mf->Create(SNAPSHOT_MESSAGE_USER_CMD);
+
+	userCMD->mDown = mDown;
+	userCMD->mX = mPos.x;
+	userCMD->mY = mPos.y;
+
+	con->SendMsg(userCMD);
+}
+
+bool C_SnapshotInterpolationSimulation::MouseDown(const b2Vec2 & p)
+{
+	mDown = true;
+	mPos = p;
+	return true;
+}
+
+void C_SnapshotInterpolationSimulation::MouseMove(const b2Vec2 & p)
+{
+	mPos = p;
+}
+
+void C_SnapshotInterpolationSimulation::MouseUp(const b2Vec2 & p)
+{
+	mDown = false;
+	mPos = p;
 }
 
 bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)

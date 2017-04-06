@@ -54,6 +54,19 @@ static float LerpRad(float a, float b, float t)
 	return a + t * (b - a);
 }
 
+
+struct PlayerData
+{
+	b2Body* body = nullptr;
+	b2Color col = b2Color(0.5f, 0.5f, 0.1f);
+
+	b2MouseJoint* mJoint = nullptr;
+	b2Vec2 mPos;
+	bool mState = false;
+
+	//std::list<UserCMD> cmd;
+};
+
 class NetworkSimulation : public cocos2d::Layer
 {
 public:

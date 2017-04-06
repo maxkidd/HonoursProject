@@ -19,12 +19,6 @@ struct StateSyncSnapshot
 	std::chrono::time_point<std::chrono::high_resolution_clock> time;
 	std::vector<std::pair<uint32_t, b2Transform>> boxes; // B2VEC2  -> BoxData
 };
-struct PlayerData
-{
-	b2Body* body = nullptr;
-	b2Color col = b2Color(0.5f, 0.5f, 0.1f);
-	bool mState = false;
-};
 
 
 class MouseQueryCallback : public b2QueryCallback

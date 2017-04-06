@@ -224,11 +224,10 @@ bool S_StateSyncSimulation::ProcessMessages(Connection * con)
 			if (userInput->mDown ) // Mouse Down
 			{
 				b2Vec2 p = b2Vec2(userInput->mX, userInput->mY);
+				_playerData[con].mPos = p;
 				if (!_playerData[con].mState)// New touch
 				{
 
-
-					_mouseWorld = p;
 
 					if (_mouseJoint) // If exists
 						return false;
@@ -254,28 +253,34 @@ bool S_StateSyncSimulation::ProcessMessages(Connection * con)
 						def.bodyB = body;
 						def.target = p;
 						def.maxForce = 1000.0f * body->GetMass();
-						_mouseJoint = (b2MouseJoint*)_world->CreateJoint(&def);
 						body->SetAwake(true);
+						
+						// 
+						_playerData[con].body = body;
+						_playerData[con].mJoint = (b2MouseJoint*)_world->CreateJoint(&def);
+						_playerData[con].mState = true;
+						//_mouseJoint = (b2MouseJoint*)_world->CreateJoint(&def);
 						return true;
 					}
 				}
 				else // Continueing touch
 				{
 
-					_mouseWorld = p;
-					if (_mouseJoint)
+					_playerData[con].mPos = p;
+					if (_playerData[con].mJoint)
 					{
-						_mouseJoint->SetTarget(p);
+						_playerData[con].mJoint->SetTarget(p);
 					}
 				}
 			}
-			if (_playerData[con].mState && !userInput->mDown)// Release mouse
+			if (!userInput->mDown)// Release mouse
 			{
-				if (_mouseJoint)
+				if (_playerData[con].mJoint)
 				{
-					_world->DestroyJoint(_mouseJoint);
-					_mouseJoint = nullptr;
+					_world->DestroyJoint(_playerData[con].mJoint);
+					_playerData[con].mJoint = nullptr;
 				}
+				_playerData[con].mState = false;
 			}
 			
 
@@ -285,6 +290,7 @@ bool S_StateSyncSimulation::ProcessMessages(Connection * con)
 			break;
 		}
 	}
+	return true;
 }
 
 void S_StateSyncSimulation::Step()
@@ -401,18 +407,20 @@ void C_StateSyncSimulation::Step()
 void C_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
 {
 	// Client data
-	/*UserCMD* userCMD = (UserCMD*)mf->Create(STATESYNC_MESSAGE_USER_CMD);
+	UserCMD* userCMD = (UserCMD*)mf->Create(STATESYNC_MESSAGE_USER_CMD);
 
 	userCMD->mDown = mDown;
 	userCMD->mX = mPos.x;
-	userCMD->mY = mPos.y;*/
+	userCMD->mY = mPos.y;
+
+	con->SendMsg(userCMD);
 }
 
 bool C_StateSyncSimulation::MouseDown(const b2Vec2 & p)
 {
 	mDown = true;
 	mPos = p;
-	return false;
+	return true;
 }
 
 void C_StateSyncSimulation::MouseMove(const b2Vec2 & p)

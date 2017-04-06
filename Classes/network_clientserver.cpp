@@ -248,7 +248,7 @@ void Server::ProcessConnectionPacket(ConnectionPacket * packet, const udp::endpo
 
 	for (int i = 0; i < MAX_SLOTS; i++)
 	{
-		if (!_clientConnected[i] || _connections[i])
+		if (!_clientConnected[i] || !_connections[i])
 			continue;
 
 		if (_connections[i]->Endpoint() == endpoint)

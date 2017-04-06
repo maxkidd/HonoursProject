@@ -45,6 +45,7 @@ class S_SnapshotInterpolationSimulation : public SnapshotInterpolationSimulation
 private:
 	//std::map<Connection*, std::vector<b2Body*>> _connectionBodyMap;
 	std::map<Connection*, bool> _connectionSynchronized;
+	std::map<Connection*, PlayerData> _playerData;
 
 	b2World* _world; // Box
 	GLESDebugDraw _debugDraw;
@@ -77,6 +78,10 @@ public:
 class C_SnapshotInterpolationSimulation : public SnapshotInterpolationSimulation
 {
 private:
+	bool mDown = false;
+	b2Vec2 mPos;
+
+
 	GLESDebugDraw _debugDraw;
 	std::deque<WorldSnapshot> snapshots; // Queue of snapshots
 
@@ -94,6 +99,11 @@ public:
 	virtual void GenerateMessages(MessageFactory* mf, Connection* con);
 
 	CREATE_FUNC(C_SnapshotInterpolationSimulation);
+
+
+	bool MouseDown(const b2Vec2& p);
+	void MouseMove(const b2Vec2& p);
+	void MouseUp(const b2Vec2& p);
 };
 
 #endif
