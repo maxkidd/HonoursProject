@@ -183,6 +183,27 @@ Server::~Server()
 {
 }
 
+void Server::DisconnectAll()
+{
+	for (int i = 0; i < MAX_SLOTS; ++i)
+	{
+		Disconnect(i);
+	}
+}
+
+void Server::Disconnect(const int ID)
+{
+	if (!_clientConnected[ID])
+		return;
+
+	if (_connections[ID])
+	{
+		ConnectionDisconnectPacket* packet = (ConnectionDisconnectPacket*)CreateDisconnectPacket();
+		_transport->SendPacket(_connections[ID]->Endpoint(), packet);
+		_transport->WritePackets();
+	}
+}
+
 void Server::ProcessPacket(Packet * packet, udp::endpoint endpoint)
 {
 	switch (packet->GetType())
@@ -281,6 +302,11 @@ void Server::ProcessDisconnectPacket(ConnectionDisconnectPacket * packet, const 
 		}
 			
 	}
+}
+
+Packet * Server::CreateDisconnectPacket()
+{
+	return GetPacketFactory()->Create(CLIENT_SERVER_PACKET_DISCONNECT);
 }
 
 void Server::SendPacketToClient(uint16_t clientID, Packet * packet)

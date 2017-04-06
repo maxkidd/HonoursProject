@@ -102,6 +102,9 @@ public:
 	Server(NetworkSimulation* simulation, BaseTransport* transport);
 	virtual ~Server();
 
+	void DisconnectAll();
+	void Disconnect(const int ID);
+
 	bool IsActive() { return _active; }
 
 
@@ -128,6 +131,7 @@ protected:
 	void ProcessConnectionPacket(ConnectionPacket* packet, const udp::endpoint& endpoint);
 	void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
 
+	Packet* CreateDisconnectPacket();
 	void SendPacketToClient(uint16_t clientID, Packet* packet);
 };
 

@@ -42,6 +42,7 @@ SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
 	}
 	if (server)
 	{
+		server->DisconnectAll();
 		delete server;
 		server = nullptr;
 	}
@@ -52,7 +53,6 @@ SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
 	}
 	if (_tableView)
 	{
-		//_tableView->release();
 		delete _tableView;
 		_tableView = nullptr;
 	}
