@@ -127,51 +127,61 @@ void StateSyncLayer::update(float dt)
 
 	_networkTimer += dt;
 
-	while (_networkTimer > (0.1f)) // Client or Server tick
+	static float updateTimer = 0.0f;
+	static float inputTimer = 0.0f;
+	updateTimer += dt;
+	inputTimer += dt;
+
+
+	_networkTimer -= (0.1f);
+
+	if (server && server->IsActive()) // Server
 	{
-		_networkTimer -= (0.1f);
-
-		if (server && server->IsActive()) // Server
+		server->ProcessMessages();
+		while (updateTimer > 0.1f)
 		{
-			server->ProcessMessages();
 			server->GenerateMessages();
-
 			server->SendPackets();
-
 			server->WritePackets();
-			server->ReadPackets();
 
-			server->ReceivePackets();
-
-			debugString.append("Server: " + server->GetNetworkState()
-				+ " Port: " + std::to_string(_transport.GetPort()));
-
-			_tableView->reloadData();
-		}
-		else if (client && client->IsActive()) // Client
-		{
-			client->ProcessMessages();
-			client->GenerateMessages();
-
-			client->SendPackets();
-
-			client->WritePackets();
-			client->ReadPackets();
-
-			client->ReceivePackets();
-
-			debugString.append("Client: " + client->GetNetworkState() 
-				+ " Port: " + std::to_string(_transport.GetPort()));
-
-			_tableView->reloadData();
-		}
-		else
-		{
-			debugString.append("No Client/Server running");
+			updateTimer -= 0.1f;
 		}
 
-		_statusLabel->setString(debugString);
+		server->ReadPackets();
+		server->ReceivePackets();
+
+		debugString.append("Server: " + server->GetNetworkState()
+			+ " Port: " + std::to_string(_transport.GetPort()));
+
+		_tableView->reloadData();
 	}
+	else if (client && client->IsActive()) // Client
+	{
+		client->ProcessMessages();
+		while (inputTimer > (1.0f / 60.0f))
+		{
+			client->GenerateMessages();
+			client->SendPackets();
+			client->WritePackets();
+			inputTimer -= 1.0f / 60.0f;
+		}
+
+		client->ReadPackets();
+		client->ReceivePackets();
+
+		debugString.append("Client: " + client->GetNetworkState() 
+			+ " Port: " + std::to_string(_transport.GetPort()));
+
+		_tableView->reloadData();
+	}
+	else
+	{
+		debugString.append("No Client/Server running");
+	}
+
+	_statusLabel->setString(debugString);
+
+
 
 	_physicsTimer += dt;
 	while (_physicsTimer > 1.0f / 60.0f)

@@ -148,33 +148,32 @@ void SnapshotInterpolationLayer::update(float dt)
 		{
 			server->GenerateMessages();
 			server->SendPackets();
+			server->WritePackets();
 			snapshotTimer -= 0.1f;
 		}
 
 
-		server->WritePackets();
 		server->ReadPackets();
-
 		server->ReceivePackets();
 
 		debugString.append("Server: " + server->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
 
 		_tableView->reloadData();
 	}
-	if (client && client->IsActive()) // Client
+	else if (client && client->IsActive()) // Client
 	{
 		client->ProcessMessages();
 
-		while (inputTimer > const(1.0f / 60.0f))
+		while (inputTimer > (1.0f/60.0f))
 		{
 			client->GenerateMessages();
 			client->SendPackets();
+			client->WritePackets();
+			inputTimer -= 1.0f/60.0f;
 		}
 
 
-		client->WritePackets();
 		client->ReadPackets();
-
 		client->ReceivePackets();
 
 		debugString.append("Client: " + client->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
@@ -188,11 +187,11 @@ void SnapshotInterpolationLayer::update(float dt)
 
 	_statusLabel->setString(debugString);
 
-	while (_physicsTimer > const(1.0f / 60.0f))
+	while (_physicsTimer > (1.0f / 60.0f))
 	{
 		_simulation->Step();
 
-		_physicsTimer -= const(1.0f / 60.0f);
+		_physicsTimer -= (1.0f / 60.0f);
 	}
 
 }
