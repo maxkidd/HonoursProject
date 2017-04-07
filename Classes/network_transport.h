@@ -9,6 +9,8 @@
 
 #include "NetworkDebugDataSource.h"
 
+#include "ImGUI\CCIMGUI.h"
+
 using asio::ip::udp;
 
 #define MAX_SEND_QUEUE (100)
@@ -23,11 +25,76 @@ struct PacketInfo
 	udp::endpoint endpoint;
 	Packet* packet;
 };
+struct NetworkLog
+{
+	ImGuiTextBuffer     Buf;
+	ImGuiTextFilter     Filter;
+	ImVector<int>       LineOffsets;        // Index to lines offset
+	bool                ScrollToBottom;
 
+	NetworkLog() {}
+	void    Clear() { Buf.clear(); LineOffsets.clear(); }
+
+	void    AddLog(const char* fmt, ...) IM_PRINTFARGS(2)
+	{
+		int old_size = Buf.size();
+		va_list args;
+		va_start(args, fmt);
+		Buf.appendv(fmt, args);
+		va_end(args);
+		for (int new_size = Buf.size(); old_size < new_size; old_size++)
+			if (Buf[old_size] == '\n')
+				LineOffsets.push_back(old_size);
+		ScrollToBottom = true;
+	}
+
+	void    Draw(const char* title, bool* p_opened = NULL)
+	{
+		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin(title, p_opened);
+		if (ImGui::Button("Clear")) Clear();
+		ImGui::SameLine();
+		bool copy = ImGui::Button("Copy");
+		ImGui::SameLine();
+		Filter.Draw("Filter", -100.0f);
+		ImGui::Separator();
+		ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+		if (copy) ImGui::LogToClipboard();
+
+		if (Filter.IsActive())
+		{
+			const char* buf_begin = Buf.begin();
+			const char* line = buf_begin;
+			for (int line_no = 0; line != NULL; line_no++)
+			{
+				//ImGui::PopStyleColor();
+				//ImGui::PushStyleColor()
+				//ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.2f, 1.0f, 1.0f));
+
+				const char* line_end = (line_no < LineOffsets.Size) ? buf_begin + LineOffsets[line_no] : NULL;
+				if (Filter.PassFilter(line, line_end))
+					//ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), line);
+					ImGui::TextUnformatted(line, line_end);
+				line = line_end && line_end[1] ? line_end + 1 : NULL;
+			}
+		}
+		else
+		{
+			//ImGui::TextUnformatted(Buf.begin());
+			ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), Buf.begin());
+		}
+
+		if (ScrollToBottom)
+			ImGui::SetScrollHere(1.0f);
+		ScrollToBottom = false;
+		ImGui::EndChild();
+		ImGui::End();
+	}
+};
 class BaseTransport
 {
 public:
-	BaseTransport(PacketFactory* packetFactory, MessageFactory* messageFactory) 
+	BaseTransport(PacketFactory* packetFactory, MessageFactory* messageFactory)
 		: _packetFactory(packetFactory), _messageFactory(messageFactory), max_packet_size_(1900)
 	{
 		_context._packetFactory = packetFactory;
@@ -64,6 +131,9 @@ private:
 	int max_packet_size_;
 protected:
 	asio::io_service _IOService;
+
+	NetworkLog log;
+
 };
 
 class SocketTransport : public BaseTransport
@@ -71,6 +141,7 @@ class SocketTransport : public BaseTransport
 public:
 	//SocketTransport(PacketFactory* packetFactory);
 	SocketTransport(PacketFactory * packetFactory, MessageFactory* messageFactory, unsigned short port = 0);
+	virtual ~SocketTransport();
 
 	unsigned short GetPort();
 protected:
@@ -79,6 +150,9 @@ protected:
 
 private:
 	udp::socket _socket;
+
+	// ImGUI
+	bool opened = true;
 };
 
 #endif

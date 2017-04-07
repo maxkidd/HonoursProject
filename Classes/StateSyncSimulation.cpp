@@ -252,7 +252,7 @@ bool S_StateSyncSimulation::ProcessMessages(Connection * con)
 						def.bodyA = _ground;
 						def.bodyB = body;
 						def.target = p;
-						def.maxForce = 1000.0f * body->GetMass();
+						def.maxForce = _mForce * body->GetMass();
 						body->SetAwake(true);
 						
 						// 
@@ -351,7 +351,7 @@ bool S_StateSyncSimulation::MouseDown(const b2Vec2 & p)
 		def.bodyA = _ground;
 		def.bodyB = body;
 		def.target = p;
-		def.maxForce = 1000.0f * body->GetMass();
+		def.maxForce = _mForce * body->GetMass();
 		_mouseJoint = (b2MouseJoint*)_world->CreateJoint(&def);
 		body->SetAwake(true);
 		return true;

@@ -144,12 +144,12 @@ void SnapshotInterpolationLayer::update(float dt)
 	{
 		server->ProcessMessages();
 
-		while (snapshotTimer > 0.1f)
+		while (snapshotTimer > 1.0f/20.0f)
 		{
 			server->GenerateMessages();
 			server->SendPackets();
 			server->WritePackets();
-			snapshotTimer -= 0.1f;
+			snapshotTimer -= 1.0f/20.0f;
 		}
 
 
@@ -158,7 +158,7 @@ void SnapshotInterpolationLayer::update(float dt)
 
 		debugString.append("Server: " + server->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
 
-		_tableView->reloadData();
+		//_tableView->reloadData();
 	}
 	else if (client && client->IsActive()) // Client
 	{
@@ -178,7 +178,7 @@ void SnapshotInterpolationLayer::update(float dt)
 
 		debugString.append("Client: " + client->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
 
-		_tableView->reloadData();
+		//_tableView->reloadData();
 	}
 	else
 	{

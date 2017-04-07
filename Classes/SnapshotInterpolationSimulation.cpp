@@ -245,7 +245,7 @@ bool S_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 						def.bodyA = _ground;
 						def.bodyB = body;
 						def.target = p;
-						def.maxForce = 1000.0f * body->GetMass();
+						def.maxForce = _mForce * body->GetMass();
 						body->SetAwake(true);
 
 						// 
@@ -384,54 +384,7 @@ C_SnapshotInterpolationSimulation::C_SnapshotInterpolationSimulation() : _debugD
 
 void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
 {
-	// Interpolation done here
-	if (snapshots.size() < 4)
-		return;
-
-
-	// Linear interolation test
-	WorldSnapshot first = snapshots[0];
-	WorldSnapshot second = snapshots[1];
-	WorldSnapshot third = snapshots[2];
-	WorldSnapshot fourth = snapshots[3];
-
-	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - first.time; // now - second snapshot time
-	
-	float t = std::min(1.0f, elapsed.count()* 10.0f);// between 0 and 1 for every 100ms
-
-	auto it1 = first.boxes.begin();
-	auto it2 = second.boxes.begin();
-	auto it3 = third.boxes.begin();
-
-	for (auto box : _boxes)
-	{
-		uint32_t id = box.first;
-		while (id != it1->first)
-		{
-			it1++;
-		}
-		while (id != it2->first)
-		{
-			it2++;
-		}
-		while (id != it3->first)
-		{
-			it3++;
-		}
-		b2Vec2 firstVec = it1->second.p;
-		b2Vec2 secondVec = it2->second.p;
-		b2Vec2 thirdVec = it3->second.p;
-		float firstRot = it1->second.q.GetAngle();
-		float secondRot = it2->second.q.GetAngle();
-
-		float x = Cubic(firstVec.x, secondVec.x, firstVec.x + (firstVec.x - secondVec.x) / 10.0f,
-			secondVec.x + (secondVec.x - thirdVec.x) / 10.0f, t);
-		float y = Cubic(firstVec.y, secondVec.y, firstVec.y + (firstVec.y - secondVec.y)/10.0f,
-			secondVec.y + (secondVec.y - thirdVec.y)/10.0f, t);
-
-		//_boxes_interp[box.first].Set(Lerp(secondVec, firstVec, t), LerpRad(secondRot, firstRot, t));
-		_boxes_interp[box.first].Set(b2Vec2(x, y), LerpRad(secondRot, firstRot, t));
-	}
+	Layer::draw(renderer, transform, flags);
 
 	// Render boxes
 	for (auto box : _boxes_interp)
@@ -461,30 +414,29 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 }
 
 void C_SnapshotInterpolationSimulation::Step()
-{
-	/*// Interpolation done here
+{// Interpolation done here
 	if (snapshots.size() < 4)
 		return;
-	
+
 
 	// Linear interolation test
-	WorldSnapshot first = snapshots.end()[-1];
-	WorldSnapshot second = snapshots.end()[-2];
-	WorldSnapshot third = snapshots.end()[-3];
-	WorldSnapshot fourth = snapshots.end()[-4];
+	WorldSnapshot first = snapshots[0];
+	WorldSnapshot second = snapshots[1];
+	WorldSnapshot third = snapshots[2];
+	WorldSnapshot fourth = snapshots[3];
 
-	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - second.time; // now - second snapshot time
-	float t = std::min(1.0f, (elapsed.count())* 10.0f);// between 0 and 1 for every 100ms
-	
+	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - first.time; // now - second snapshot time
+
+	float t = std::min(1.0f, elapsed.count()*20.0f);// between 0 and 1 for every 100ms
+
 	auto it1 = first.boxes.begin();
 	auto it2 = second.boxes.begin();
 	auto it3 = third.boxes.begin();
-	auto it4 = fourth.boxes.begin();
 
 	for (auto box : _boxes)
 	{
 		uint32_t id = box.first;
-		while(id != it1->first)
+		while (id != it1->first)
 		{
 			it1++;
 		}
@@ -496,22 +448,20 @@ void C_SnapshotInterpolationSimulation::Step()
 		{
 			it3++;
 		}
-		while (id != it4->first)
-		{
-			it4++;
-		}
 		b2Vec2 firstVec = it1->second.p;
 		b2Vec2 secondVec = it2->second.p;
 		b2Vec2 thirdVec = it3->second.p;
-		b2Vec2 fourthVec = it4->second.p;
 		float firstRot = it1->second.q.GetAngle();
 		float secondRot = it2->second.q.GetAngle();
 
-		float x = CubicHermite(fourthVec.x, thirdVec.x, secondVec.x, firstVec.x, t);
-		float y = CubicHermite(fourthVec.y, thirdVec.y, secondVec.y, firstVec.y, t);
+		float x = Cubic(firstVec.x, secondVec.x, firstVec.x + (firstVec.x - secondVec.x) / 10.0f,
+			secondVec.x + (secondVec.x - thirdVec.x) / 10.0f, t);
+		float y = Cubic(firstVec.y, secondVec.y, firstVec.y + (firstVec.y - secondVec.y) / 10.0f,
+			secondVec.y + (secondVec.y - thirdVec.y) / 10.0f, t);
 
-		_boxes_interp[box.first].Set(Lerp(secondVec, firstVec,t), LerpRad(secondRot, firstRot, t));
-	}*/
+		//_boxes_interp[box.first].Set(Lerp(secondVec, firstVec, t), LerpRad(secondRot, firstRot, t));
+		_boxes_interp[box.first].Set(b2Vec2(x, y), LerpRad(secondRot, firstRot, t));
+	}
 }
 
 void C_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Connection * con)

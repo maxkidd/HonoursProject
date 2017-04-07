@@ -14,6 +14,8 @@
 
 class HelloWorld : public cocos2d::Layer
 {
+private:
+	bool isShowDemo;
 public:
     static cocos2d::Scene* createScene();
 

@@ -105,8 +105,6 @@ bool HelloWorld::init()
 	//ImGUI
 	
 	CCIMGUI::getInstance()->addImGUI([=]() {
-		//ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_Always);
-		//ImGui::ShowTestWindow(&isShowDemo);
 
 		if (ImGui::BeginMainMenuBar())
 		{

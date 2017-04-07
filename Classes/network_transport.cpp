@@ -2,10 +2,36 @@
 
 #include <cocos2d.h>
 
+#include "ImGui\CCIMGUI.h"
+
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+
 SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* messageFactory, unsigned short port) 
 	: BaseTransport(packetFactory, messageFactory), _socket(_IOService, udp::endpoint(udp::v4(), port))
 {
 	_socket.non_blocking(true);
+
+
+	CCIMGUI::getInstance()->addImGUI([=]() {
+
+		/*static float last_time = -1.0f;
+		float time = ImGui::GetTime();
+		if (time - last_time >= 0.3f)
+		{
+			const char* random_words[] = { "system", "info", "warning", "error", "fatal", "notice", "log" };
+			log.AddLog("[%s] Hello, time is %.1f, rand() %d\n", random_words[rand() % IM_ARRAYSIZE(random_words)], time, (int)rand());
+			last_time = time;
+		}*/
+
+		log.Draw("Network Log", &opened);
+
+	}, "Logging");
+
+}
+
+SocketTransport::~SocketTransport()
+{
+	CCIMGUI::getInstance()->removeImGUI("Logging");
 }
 
 unsigned short SocketTransport::GetPort()
@@ -89,8 +115,9 @@ void BaseTransport::WritePackets()
 		InternalSendPacket(packetInfo.endpoint, buffer, bytesUsed);
 		
 		
-		_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Sent " + std::to_string(bytesUsed) + "bytes to "
-			+ packetInfo.endpoint.address().to_string(), NET_LOG);
+		/*_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Sent " + std::to_string(bytesUsed) + "bytes to "
+			+ packetInfo.endpoint.address().to_string(), NET_LOG);*/ 
+		log.AddLog("[%s](->) packet(%d), bytes(%d)\n", "Log", packetInfo.packet->GetType(), (bytesUsed));
 	}
 }
 
@@ -120,7 +147,8 @@ void BaseTransport::ReadPackets()
 		_receiveQueue.push(packetInfo);
 
 
-		_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Received " + std::to_string(bytesReceived) + "bytes from "
-			+ packetInfo.endpoint.address().to_string(), NET_LOG);
+		/*_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Received " + std::to_string(bytesReceived) + "bytes from "
+			+ packetInfo.endpoint.address().to_string(), NET_LOG);*/
+		log.AddLog("[%s](<-) packet(%d), bytes(%d)\n", "Log", packetInfo.packet->GetType(), (bytesReceived));
 	}
 }

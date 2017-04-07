@@ -138,13 +138,13 @@ void StateSyncLayer::update(float dt)
 	if (server && server->IsActive()) // Server
 	{
 		server->ProcessMessages();
-		while (updateTimer > 0.1f)
+		while (updateTimer > 1.0f / 20.0f)
 		{
 			server->GenerateMessages();
 			server->SendPackets();
 			server->WritePackets();
 
-			updateTimer -= 0.1f;
+			updateTimer -= 1.0f / 20.0f;
 		}
 
 		server->ReadPackets();
