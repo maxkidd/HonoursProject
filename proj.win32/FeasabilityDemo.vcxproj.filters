@@ -42,9 +42,6 @@
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\NetworkDebugView.cpp">
       <Filter>src\Layers</Filter>
     </ClCompile>
@@ -68,12 +65,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Box2DTestBed\TestEntries.cpp">
       <Filter>src\Layers\Box2D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\WorldState.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\b2NetworkWorld.cpp">
-      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\network_channel.cpp">
       <Filter>src\Network</Filter>
@@ -153,24 +144,21 @@
     <ClCompile Include="..\Classes\ClientLayer.cpp">
       <Filter>src\Old</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\MainMenu.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\b2NetworkWorld.cpp">
+      <Filter>src\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\WorldState.cpp">
+      <Filter>src\Old</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>win32</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\AppDelegate.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\HelloWorldScene.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\NetMessage.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Client.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Server.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\NetworkDebugView.h">
@@ -344,17 +332,8 @@
     <ClInclude Include="..\Classes\testResource.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\tests.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Box2DTestBed\Box2DTest.h">
       <Filter>src\Layers\Box2D</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\WorldState.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\b2NetworkWorld.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\network_channel.h">
       <Filter>src\Network</Filter>
@@ -456,6 +435,27 @@
       <Filter>src\Old</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\ClientLayer.h">
+      <Filter>src\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MainMenu.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Client.h">
+      <Filter>src\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Server.h">
+      <Filter>src\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\b2NetworkWorld.h">
+      <Filter>src\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\NetMessage.h">
+      <Filter>src\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\WorldState.h">
+      <Filter>src\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\tests.h">
       <Filter>src\Old</Filter>
     </ClInclude>
   </ItemGroup>

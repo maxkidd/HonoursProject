@@ -3,7 +3,7 @@
 #include <thread>
 #include <utility>
 
-#include "HelloWorldScene.h"
+#include "MainMenu.h"
 
 #include "cocos\ui\UITextField.h"
 #include "cocos\ui\UIButton.h"

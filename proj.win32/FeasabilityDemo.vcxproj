@@ -160,7 +160,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\ClientLayer.cpp" />
     <ClCompile Include="..\Classes\controller.cpp" />
     <ClCompile Include="..\Classes\GameLayer.cpp" />
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\MainMenu.cpp" />
     <ClCompile Include="..\Classes\ImGUI\CCIMGUI.cpp" />
     <ClCompile Include="..\Classes\ImGUI\imgui.cpp" />
     <ClCompile Include="..\Classes\ImGUI\IMGUIGLViewImpl.cpp" />
@@ -251,7 +251,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\ClientLayer.h" />
     <ClInclude Include="..\Classes\controller.h" />
     <ClInclude Include="..\Classes\GameLayer.h" />
-    <ClInclude Include="..\Classes\HelloWorldScene.h" />
+    <ClInclude Include="..\Classes\MainMenu.h" />
     <ClInclude Include="..\Classes\ImGUI\CCIMGUI.h" />
     <ClInclude Include="..\Classes\ImGUI\imconfig.h" />
     <ClInclude Include="..\Classes\ImGUI\imgui.h" />

@@ -25,9 +25,15 @@ struct PacketInfo
 	udp::endpoint endpoint;
 	Packet* packet;
 };
+enum _logType
+{
+	LOG
+};
 struct NetworkLog
 {
+
 	ImGuiTextBuffer     Buf;
+	ImVector<_logType>	LogType;
 	ImGuiTextFilter     Filter;
 	ImVector<int>       LineOffsets;        // Index to lines offset
 	bool                ScrollToBottom;
@@ -67,21 +73,32 @@ struct NetworkLog
 			const char* line = buf_begin;
 			for (int line_no = 0; line != NULL; line_no++)
 			{
-				//ImGui::PopStyleColor();
-				//ImGui::PushStyleColor()
-				//ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.2f, 1.0f, 1.0f));
 
 				const char* line_end = (line_no < LineOffsets.Size) ? buf_begin + LineOffsets[line_no] : NULL;
 				if (Filter.PassFilter(line, line_end))
-					//ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), line);
 					ImGui::TextUnformatted(line, line_end);
 				line = line_end && line_end[1] ? line_end + 1 : NULL;
 			}
 		}
 		else
 		{
-			//ImGui::TextUnformatted(Buf.begin());
-			ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), Buf.begin());
+			const char* buf_begin = Buf.begin();
+			const char* line = buf_begin;
+			for (int line_no = 0; line != NULL; line_no++)
+			{
+				const char* line_end = (line_no < LineOffsets.Size) ? buf_begin + LineOffsets[line_no] : NULL;
+				if (Filter.PassFilter(line, line_end))
+					ImGui::TextUnformatted(line, line_end);
+				line = line_end && line_end[1] ? line_end + 1 : NULL;
+			}
+
+			ImColor col = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
+
+			LogType[2];
+
+			ImGui::PushStyleColor(ImGuiCol_Text, col);
+			ImGui::TextUnformatted(Buf.begin());
+			ImGui::PopStyleColor();
 		}
 
 		if (ScrollToBottom)

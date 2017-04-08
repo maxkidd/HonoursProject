@@ -4,7 +4,7 @@
 #include "cocos\ui\UIButton.h"
 #include "cocos\ui\UIWidget.h"
 
-#include "HelloWorldScene.h" // Replace name
+#include "MainMenu.h" // Replace name
 
 using namespace cocos2d;
 
@@ -22,7 +22,7 @@ GameLayer::GameLayer()
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			// Go back to menu
-			Director::getInstance()->pushScene(TransitionFadeTR::create(1.0f, HelloWorld::createScene()));
+			Director::getInstance()->pushScene(TransitionFadeTR::create(1.0f, MainMenu::createScene()));
 		}
 	});
 	addChild(backButton);
