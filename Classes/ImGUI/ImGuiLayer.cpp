@@ -5,6 +5,11 @@
 
 USING_NS_CC;
 
+ImGuiLayer::~ImGuiLayer()
+{
+	//unscheduleUpdate();
+}
+
 // on "init" you need to initialize your instance
 bool ImGuiLayer::init()
 {
@@ -28,6 +33,8 @@ bool ImGuiLayer::init()
         return inImGuiWidgets;
     };
     getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+	//scheduleUpdate();
+
     return true;
 }
 
@@ -39,6 +46,12 @@ void ImGuiLayer::visit(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentT
     Director::getInstance()->getRenderer()->addCommand(&_command);
 }
 
+void ImGuiLayer::update(float dt)
+{
+	//ImGui_ImplGlfw_NewFrame();
+	//CCIMGUI::getInstance()->updateImGUI();
+}
+
 void ImGuiLayer::onDraw()
 {
 	
@@ -46,8 +59,8 @@ void ImGuiLayer::onDraw()
     if (CCIMGUI::getInstance()->getWindow()) {
 		ImGuiIO& io = ImGui::GetIO();
 		io.DeltaTime = Director::getInstance()->getDeltaTime();
-
-        ImGui_ImplGlfw_NewFrame();
+		
+		ImGui_ImplGlfw_NewFrame();
 		CCIMGUI::getInstance()->updateImGUI();
         // Rendering
         ImGui::Render();

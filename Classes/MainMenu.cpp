@@ -111,17 +111,25 @@ bool MainMenu::init()
 
 					if (ImGui::MenuItem("Snapshot Interpolation"))
 					{
-						Director::getInstance()->replaceScene(TransitionFadeBL::create(1.0f, SnapshotInterpolationLayer::scene()));
+						//LoadSnapshot();
+						//Director::getInstance()->
+						//auto schedular = Director::getInstance()->getScheduler();
+						//scheduleOnce(SEL_SCHEDULE(&LoadStateSyncScene), 0.0f);
+						//runAction(Sequence::create()
+						//Director::getInstance()->pushScene(TransitionSplitCols::create(1.0f, SnapshotInterpolationLayer::scene()));
+					//Director::getInstance()->pushScene(MainMenu::createScene());
+						Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, SnapshotInterpolationLayer::scene()));
 					}
 					if (ImGui::MenuItem("State Synchronization"))
 					{
+						//Director::getInstance()->pushScene(MainMenu::createScene());
 						Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, StateSyncLayer::scene()));
 					}
 					ImGui::EndMenu();
 				}
 				if (ImGui::MenuItem("Back", "F3")) 
 				{
-					Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, MainMenu::createScene()));;
+					Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, MainMenu::createScene()));
 				}
 				if (ImGui::MenuItem("Quit", "F4")) 
 				{
@@ -140,21 +148,6 @@ bool MainMenu::init()
 					asio::io_service netService;
 					udp::resolver   resolver(netService);
 					udp::resolver::query query(udp::v4(), "google.com", "");
-					udp::resolver::iterator endpoints = resolver.resolve(query);
-					udp::endpoint ep = *endpoints;
-					udp::socket socket(netService);
-					socket.connect(ep);
-					asio::ip::address addr = socket.local_endpoint().address();
-					//std::cout << "My IP according to google is: " << addr.to_string() << std::endl;
-					ImGui::MenuItem(addr.to_string().c_str(), NULL, false, false);
-				}
-				catch (std::exception& e) {
-
-				}
-				try {
-					asio::io_service netService;
-					udp::resolver   resolver(netService);
-					udp::resolver::query query(udp::v4(), "uaddns02.uad.ac.uk", "");
 					udp::resolver::iterator endpoints = resolver.resolve(query);
 					udp::endpoint ep = *endpoints;
 					udp::socket socket(netService);
@@ -193,10 +186,10 @@ void MainMenu::LoadBox2DTest()
 
 void MainMenu::LoadSnapshot()
 {
-	Director::getInstance()->replaceScene(TransitionFadeBL::create(1.0f, SnapshotInterpolationLayer::scene()));
+	Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, SnapshotInterpolationLayer::scene()));
 }
 
 void MainMenu::LoadStateSync()
 {
-	Director::getInstance()->replaceScene(TransitionFadeBL::create(1.0f, StateSyncLayer::scene()));
+	Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, StateSyncLayer::scene()));
 }

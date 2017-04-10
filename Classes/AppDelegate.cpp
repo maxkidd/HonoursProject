@@ -86,6 +86,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // run
     director->runWithScene(scene);
 
+
 	// ImGUI
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	director->getScheduler()->schedule([=](float dt)
@@ -96,6 +97,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 			scene->addChild(ImGuiLayer::create(), INT_MAX, "ImGUILayer");
 		}
 	}, this, 0, false, "checkImGUI");
+
+
 #endif
     return true;
 }

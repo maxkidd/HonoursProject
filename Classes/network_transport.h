@@ -92,13 +92,13 @@ struct NetworkLog
 				line = line_end && line_end[1] ? line_end + 1 : NULL;
 			}
 
-			ImColor col = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
+			//ImColor col = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
 
-			LogType[2];
+			//LogType[2];
 
-			ImGui::PushStyleColor(ImGuiCol_Text, col);
+			//ImGui::PushStyleColor(ImGuiCol_Text, col);
 			ImGui::TextUnformatted(Buf.begin());
-			ImGui::PopStyleColor();
+			//ImGui::PopStyleColor();
 		}
 
 		if (ScrollToBottom)

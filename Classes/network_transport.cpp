@@ -25,13 +25,13 @@ SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* 
 
 		log.Draw("Network Log", &opened);
 
-	}, "Logging");
+	}, std::string("Logging" + to_string(_socket.local_endpoint().port())));
 
 }
 
 SocketTransport::~SocketTransport()
 {
-	CCIMGUI::getInstance()->removeImGUI("Logging");
+	CCIMGUI::getInstance()->removeImGUI(std::string("Logging" + to_string(_socket.local_endpoint().port())));
 }
 
 unsigned short SocketTransport::GetPort()
