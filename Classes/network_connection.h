@@ -26,6 +26,8 @@ public:
 	ConnectionPacket* GeneratePacket();
 	bool ProcessPacket(ConnectionPacket* packet);
 
+	void ProcessAcks(uint32_t ack, uint32_t prevAcks);
+
 	void SendMsg(NMessage* message);
 	NMessage* ReceiveMsg();
 
@@ -40,6 +42,17 @@ private:
 	MessageFactory* _messageFactory;
 
 	std::chrono::high_resolution_clock::time_point _lastProcessedPacket;
+
+
+	const int sequenceBufferSize = 64;
+
+	uint32_t sentSequence = 1;
+	bool* sentAckEntries;
+
+	uint32_t recvSequence = 1;
+	bool* recvAckEntries;
+
+
 };
 
 #endif

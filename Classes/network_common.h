@@ -42,10 +42,21 @@ public:
 	ChannelPacket* _channelEntry = nullptr; // Channel packet that holds messages
 	MessageFactory* _messageFactory = nullptr;
 
+	// 16 bit
+	uint32_t packetSequence;	// Current sequence acknowledgement number
+
+	// 16 bit
+	uint32_t ackReceipt;		// Acknowledgement number of last received packet
+	uint32_t prevAcks;			// Bit mask for last acknowledgements received
+
 	ConnectionPacket() { }
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
+
+		stream.SerializeBits(packetSequence, 16);
+		stream.SerializeBits(ackReceipt, 16);
+		stream.SerializeInteger(prevAcks);
 
 		if (Stream::IsReading)
 		{

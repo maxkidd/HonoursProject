@@ -1,4 +1,5 @@
 #include "network_transport.h"
+#include "network_common.h"
 
 #include <cocos2d.h>
 
@@ -116,8 +117,17 @@ void BaseTransport::WritePackets()
 		
 		
 		/*_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Sent " + std::to_string(bytesUsed) + "bytes to "
-			+ packetInfo.endpoint.address().to_string(), NET_LOG);*/ 
-		log.AddLog("[%s](->) packet(%d), bytes(%d)\n", "Log", packetInfo.packet->GetType(), (bytesUsed));
+			+ packetInfo.endpoint.address().to_string(), NET_LOG);*/
+		uint32_t type = packetInfo.packet->GetType();
+		log.AddLog("[%s](-->) packet(%d), bytes(%d)\n", "Log", type, (bytesUsed));
+		
+		if (type == CLIENT_SERVER_PACKET_CONNECTION)
+		{
+			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
+
+			log.AddLog("[%s](-->) SEQUENCE(%d), LATEST_ACK(%d), MISSED_SEQUENCE(%d)\n", "Log", 
+				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
+		}
 	}
 }
 
@@ -149,6 +159,16 @@ void BaseTransport::ReadPackets()
 
 		/*_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Received " + std::to_string(bytesReceived) + "bytes from "
 			+ packetInfo.endpoint.address().to_string(), NET_LOG);*/
-		log.AddLog("[%s](<-) packet(%d), bytes(%d)\n", "Log", packetInfo.packet->GetType(), (bytesReceived));
+		uint32_t type = packetInfo.packet->GetType();
+		log.AddLog("[%s](<--) packet(%d), bytes(%d)\n", "Log", type, (bytesReceived));
+
+
+		if (type == CLIENT_SERVER_PACKET_CONNECTION)
+		{
+			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
+
+			log.AddLog("[%s](<--) SEQUENCE(%d), LATEST_ACK(%d), MISSED_SEQUENCE(%d)\n", "Log",
+				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
+		}
 	}
 }
