@@ -47,7 +47,7 @@ ConnectionPacket * Connection::GeneratePacket()
 
 		for (int i = 0; i < 32; ++i)
 		{
-			uint32_t sequence = ack - 1;
+			uint32_t sequence = ack - i;
 			if (recvAckEntries[sequence % sequenceBufferSize])
 			{
 				ackBits |= mask;

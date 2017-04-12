@@ -125,7 +125,7 @@ void BaseTransport::WritePackets()
 		{
 			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
 
-			log.AddLog("[%s](-->) SEQUENCE(%d), LATEST_ACK(%d), MISSED_SEQUENCE(%d)\n", "Log", 
+			log.AddLog("[%s](-->) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log", 
 				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
 		}
 	}
@@ -167,7 +167,7 @@ void BaseTransport::ReadPackets()
 		{
 			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
 
-			log.AddLog("[%s](<--) SEQUENCE(%d), LATEST_ACK(%d), MISSED_SEQUENCE(%d)\n", "Log",
+			log.AddLog("[%s](<--) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
 				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
 		}
 	}
