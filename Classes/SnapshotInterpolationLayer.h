@@ -6,16 +6,11 @@
 
 #include "asio\asio.hpp"
 
-//#include "server.h"
-//#include "NetworkDebugView.h"
-
 #include "network_transport.h"
 #include "network_connection.h"
-//#include "network_common.h"
 #include "network_packet.h"
 
-
-#include "NetworkDebugDataSource.h"
+//#include "NetworkDebugDataSource.h"
 
 #include <stdio.h>
 

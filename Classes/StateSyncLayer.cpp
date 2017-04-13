@@ -1,7 +1,7 @@
 #include "StateSyncLayer.h"
 
-#include <thread>
-#include <utility>
+//#include <thread>
+//#include <utility>
 
 #include "cocos\ui\UITextField.h"
 #include "cocos\ui\UIButton.h"
@@ -9,7 +9,7 @@
 
 #include <chrono>
 
-#include "network_common.h"
+//#include "network_common.h"
 
 using namespace std;
 using namespace cocos2d;
@@ -46,13 +46,6 @@ StateSyncLayer::~StateSyncLayer()
 	if (_simulation)
 		delete _simulation;
 
-
-	if (_tableView)
-	{
-		//_tableView->release();
-		delete _tableView;
-		_tableView = nullptr;
-	}
 }
 
 cocos2d::Scene * StateSyncLayer::scene()
@@ -99,18 +92,6 @@ bool StateSyncLayer::init()
 
 	createNetworkStatsLabel();
 
-
-	_tableView = TableView::create(_transport.GetDebugService(), Size(winSize.width, winSize.height * 0.9f));
-	_tableView->setPosition(10.0f, winSize.height * 0.1f);
-	//tableView->setContentSize(Size(200.0f, 20.0f));
-	_tableView->setDirection(ScrollView::Direction::VERTICAL);
-	_tableView->setTouchEnabled(false);
-	//_tableView->retain();
-	
-
-	addChild(_tableView);
-	//_tableView->reloadData();
-
 	scheduleUpdate();
 
 	return true;
@@ -153,7 +134,6 @@ void StateSyncLayer::update(float dt)
 		debugString.append("Server: " + server->GetNetworkState()
 			+ " Port: " + std::to_string(_transport.GetPort()));
 
-		_tableView->reloadData();
 	}
 	else if (client && client->IsActive()) // Client
 	{
@@ -172,7 +152,6 @@ void StateSyncLayer::update(float dt)
 		debugString.append("Client: " + client->GetNetworkState() 
 			+ " Port: " + std::to_string(_transport.GetPort()));
 
-		_tableView->reloadData();
 	}
 	else
 	{

@@ -153,6 +153,9 @@
     <ClCompile Include="..\Classes\WorldState.cpp">
       <Filter>src\Old</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Logger.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -457,6 +460,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\tests.h">
       <Filter>src\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Logger.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,8 @@
 
 #include "ImGui\CCIMGUI.h"
 
+#include "Logger.h"
+
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* messageFactory, unsigned short port) 
@@ -12,6 +14,7 @@ SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* 
 {
 	_socket.non_blocking(true);
 
+	log = NetworkLog::getInstance();
 
 	CCIMGUI::getInstance()->addImGUI([=]() {
 
@@ -24,7 +27,7 @@ SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* 
 			last_time = time;
 		}*/
 
-		log.Draw("Network Log", &opened);
+		log->Draw("Network Log", &opened);
 
 	}, std::string("Logging" + to_string(_socket.local_endpoint().port())));
 
@@ -116,16 +119,14 @@ void BaseTransport::WritePackets()
 		InternalSendPacket(packetInfo.endpoint, buffer, bytesUsed);
 		
 		
-		/*_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Sent " + std::to_string(bytesUsed) + "bytes to "
-			+ packetInfo.endpoint.address().to_string(), NET_LOG);*/
 		uint32_t type = packetInfo.packet->GetType();
-		log.AddLog("[%s](-->) packet(%d), bytes(%d)\n", "Log", type, (bytesUsed));
+		log->AddLog(LOG_PACKET_SENT,"[%s](-->) packet(%d), bytes(%d)\n", "Log", type, (bytesUsed));
 		
 		if (type == CLIENT_SERVER_PACKET_CONNECTION)
 		{
 			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
 
-			log.AddLog("[%s](-->) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log", 
+			log->AddLog(LOG_PACKET_ACK, "[%s](-->) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
 				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
 		}
 	}
@@ -157,17 +158,15 @@ void BaseTransport::ReadPackets()
 		_receiveQueue.push(packetInfo);
 
 
-		/*_debugData.createEntry(to_string(packetInfo.packet->GetType()) + " Received " + std::to_string(bytesReceived) + "bytes from "
-			+ packetInfo.endpoint.address().to_string(), NET_LOG);*/
 		uint32_t type = packetInfo.packet->GetType();
-		log.AddLog("[%s](<--) packet(%d), bytes(%d)\n", "Log", type, (bytesReceived));
+		log->AddLog(LOG_PACKET_RECEIVED, "[%s](<--) packet(%d), bytes(%d)\n", "Log", type, (bytesReceived));
 
 
 		if (type == CLIENT_SERVER_PACKET_CONNECTION)
 		{
 			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
 
-			log.AddLog("[%s](<--) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
+			log->AddLog(LOG_PACKET_ACK, "[%s](<--) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
 				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
 		}
 	}

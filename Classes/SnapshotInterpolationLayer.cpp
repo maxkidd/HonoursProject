@@ -1,9 +1,7 @@
 #include "SnapshotInterpolationLayer.h"
 
-#include <thread>
-#include <utility>
-
-#include "MainMenu.h"
+//#include <thread>
+//#include <utility>
 
 #include "cocos\ui\UITextField.h"
 #include "cocos\ui\UIButton.h"
@@ -102,16 +100,6 @@ bool SnapshotInterpolationLayer::init()
 
 	createNetworkStatsLabel();
 
-
-	_tableView = TableView::create(_transport.GetDebugService(), Size(winSize.width, winSize.height * 0.9f));
-	_tableView->setPosition(10.0f, winSize.height * 0.1f);
-	//tableView->setContentSize(Size(200.0f, 20.0f));
-	_tableView->setDirection(ScrollView::Direction::VERTICAL);
-	_tableView->setTouchEnabled(false);
-	//_tableView->retain();
-
-	addChild(_tableView);
-	//_tableView->reloadData();
 
 	scheduleUpdate();
 
