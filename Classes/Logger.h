@@ -36,6 +36,14 @@ static ImVec4 LOG_COLOR(_logType type)
 
 struct NetworkLog
 {
+	struct BandwidthData
+	{
+		bool _isSending;
+		int _bytes;
+
+		BandwidthData(bool sending, int bytes) :_isSending(sending), _bytes(bytes) {}
+	};
+
 	static NetworkLog* getInstance();
 	static void destroyInstance();
 
@@ -45,11 +53,40 @@ struct NetworkLog
 	ImGuiTextFilter Filter;
 	ImVector<ImVec4> typeOffsets;        // Index to colour offset
 	ImVector<int>       LineOffsets;        // Index to lines offset
+	ImVector<BandwidthData>       o_bandwidthData;
+	ImVector<BandwidthData>       i_bandwidthData;
 	bool                ScrollToBottom;
+	int display_count = 70;
+	int func_type = 0;
 
-	NetworkLog() {}
+	struct LogView
+	{
+		static float Sin(void*, int i) { return sinf(i * 0.1f); }
+		static float Saw(void*, int i) { return (i & 1) ? 1.0f : 0.0f; }
+
+		static bool paused;// Toggle for histogram view
+
+		static float bandwidth(void* data, int i) { 
+			static int currentStart;
+			ImVector<BandwidthData>* vec = (ImVector<BandwidthData>*)data;
+			if (!paused)
+				currentStart = vec->size();
+
+			return (*(ImVector<BandwidthData>*)data)[currentStart - i]._bytes;
+		}
+	};
+
+
+	NetworkLog() 
+	{
+		i_bandwidthData.reserve(100);
+		o_bandwidthData.reserve(100);
+	}
 	void    Clear() {
 		Buf.clear(); LineOffsets.clear(); typeOffsets.clear();
+	}
+	void    TogglePause() {
+		LogView::paused = !LogView::paused;
 	}
 
 	void    AddLog(_logType type, const char* fmt, ...) IM_PRINTFARGS(2)
@@ -69,6 +106,13 @@ struct NetworkLog
 			}
 		ScrollToBottom = true;
 	}
+	void    AddPacketLog(_logType type, bool isSending, int bytes)
+	{
+		if (isSending)
+			o_bandwidthData.push_back(BandwidthData(isSending, bytes));
+		else
+			i_bandwidthData.push_back(BandwidthData(isSending, bytes));
+	}
 
 	void    Draw(const char* title, bool* p_opened = NULL)
 	{
@@ -79,7 +123,25 @@ struct NetworkLog
 		bool copy = ImGui::Button("Copy");
 		ImGui::SameLine();
 		Filter.Draw("Filter", -100.0f);
+		ImGui::SameLine();
+		if (ImGui::Button(LogView::paused ? "Unpause" : "Pause")) TogglePause();
+
+
 		ImGui::Separator();
+
+		ImGui::PushItemWidth(100); ImGui::Combo("Packet", &func_type, "Incoming\0Outgoing\0"); ImGui::PopItemWidth();
+		ImGui::SameLine();
+		ImGui::SliderInt("Sample count", &display_count, 1, 500);
+
+		if(func_type == 0)
+			ImGui::PlotHistogram("Incoming packets", LogView::bandwidth, (void*)&i_bandwidthData, 
+				i_bandwidthData.size() > display_count ? display_count : i_bandwidthData.size() + 1, 0, NULL, -1.0f, 1000.0f, ImVec2(0, 80.0f));
+		else
+			ImGui::PlotHistogram("Outgoing packets", LogView::bandwidth, (void*)&o_bandwidthData, 
+				o_bandwidthData.size() > display_count ? display_count : o_bandwidthData.size() + 1, 0, NULL, -1.0f, 1000.0f, ImVec2(0, 80.0f));
+
+		ImGui::Separator();
+
 		ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 		if (copy) ImGui::LogToClipboard();
 
@@ -108,7 +170,9 @@ struct NetworkLog
 		if (ScrollToBottom)
 			ImGui::SetScrollHere(1.0f);
 		ScrollToBottom = false;
+
 		ImGui::EndChild();
+
 		ImGui::End();
 	}
 };

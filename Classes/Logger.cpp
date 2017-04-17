@@ -1,5 +1,7 @@
 #include "Logger.h"
 
+bool NetworkLog::LogView::paused = false;
+
 static NetworkLog* instance = nullptr;
 NetworkLog * NetworkLog::getInstance()
 {

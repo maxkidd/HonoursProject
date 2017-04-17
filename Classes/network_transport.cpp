@@ -14,7 +14,7 @@ SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* 
 {
 	_socket.non_blocking(true);
 
-	log = NetworkLog::getInstance();
+	//log = NetworkLog::getInstance();
 
 	CCIMGUI::getInstance()->addImGUI([=]() {
 
@@ -27,7 +27,7 @@ SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* 
 			last_time = time;
 		}*/
 
-		log->Draw("Network Log", &opened);
+		NetworkLog::getInstance()->Draw("Network Log", &opened);
 
 	}, std::string("Logging" + to_string(_socket.local_endpoint().port())));
 
@@ -120,14 +120,16 @@ void BaseTransport::WritePackets()
 		
 		
 		uint32_t type = packetInfo.packet->GetType();
-		log->AddLog(LOG_PACKET_SENT,"[%s](-->) packet(%d), bytes(%d)\n", "Log", type, (bytesUsed));
+		NetworkLog::getInstance()->AddLog(LOG_PACKET_SENT,"[%s](-->) packet(%d), bytes(%d)\n", "Log", type, (bytesUsed));
 		
 		if (type == CLIENT_SERVER_PACKET_CONNECTION)
 		{
 			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
 
-			log->AddLog(LOG_PACKET_ACK, "[%s](-->) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
+			NetworkLog::getInstance()->AddLog(LOG_PACKET_ACK, "[%s](-->) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
 				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
+
+			NetworkLog::getInstance()->AddPacketLog(LOG_PACKET_SENT, true, bytesUsed);
 		}
 	}
 }
@@ -159,15 +161,17 @@ void BaseTransport::ReadPackets()
 
 
 		uint32_t type = packetInfo.packet->GetType();
-		log->AddLog(LOG_PACKET_RECEIVED, "[%s](<--) packet(%d), bytes(%d)\n", "Log", type, (bytesReceived));
+		NetworkLog::getInstance()->AddLog(LOG_PACKET_RECEIVED, "[%s](<--) packet(%d), bytes(%d)\n", "Log", type, (bytesReceived));
 
 
 		if (type == CLIENT_SERVER_PACKET_CONNECTION)
 		{
 			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
 
-			log->AddLog(LOG_PACKET_ACK, "[%s](<--) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
+			NetworkLog::getInstance()->AddLog(LOG_PACKET_ACK, "[%s](<--) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
 				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
+
+			NetworkLog::getInstance()->AddPacketLog(LOG_PACKET_RECEIVED, false, bytesReceived);
 		}
 	}
 }
