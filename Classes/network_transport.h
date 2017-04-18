@@ -44,15 +44,16 @@ public:
 		_context._messageFactory = messageFactory;
 	}
 	virtual ~BaseTransport() {}
+	asio::io_service* GetIOService() { return &_IOService; }
 
+
+	// Receive the next packet and corresponding endpoint that has been read
 	Packet* ReceivePacket(udp::endpoint &endpoint);
-
+	// Send packet to the send queue waiting to be written
 	void SendPacket(const udp::endpoint & endpoint, Packet * data);
-
+	// Read&Write packets using the inherited internal functions
 	void WritePackets();
 	void ReadPackets();
-
-	asio::io_service* GetIOService() { return &_IOService; }
 protected:
 	// Internal receive functions to recieve packets from destination
 	virtual int InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes) = 0;
