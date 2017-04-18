@@ -2,22 +2,24 @@
 #define _TRANSPORT_H_
 
 #include <queue>
+
 #include "asio\asio.hpp"
 
 #include "network_packet.h"
 #include "network_message.h"
 
-//#include "NetworkDebugDataSource.h"
-
-#include "ImGUI\CCIMGUI.h"
 
 using asio::ip::udp;
 
-#define MAX_SEND_QUEUE (100)
-#define MAX_RECEIVE_QUEUE (100)
+
+#define MAX_SEND_QUEUE (100)	// Maximum messages in the send queue
+#define MAX_RECEIVE_QUEUE (100)	// Maximum messages in the recv queue
 
 class NetworkLog;
 
+/**
+	Added info regarding packets sent/recv
+*/
 struct PacketInfo
 {
 	PacketInfo()
@@ -27,6 +29,11 @@ struct PacketInfo
 	udp::endpoint endpoint;
 	Packet* packet;
 };
+/**
+	Base class for sending and receiving packets
+
+	Different transport implementations can be setup
+*/
 class BaseTransport
 {
 public:
@@ -38,7 +45,6 @@ public:
 	}
 	virtual ~BaseTransport() {}
 
-	Packet* CreatePacket();
 	Packet* ReceivePacket(udp::endpoint &endpoint);
 
 	void SendPacket(const udp::endpoint & endpoint, Packet * data);
@@ -64,28 +70,28 @@ private:
 	int max_packet_size_;
 protected:
 	asio::io_service _IOService;
-
-	NetworkLog* log;
-
 };
 
+/**
+	Transport using ASIO to send/recv packets over UDP
+*/
 class SocketTransport : public BaseTransport
 {
 public:
-	//SocketTransport(PacketFactory* packetFactory);
 	SocketTransport(PacketFactory * packetFactory, MessageFactory* messageFactory, unsigned short port = 0);
 	virtual ~SocketTransport();
 
+	/// Returns local port used
 	unsigned short GetPort();
+
 protected:
+	/// Override receive packet -> ASIO
 	virtual int InternalReceivePacket(udp::endpoint & endpoint, void * data, int bytes);
+	/// Override send packet -> ASIO
 	virtual bool InternalSendPacket(const udp::endpoint & endpoint, const void * data, int size);
 
 private:
 	udp::socket _socket;
-
-	// ImGUI
-	bool opened = true;
 };
 
 #endif

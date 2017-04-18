@@ -1,8 +1,6 @@
 #include "network_transport.h"
 #include "network_common.h"
 
-#include <cocos2d.h>
-
 #include "ImGui\CCIMGUI.h"
 
 #include "Logger.h"
@@ -14,22 +12,15 @@ SocketTransport::SocketTransport(PacketFactory * packetFactory, MessageFactory* 
 {
 	_socket.non_blocking(true);
 
-	//log = NetworkLog::getInstance();
 
-	CCIMGUI::getInstance()->addImGUI([=]() {
+	/// ImGUI
+	{
+		CCIMGUI::getInstance()->addImGUI([=]() {
 
-		/*static float last_time = -1.0f;
-		float time = ImGui::GetTime();
-		if (time - last_time >= 0.3f)
-		{
-			const char* random_words[] = { "system", "info", "warning", "error", "fatal", "notice", "log" };
-			log.AddLog("[%s] Hello, time is %.1f, rand() %d\n", random_words[rand() % IM_ARRAYSIZE(random_words)], time, (int)rand());
-			last_time = time;
-		}*/
+			NetworkLog::getInstance()->Draw("Network Log", false);
 
-		NetworkLog::getInstance()->Draw("Network Log", &opened);
-
-	}, std::string("Logging" + to_string(_socket.local_endpoint().port())));
+		}, std::string("Logging" + to_string(_socket.local_endpoint().port())));
+	}
 
 }
 
@@ -68,11 +59,6 @@ bool SocketTransport::InternalSendPacket(const udp::endpoint & endpoint, const v
 		CCLOG("InternalSendPacket : %s", ec.message());
 
 	return true;
-}
-
-Packet * BaseTransport::CreatePacket()
-{
-	return nullptr;
 }
 
 Packet * BaseTransport::ReceivePacket(udp::endpoint & endpoint)
@@ -118,18 +104,21 @@ void BaseTransport::WritePackets()
 		// Send packet to address
 		InternalSendPacket(packetInfo.endpoint, buffer, bytesUsed);
 		
-		
-		uint32_t type = packetInfo.packet->GetType();
-		NetworkLog::getInstance()->AddLog(LOG_PACKET_SENT,"[%s](-->) packet(%d), bytes(%d)\n", "Log", type, (bytesUsed));
-		
-		if (type == CLIENT_SERVER_PACKET_CONNECTION)
+
+		/// ImGUI Debugging
 		{
-			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
+			uint32_t type = packetInfo.packet->GetType();
+			NetworkLog::getInstance()->AddLog(LOG_PACKET_SENT, "[%s](-->) packet(%d), bytes(%d)\n", "Log", type, (bytesUsed));
 
-			NetworkLog::getInstance()->AddLog(LOG_PACKET_ACK, "[%s](-->) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
-				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
+			if (type == CLIENT_SERVER_PACKET_CONNECTION)
+			{
+				ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
 
-			NetworkLog::getInstance()->AddPacketLog(LOG_PACKET_SENT, true, bytesUsed);
+				NetworkLog::getInstance()->AddLog(LOG_PACKET_ACK, "[%s](-->) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
+					conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
+
+				NetworkLog::getInstance()->AddPacketLog(LOG_PACKET_SENT, true, bytesUsed);
+			}
 		}
 	}
 }
@@ -138,40 +127,45 @@ void BaseTransport::ReadPackets()
 {
 	while (true)
 	{
+		// Buffer to read to
 		uint8_t* buffer = new uint8_t[max_packet_size_];
 		memset(buffer, 0, sizeof(uint8_t)*max_packet_size_);
 
+		// Recv endpoint
 		asio::ip::basic_endpoint<udp> endpoint;
 
+		// Receive packet
 		int bytesReceived = InternalReceivePacket(endpoint, buffer, max_packet_size_);
 		
 		// Finish if no bytes received
 		if (!bytesReceived)
 			break;
-
+		// Or receive queue is too big
 		if (_receiveQueue.size() >= MAX_RECEIVE_QUEUE)
 			break;
 
-		// All is good
+		// Create new PacketInfo entry
 		PacketInfo packetInfo;
 		packetInfo.endpoint = endpoint;
 		packetInfo.packet = ReadPacket(&_context, _packetFactory, buffer, bytesReceived);
 		
 		_receiveQueue.push(packetInfo);
 
-
-		uint32_t type = packetInfo.packet->GetType();
-		NetworkLog::getInstance()->AddLog(LOG_PACKET_RECEIVED, "[%s](<--) packet(%d), bytes(%d)\n", "Log", type, (bytesReceived));
-
-
-		if (type == CLIENT_SERVER_PACKET_CONNECTION)
+		/// ImGUI Debugging
 		{
-			ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
+			uint32_t type = packetInfo.packet->GetType();
+			NetworkLog::getInstance()->AddLog(LOG_PACKET_RECEIVED, "[%s](<--) packet(%d), bytes(%d)\n", "Log", type, (bytesReceived));
 
-			NetworkLog::getInstance()->AddLog(LOG_PACKET_ACK, "[%s](<--) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
-				conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
 
-			NetworkLog::getInstance()->AddPacketLog(LOG_PACKET_RECEIVED, false, bytesReceived);
+			if (type == CLIENT_SERVER_PACKET_CONNECTION)
+			{
+				ConnectionPacket* conPacket = (ConnectionPacket*)packetInfo.packet;
+
+				NetworkLog::getInstance()->AddLog(LOG_PACKET_ACK, "[%s](<--) SEQUENCE(%u), LATEST_ACK(%u), MISSED_SEQUENCE(%u)\n", "Log",
+					conPacket->packetSequence, conPacket->ackReceipt, ~conPacket->prevAcks);
+
+				NetworkLog::getInstance()->AddPacketLog(LOG_PACKET_RECEIVED, false, bytesReceived);
+			}
 		}
 	}
 }
