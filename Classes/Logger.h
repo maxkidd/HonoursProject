@@ -12,11 +12,11 @@ enum _logType
 	LOG_PACKET_ACK,
 	LOG_ERROR
 };
-#define COLOUR_RED		ImVec4(1.0f, 0.0f, 0.0f, 1.0f)
-#define COLOUR_GREEN	ImVec4(0.0f, 1.0f, 0.0f, 1.0f)
-#define COLOUR_PURPLE	ImVec4(0.5f, 0.0f, 0.5f, 1.0f)
-#define COLOUR_BLUE		ImVec4(0.0f, 0.0f, 1.0f, 1.0f)
-#define COLOUR_WHITE	ImVec4(0.0f, 0.0f, 0.0f, 1.0f)
+#define COLOUR_RED		ImVec4(1.0f, 0.3f, 0.3f, 1.0f)
+#define COLOUR_GREEN	ImVec4(0.3f, 1.0f, 0.3f, 1.0f)
+#define COLOUR_PURPLE	ImVec4(0.5f, 0.3f, 0.5f, 1.0f)
+#define COLOUR_BLUE		ImVec4(0.3f, 0.3f, 1.0f, 1.0f)
+#define COLOUR_WHITE	ImVec4(0.3f, 0.3f, 0.3f, 1.0f)
 #define COLOUR_BLACK	ImVec4(1.0f, 1.0f, 1.0f, 1.0f)
 
 static ImVec4 LOG_COLOR(_logType type)
@@ -40,7 +40,6 @@ struct NetworkLog
 {
 	struct BandwidthData
 	{
-		//std::chrono::high_resolution_clock::time_point time;
 		bool _isSending;
 		int _bytes;
 
@@ -66,6 +65,7 @@ struct NetworkLog
 	bool _scrollToBottom;
 	int display_count = 70;
 	int func_type = 0;
+	bool colour = false;
 
 	struct LogView
 	{
@@ -78,12 +78,25 @@ struct NetworkLog
 			if (i == 0)
 				return 0.0f;
 
-			static int currentStart;
-			ImVector<BandwidthData>* vec = (ImVector<BandwidthData>*)data;
-			if (!paused)
-				currentStart = vec->size();
+			auto bandwidthData = (ImVector<BandwidthData>*)data;
 
-			return (*(ImVector<BandwidthData>*)data)[currentStart - i]._bytes;
+			static int currentStart;
+			if (!paused)
+				currentStart = bandwidthData->size();
+
+			return (*bandwidthData)[currentStart - i]._bytes;
+		}
+		static float bandwidthKbps(void* data, int i) {
+			if (i == 0)
+				return 0.0f;
+
+			auto bandwidthData = (ImVector<BandwidthData>*)data;
+
+			static int currentStart;
+			if (!paused)
+				currentStart = bandwidthData->size();
+
+			return (float)(*bandwidthData)[currentStart - i]._bytes / 1024.0f;
 		}
 	};
 
@@ -125,8 +138,8 @@ struct NetworkLog
 		auto time = std::chrono::high_resolution_clock::now();
 		if (((std::chrono::duration<float>)(time - _lastSecond)).count() > 1.0f)
 		{
-			o_bandwidthTimeData.back()._bytes /= 1024;
-			i_bandwidthTimeData.back()._bytes /= 1024;
+			//o_bandwidthTimeData.back()._bytes /= 1024;
+			//i_bandwidthTimeData.back()._bytes /= 1024;
 
 			_lastSecond = time;
 			o_bandwidthTimeData.push_back(BandwidthData(true, 0));
@@ -154,6 +167,9 @@ struct NetworkLog
 		ImGui::SameLine();
 		bool copy = ImGui::Button("Copy");
 		ImGui::SameLine();
+		if(ImGui::Button("Colour"))
+			colour = !colour;
+		ImGui::SameLine();
 		_filter.Draw("Filter", -100.0f);
 		ImGui::SameLine();
 		if (ImGui::Button(LogView::paused ? "Unpause" : "Pause")) TogglePause();
@@ -173,10 +189,10 @@ struct NetworkLog
 			ImGui::PlotHistogram("Outgoing packets", LogView::bandwidth, (void*)&o_bandwidthData,
 				o_bandwidthData.size() > display_count ? display_count : o_bandwidthData.size() + 1, 0, NULL, -1.0f, 1500.0f, ImVec2(0, 80.0f));
 		else if (func_type == 2)
-			ImGui::PlotLines("Incoming kbps", LogView::bandwidth, (void*)&i_bandwidthTimeData, 
+			ImGui::PlotLines("Incoming kbps", LogView::bandwidthKbps, (void*)&i_bandwidthTimeData,
 				i_bandwidthTimeData.size() > display_count ? display_count : i_bandwidthTimeData.size(), 0.0f, "kbps", 1.0f, 100.0f, ImVec2(0, 80));
 		else
-			ImGui::PlotLines("Outgoing kbps", LogView::bandwidth, (void*)&o_bandwidthTimeData, 
+			ImGui::PlotLines("Outgoing kbps", LogView::bandwidthKbps, (void*)&o_bandwidthTimeData,
 				o_bandwidthTimeData.size() > display_count ? display_count : o_bandwidthTimeData.size(), 0.0f, "kbps", 1.0f, 100.0f, ImVec2(0, 80));
 
 		ImGui::Separator();
@@ -201,7 +217,7 @@ struct NetworkLog
 				line = line_end && line_end[1] ? line_end + 1 : NULL;
 			}
 		}
-		else
+		else if(colour)
 		{
 			const char* buf_begin = Buf.begin();
 			const char* line = buf_begin;
@@ -218,6 +234,10 @@ struct NetworkLog
 				line = line_end && line_end[1] ? line_end + 1 : NULL;
 			}
 			//ImGui::TextUnformatted(Buf.begin());
+		}
+		else
+		{
+			ImGui::TextUnformatted(Buf.begin());
 		}
 
 		if (_scrollToBottom)

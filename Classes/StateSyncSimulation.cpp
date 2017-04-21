@@ -112,7 +112,7 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 			
 			uint32_t* id = (uint32_t*)body->GetUserData();
 
-			if (*id == uint32_t(-1))
+			if (*id == uint32_t(-1) || !body->IsAwake())
 				goto next_body;
 
 			b2Vec2 pos = body->GetPosition();
