@@ -98,7 +98,7 @@ S_SnapshotInterpolationSimulation::S_SnapshotInterpolationSimulation()
 		b2PolygonShape shape;
 		shape.SetAsBox(boxWidth, boxWidth);
 
-		b2Vec2 x(0.0f, 50.0f);
+		b2Vec2 x(10.0f, 50.0f);
 		b2Vec2 y;
 		b2Vec2 deltaX(0.5625f, 1.25f);
 		b2Vec2 deltaY(1.125f, 0.0f);
@@ -132,7 +132,7 @@ void S_SnapshotInterpolationSimulation::GenerateMessages(MessageFactory * mf, Co
 		b2Body* prevBody = body;
 		while (body)
 		{
-			SnapshotBoxCreate* create = (SnapshotBoxCreate*)mf->Create(SNAPSHOT_MESSAGE_CREATE_BOX);
+			SnapshotBoxMove* create = (SnapshotBoxMove*)mf->Create(SNAPSHOT_MESSAGE_MOVE_BOX);
 
 			uint32_t* id = (uint32_t*)body->GetUserData();
 
@@ -423,11 +423,14 @@ void C_SnapshotInterpolationSimulation::Step()
 	WorldSnapshot first = snapshots[0];
 	WorldSnapshot second = snapshots[1];
 	WorldSnapshot third = snapshots[2];
-	WorldSnapshot fourth = snapshots[3];
 
-	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - first.time; // now - second snapshot time
+	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - first.time; // 0-50ms
+	float t = std::min(1.0f, elapsed.count()*20.0f);// between 0 and 1 for every 50ms
 
-	float t = std::min(1.0f, elapsed.count()*20.0f);// between 0 and 1 for every 100ms
+	//std::chrono::duration<float> elapsed2 = std::chrono::high_resolution_clock::now() - second.time; // 50-100ms
+	//float t2 = std::min(1.0f, elapsed.count()*20.0f);// between 0 and 1 for every 50ms
+
+	//if(elapsed2 > 50.0f)
 
 	auto it1 = first.boxes.begin();
 	auto it2 = second.boxes.begin();
@@ -501,23 +504,6 @@ bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 	{
 		switch (message->GetType())
 		{
-		case SNAPSHOT_MESSAGE_CREATE_BOX:
-			//Process creation
-		{
-			SnapshotBoxCreate* create = (SnapshotBoxCreate*)message;
-			uint32_t id = create->id;
-			float x = create->x;
-			float y = create->y;
-			float rads = float(create->rot) / (180.0f / M_PI);
-
-			if (_boxes.find(id) != _boxes.end())
-				continue; // Already created
-
-			_boxes[id].Set(b2Vec2(x, y), rads);
-
-		}
-
-		break;
 		case SNAPSHOT_MESSAGE_MOVE_BOX:
 		{
 			// Process move

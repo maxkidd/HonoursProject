@@ -70,7 +70,7 @@ protected:
 
 	int _stepCount;
 
-	const int _count = 12; // For triangle of boxes
+	const int _count = 16; // For triangle of boxes
 	bool _pause = false;
 
 	static uint32_t id;

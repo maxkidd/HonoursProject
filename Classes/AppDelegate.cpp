@@ -11,6 +11,7 @@ USING_NS_CC;
 	#include "ImGUI\IMGUIGLViewImpl.h"
 	#include "ImGUI\ImGuiLayer.h"
 	#include "ImGUI\imgui.h"
+	#include "ImGUI\CCIMGUI.h"
 #endif
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);

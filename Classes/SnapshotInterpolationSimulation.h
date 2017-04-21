@@ -56,7 +56,7 @@ private:
 
 
 	int _stepCount;
-	const int _count = 12;
+	const int _count = 16;
 	bool _pause = false;
 	static uint32_t id;
 public:

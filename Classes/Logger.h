@@ -3,6 +3,8 @@
 
 #include "ImGUI\imgui.h"
 
+#include <chrono>
+
 enum _logType
 {
 	LOG_PACKET_RECEIVED,
@@ -38,6 +40,7 @@ struct NetworkLog
 {
 	struct BandwidthData
 	{
+		//std::chrono::high_resolution_clock::time_point time;
 		bool _isSending;
 		int _bytes;
 
@@ -50,12 +53,17 @@ struct NetworkLog
 	ImGuiTextBuffer     Buf;
 
 	//ImVector<std::pair<_logType, ImGuiTextBuffer>>	LogType;
-	ImGuiTextFilter Filter;
-	ImVector<ImVec4> typeOffsets;        // Index to colour offset
-	ImVector<int>       LineOffsets;        // Index to lines offset
+	ImGuiTextFilter _filter;
+	ImVector<ImVec4> _typeOffsets;        // Index to colour offset
+	ImVector<int>       _lineOffsets;        // Index to lines offset
 	ImVector<BandwidthData>       o_bandwidthData;
 	ImVector<BandwidthData>       i_bandwidthData;
-	bool                ScrollToBottom;
+
+	std::chrono::high_resolution_clock::time_point _lastSecond;
+	ImVector<BandwidthData>       o_bandwidthTimeData;
+	ImVector<BandwidthData>       i_bandwidthTimeData;
+
+	bool _scrollToBottom;
 	int display_count = 70;
 	int func_type = 0;
 
@@ -66,7 +74,10 @@ struct NetworkLog
 
 		static bool paused;// Toggle for histogram view
 
-		static float bandwidth(void* data, int i) { 
+		static float bandwidth(void* data, int i) {
+			if (i == 0)
+				return 0.0f;
+
 			static int currentStart;
 			ImVector<BandwidthData>* vec = (ImVector<BandwidthData>*)data;
 			if (!paused)
@@ -79,11 +90,14 @@ struct NetworkLog
 
 	NetworkLog() 
 	{
+		o_bandwidthTimeData.push_back(BandwidthData(true, 0));
+		i_bandwidthTimeData.push_back(BandwidthData(false, 0));
+
 		i_bandwidthData.reserve(100);
 		o_bandwidthData.reserve(100);
 	}
 	void    Clear() {
-		Buf.clear(); LineOffsets.clear(); typeOffsets.clear();
+		Buf.clear(); _lineOffsets.clear(); _typeOffsets.clear();
 	}
 	void    TogglePause() {
 		LogView::paused = !LogView::paused;
@@ -101,17 +115,35 @@ struct NetworkLog
 		for (int new_size = Buf.size(); old_size < new_size; old_size++)
 			if (Buf[old_size] == '\n')
 			{
-				LineOffsets.push_back(old_size);
-				typeOffsets.push_back(LOG_COLOR(type));
+				_lineOffsets.push_back(old_size);
+				_typeOffsets.push_back(LOG_COLOR(type));
 			}
-		ScrollToBottom = true;
+		_scrollToBottom = true;
 	}
 	void    AddPacketLog(_logType type, bool isSending, int bytes)
 	{
+		auto time = std::chrono::high_resolution_clock::now();
+		if (((std::chrono::duration<float>)(time - _lastSecond)).count() > 1.0f)
+		{
+			o_bandwidthTimeData.back()._bytes /= 1024;
+			i_bandwidthTimeData.back()._bytes /= 1024;
+
+			_lastSecond = time;
+			o_bandwidthTimeData.push_back(BandwidthData(true, 0));
+			i_bandwidthTimeData.push_back(BandwidthData(false, 0));
+		}
+
 		if (isSending)
+		{
 			o_bandwidthData.push_back(BandwidthData(isSending, bytes));
+			o_bandwidthTimeData.back()._bytes += bytes;
+		}
 		else
+		{
 			i_bandwidthData.push_back(BandwidthData(isSending, bytes));
+			i_bandwidthTimeData.back()._bytes += bytes;
+		}
+		
 	}
 
 	void    Draw(const char* title, bool* p_opened = NULL)
@@ -122,40 +154,47 @@ struct NetworkLog
 		ImGui::SameLine();
 		bool copy = ImGui::Button("Copy");
 		ImGui::SameLine();
-		Filter.Draw("Filter", -100.0f);
+		_filter.Draw("Filter", -100.0f);
 		ImGui::SameLine();
 		if (ImGui::Button(LogView::paused ? "Unpause" : "Pause")) TogglePause();
 
 
 		ImGui::Separator();
 
-		ImGui::PushItemWidth(100); ImGui::Combo("Packet", &func_type, "Incoming\0Outgoing\0"); ImGui::PopItemWidth();
+		ImGui::PushItemWidth(100); ImGui::Combo("Packet", &func_type,
+			"Incoming Packets\0Outgoing Packets\0Incoming kbps\0Outgoing kbps\0"); ImGui::PopItemWidth();
 		ImGui::SameLine();
 		ImGui::SliderInt("Sample count", &display_count, 1, 500);
 
 		if(func_type == 0)
 			ImGui::PlotHistogram("Incoming packets", LogView::bandwidth, (void*)&i_bandwidthData, 
-				i_bandwidthData.size() > display_count ? display_count : i_bandwidthData.size() + 1, 0, NULL, -1.0f, 1000.0f, ImVec2(0, 80.0f));
+				i_bandwidthData.size() > display_count ? display_count : i_bandwidthData.size() + 1, 0, NULL, -1.0f, 1500.0f, ImVec2(0, 80.0f));
+		else if (func_type == 1)
+			ImGui::PlotHistogram("Outgoing packets", LogView::bandwidth, (void*)&o_bandwidthData,
+				o_bandwidthData.size() > display_count ? display_count : o_bandwidthData.size() + 1, 0, NULL, -1.0f, 1500.0f, ImVec2(0, 80.0f));
+		else if (func_type == 2)
+			ImGui::PlotLines("Incoming kbps", LogView::bandwidth, (void*)&i_bandwidthTimeData, 
+				i_bandwidthTimeData.size() > display_count ? display_count : i_bandwidthTimeData.size(), 0.0f, "kbps", 1.0f, 100.0f, ImVec2(0, 80));
 		else
-			ImGui::PlotHistogram("Outgoing packets", LogView::bandwidth, (void*)&o_bandwidthData, 
-				o_bandwidthData.size() > display_count ? display_count : o_bandwidthData.size() + 1, 0, NULL, -1.0f, 1000.0f, ImVec2(0, 80.0f));
+			ImGui::PlotLines("Outgoing kbps", LogView::bandwidth, (void*)&o_bandwidthTimeData, 
+				o_bandwidthTimeData.size() > display_count ? display_count : o_bandwidthTimeData.size(), 0.0f, "kbps", 1.0f, 100.0f, ImVec2(0, 80));
 
 		ImGui::Separator();
 
 		ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 		if (copy) ImGui::LogToClipboard();
 
-		if (Filter.IsActive())
+		if (_filter.IsActive())
 		{
 			const char* buf_begin = Buf.begin();
 			const char* line = buf_begin;
 			for (int line_no = 0; line != NULL; line_no++)
 			{
 
-				const char* line_end = (line_no < LineOffsets.Size) ? buf_begin + LineOffsets[line_no] : NULL;
-				if (Filter.PassFilter(line, line_end))
+				const char* line_end = (line_no < _lineOffsets.Size) ? buf_begin + _lineOffsets[line_no] : NULL;
+				if (_filter.PassFilter(line, line_end))
 				{
-					ImGui::PushStyleColor(ImGuiCol_Text, typeOffsets[line_no]);
+					ImGui::PushStyleColor(ImGuiCol_Text, _typeOffsets[line_no]);
 					ImGui::TextUnformatted(line, line_end);
 					ImGui::PopStyleColor();
 				}
@@ -164,12 +203,26 @@ struct NetworkLog
 		}
 		else
 		{
-			ImGui::TextUnformatted(Buf.begin());
+			const char* buf_begin = Buf.begin();
+			const char* line = buf_begin;
+			for (int line_no = 0; line != NULL; line_no++)
+			{
+
+				const char* line_end = (line_no < _lineOffsets.Size) ? buf_begin + _lineOffsets[line_no] : NULL;
+				if (_typeOffsets.size() > line_no)
+				{
+					ImGui::PushStyleColor(ImGuiCol_Text, _typeOffsets[line_no]);
+					ImGui::TextUnformatted(line, line_end);
+					ImGui::PopStyleColor();
+				}
+				line = line_end && line_end[1] ? line_end + 1 : NULL;
+			}
+			//ImGui::TextUnformatted(Buf.begin());
 		}
 
-		if (ScrollToBottom)
+		if (_scrollToBottom)
 			ImGui::SetScrollHere(1.0f);
-		ScrollToBottom = false;
+		_scrollToBottom = false;
 
 		ImGui::EndChild();
 

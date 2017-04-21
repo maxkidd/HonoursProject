@@ -76,7 +76,7 @@ S_StateSyncSimulation::S_StateSyncSimulation()
 		b2PolygonShape shape;
 		shape.SetAsBox(boxWidth, boxWidth);
 
-		b2Vec2 x(0.0f, 10.0f);
+		b2Vec2 x(10.0f, 50.0f);
 		b2Vec2 y;
 		b2Vec2 deltaX(0.5625f, 1.25f);
 		b2Vec2 deltaY(1.125f, 0.0f);
@@ -132,7 +132,6 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 			create->id = *id;
 			create->x = pos.x;
 			create->y = pos.y;
-
 
 			con->SendMsg(create);
 
