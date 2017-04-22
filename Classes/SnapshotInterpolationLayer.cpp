@@ -8,11 +8,14 @@
 #include "cocos\ui\UIWidget.h"
 
 #include <chrono>
+#include "ImGUI\imgui.h"
+#include "ImGUI\CCIMGUI.h"
 
 using namespace std;
 using namespace cocos2d;
 using namespace cocos2d::extension;
 
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 SnapshotInterpolationLayer::SnapshotInterpolationLayer() : _statusLabel(nullptr),
 server(nullptr), client(nullptr), _transport(new UnreliablePacketFactory(), new SnapshotMessageFactory())
@@ -222,6 +225,50 @@ void SnapshotInterpolationLayer::setupServer()
 
 void SnapshotInterpolationLayer::connectAsClient()
 {
+
+	// ImGui connect UI
+	CCIMGUI::getInstance()->addImGUI([=]() {
+		static bool show_app_about = false;
+		ImGui::Begin("Connect to server!", &show_app_about, ImGuiWindowFlags_AlwaysAutoResize & ImGuiWindowFlags_MenuBar);
+		//if (ImGui::BeginPopup("Connects"))
+		{
+			//if (ImGui::BeginMenu("Connect to Server!"))
+			{
+				static char ip[32] = "localhost";
+				static char port[32] = "1500";
+
+				ImGui::InputText("ip_address", ip, IM_ARRAYSIZE(ip));
+				ImGui::InputText("port", port, IM_ARRAYSIZE(port));
+
+				if (ImGui::Button("Connect"))
+				{
+					if (server)
+					{
+						delete server;
+						server = nullptr;
+					}
+					if (client){delete client;}
+
+					if (_simulation)removeChild(_simulation);
+
+					_simulation = C_SnapshotInterpolationSimulation::create();
+					addChild(_simulation, 9999);
+
+					client = new SnapshotClient((C_SnapshotInterpolationSimulation*)_simulation, &_transport);
+					client->Connect(ip, port);
+
+
+					// Remove on the next frame
+					CCIMGUI::getInstance()->removeImGUI("ConnectSnaphotInterp", false);
+				}
+			}
+
+			ImGui::End();
+		}
+	}, "ConnectSnaphotInterp");
+
+	// Old connect UI
+	/*
 	Size winSize = Director::getInstance()->getWinSize();
 
 	Node *connectNode = Node::create();
@@ -298,7 +345,7 @@ void SnapshotInterpolationLayer::connectAsClient()
 
 
 	this->addChild(connectNode);
-
+	*/
 }
 
 void SnapshotInterpolationLayer::connectAsServer()
@@ -306,7 +353,6 @@ void SnapshotInterpolationLayer::connectAsServer()
 
 	if (client)
 	{
-		//server->destroy
 		delete client;
 		client = nullptr;
 	}

@@ -79,6 +79,16 @@ void CCIMGUI::init()
 
 void CCIMGUI::updateImGUI()
 {
+	// Remove piplines before update
+	for (auto iter = _removePiplines.begin(); iter != _removePiplines.end(); ++iter)
+	{
+		auto pointer = _callPiplines.find(iter->first);
+		if (pointer != _callPiplines.end())
+			_callPiplines.erase(pointer);
+	}
+	_removePiplines.clear();
+
+	// Update
 	auto iter = _callPiplines.begin();
 	for (; iter != _callPiplines.end(); ++iter)
 	{
@@ -86,11 +96,17 @@ void CCIMGUI::updateImGUI()
 	}
 }
 
-void CCIMGUI::removeImGUI(std::string name)
+void CCIMGUI::removeImGUI(std::string name, bool immediate)
 {
-	auto iter = _callPiplines.find(name);
-	if (iter != _callPiplines.end())
-		_callPiplines.erase(iter);
+	if (immediate)
+	{
+		auto iter = _callPiplines.find(name);
+		if (iter != _callPiplines.end())
+			_callPiplines.erase(iter);
+	}
+	else
+		_removePiplines[name] = _callPiplines.find(name)->second;
+
 }
 
 void CCIMGUI::setValue(bool value, std::string uid)

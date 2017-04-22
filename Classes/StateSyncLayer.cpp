@@ -1,20 +1,19 @@
 #include "StateSyncLayer.h"
 
-//#include <thread>
-//#include <utility>
-
 #include "cocos\ui\UITextField.h"
 #include "cocos\ui\UIButton.h"
 #include "cocos\ui\UIWidget.h"
 
 #include <chrono>
 
-//#include "network_common.h"
+#include "ImGUI\imgui.h"
+#include "ImGUI\CCIMGUI.h"
 
 using namespace std;
 using namespace cocos2d;
 using namespace cocos2d::extension;
 
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 StateSyncLayer::StateSyncLayer() : _statusLabel(nullptr)
 //server(nullptr), client(nullptr)
 	,_transport(new UnreliablePacketFactory(), new StateSyncMessageFactory())
@@ -37,14 +36,18 @@ StateSyncLayer::~StateSyncLayer()
 	{
 		client->Disconnect();
 		delete client;
-		client = nullptr;
+	}
+	if (server)
+	{
+		server->DisconnectAll();
+		delete server;
 	}
 
-	if (server)
-		delete server;
-
 	if (_simulation)
+	{
+		removeChild(_simulation);
 		delete _simulation;
+	}
 
 }
 
@@ -210,6 +213,48 @@ void StateSyncLayer::setupServer()
 
 void StateSyncLayer::connectAsClient()
 {
+	// ImGui connect UI
+	CCIMGUI::getInstance()->addImGUI([=]() {
+		static bool show_app_about = false;
+		ImGui::Begin("Connect to server!", &show_app_about, ImGuiWindowFlags_AlwaysAutoResize & ImGuiWindowFlags_MenuBar);
+		//if (ImGui::BeginPopup("Connects"))
+		{
+			//if (ImGui::BeginMenu("Connect to Server!"))
+			{
+				static char ip[32] = "localhost";
+				static char port[32] = "1500";
+
+				ImGui::InputText("ip_address", ip, IM_ARRAYSIZE(ip));
+				ImGui::InputText("port", port, IM_ARRAYSIZE(port));
+
+				if (ImGui::Button("Connect"))
+				{
+					if (server)
+					{
+						delete server;
+						server = nullptr;
+					}
+					if (client) { delete client; }
+
+					if (_simulation)removeChild(_simulation);
+
+					_simulation = C_StateSyncSimulation::create();
+					addChild(_simulation, 9999);
+
+					client = new StateSyncClient((C_StateSyncSimulation*)_simulation, &_transport);
+					client->Connect(ip, port);
+
+
+					// Remove on the next frame
+					CCIMGUI::getInstance()->removeImGUI("ConnectStateSync", false);
+				}
+			}
+
+			ImGui::End();
+		}
+	}, "ConnectStateSync");
+
+	/*
 	Size winSize = Director::getInstance()->getWinSize();
 
 	Node *connectNode = Node::create();
@@ -285,7 +330,7 @@ void StateSyncLayer::connectAsClient()
 
 
 	this->addChild(connectNode);
-
+	*/
 }
 
 void StateSyncLayer::connectAsServer()

@@ -22,6 +22,7 @@ private:
 	ImVec4 _clearColor = ImColor(114, 144, 154);
 	//-------------------------------------------------------
 	std::map<std::string, std::function<void()>> _callPiplines;
+	std::map<std::string, std::function<void()>> _removePiplines;
 	std::map<std::string, CCIMGUI_Value*> _values;
 	//-------------------------------------------------------
 	bool isShowSetupStyle = false;
@@ -37,7 +38,8 @@ public:
 	void init();
 	void updateImGUI();
 	void addImGUI(std::function<void()> imGUICall, std::string name) {_callPiplines[name] = imGUICall;};
-	void removeImGUI(std::string name);
+	//void removeImGUI(std::string name);
+	void removeImGUI(std::string name, bool immediate = true);
 	//-------------------------------------------------------
 	void setValue(bool value, std::string uid);
 	void setValue(int value, std::string uid);

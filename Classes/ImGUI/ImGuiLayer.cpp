@@ -48,8 +48,8 @@ void ImGuiLayer::visit(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentT
 
 void ImGuiLayer::update(float dt)
 {
-	//ImGui_ImplGlfw_NewFrame();
-	//CCIMGUI::getInstance()->updateImGUI();
+	ImGui_ImplGlfw_NewFrame();
+	CCIMGUI::getInstance()->updateImGUI();
 }
 
 void ImGuiLayer::onDraw()

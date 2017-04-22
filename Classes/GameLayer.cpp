@@ -5,6 +5,8 @@
 #include "cocos\ui\UIWidget.h"
 
 #include "MainMenu.h" // Replace name
+#include "ImGUI\imgui.h"
+#include "ImGUI\CCIMGUI.h"
 
 using namespace cocos2d;
 

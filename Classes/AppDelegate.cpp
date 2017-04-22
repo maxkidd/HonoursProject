@@ -107,6 +107,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 	CCIMGUI::getInstance()->addImGUI([=]() {
 
+
+		static bool testToggle = false;
+		if (testToggle)
+			ImGui::ShowTestWindow();
 		if (ImGui::BeginMainMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -125,20 +129,25 @@ bool AppDelegate::applicationDidFinishLaunching() {
 						//runAction(Sequence::create()
 						//Director::getInstance()->pushScene(TransitionSplitCols::create(1.0f, SnapshotInterpolationLayer::scene()));
 						//Director::getInstance()->pushScene(MainMenu::createScene());
-						Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, SnapshotInterpolationLayer::scene()));
+						Director::getInstance()->pushScene(SnapshotInterpolationLayer::scene());
 					}
 					if (ImGui::MenuItem("State Synchronization"))
 					{
 						//Director::getInstance()->pushScene(MainMenu::createScene());
-						Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, StateSyncLayer::scene()));
+						Director::getInstance()->pushScene(StateSyncLayer::scene());
 					}
 					ImGui::EndMenu();
 				}
-				if (ImGui::MenuItem("Back", "F3"))
+				if (ImGui::MenuItem("Connect"))
 				{
-					Director::getInstance()->replaceScene(TransitionSplitCols::create(1.0f, MainMenu::createScene()));
+					testToggle = true;
 				}
-				if (ImGui::MenuItem("Quit", "F4"))
+
+				if (ImGui::MenuItem("Back"))
+				{
+					Director::getInstance()->pushScene(MainMenu::createScene());
+				}
+				if (ImGui::MenuItem("Quit"))
 				{
 					Director::getInstance()->end();
 				}
