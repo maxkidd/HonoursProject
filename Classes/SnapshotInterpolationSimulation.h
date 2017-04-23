@@ -12,7 +12,7 @@
 #include "network_connection.h"
 #include "network_simulation.h"
 
-
+// Snapshot of the world sent
 struct WorldSnapshot
 {
 	std::chrono::time_point<std::chrono::high_resolution_clock> time;
@@ -20,7 +20,9 @@ struct WorldSnapshot
 };
 
 
-
+/**
+	Snapshot Interpolation Simulation
+*/
 class SnapshotInterpolationSimulation : public NetworkSimulation
 {
 private:
@@ -39,11 +41,15 @@ public:
 	bool MoveBox(uint32_t id, b2Vec2 pos);
 };
 
-// Server
+/**
+	Snapshot Interpolation Simulation (Server)
+	- Server logic for simulation
+	- Processes input packets from clients and updates the simulation
+	- Sends updated snapshots of the world
+*/
 class S_SnapshotInterpolationSimulation : public SnapshotInterpolationSimulation
 {
 private:
-	//std::map<Connection*, std::vector<b2Body*>> _connectionBodyMap;
 	std::map<Connection*, bool> _connectionSynchronized;
 	std::map<Connection*, PlayerData> _playerData;
 
@@ -74,7 +80,14 @@ public:
 	void MouseUp(const b2Vec2& p);
 };
 
-// Client
+/**
+	Snapshot Interpolation Simulation (Client)
+	- Client logic for interpolating between snapshots
+	- Processes packets from the server and updates the interpolation 
+		based on time difference
+	- Sends client input fast
+	- Draws snapshots objects without simulation
+*/
 class C_SnapshotInterpolationSimulation : public SnapshotInterpolationSimulation
 {
 private:
@@ -87,7 +100,6 @@ private:
 
 	std::map<uint32_t, b2Transform> _boxes;
 	std::map<uint32_t, b2Transform> _boxes_interp;
-	std::map<uint32_t, b2Transform> _boxes_interp2;
 
 	b2Vec2 _boxVertices[4];
 public:

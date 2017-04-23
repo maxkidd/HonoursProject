@@ -116,8 +116,8 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 			
 			uint32_t* id = (uint32_t*)body->GetUserData();
 
-			if (*id == uint32_t(-1) || !body->IsAwake())
-				goto next_body;
+			if (*id == uint32_t(-1))// || !body->IsAwake())
+				goto next_bodyU;
 
 			b2Vec2 pos = body->GetPosition();
 
@@ -142,7 +142,7 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 			// Add priority object to connection
 			_connectionPriorityQueue[con][body] = 0.0f;
 
-		next_body:
+		next_bodyU:
 			prevBody = body;
 			body = body->GetNext();
 			if (prevBody == body)
@@ -153,7 +153,7 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 	}
 	else // Synchronized
 	{
-		int bytesTarget = _kbpsTarget * 10; 
+		int bytesTarget = std::min(_kbpsTarget * 1024 / 30, 1452);
 
 		MeasureStream stream;
 
@@ -177,6 +177,9 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 		for (auto p : priority)
 		{
 			b2Body* body = p.first;
+
+			if (!body->IsAwake())
+				continue;
 
 			StateSyncBoxMove* move = (StateSyncBoxMove*)mf->Create(STATESYNC_MESSAGE_MOVE_BOX);
 
@@ -246,9 +249,9 @@ bool S_StateSyncSimulation::ProcessMessages(Connection * con)
 					MouseQueryCallback callback(p);
 					_world->QueryAABB(&callback, aabb);
 
-					if (callback.m_fixture)
+					if (callback._fixture)
 					{
-						b2Body* body = callback.m_fixture->GetBody();
+						b2Body* body = callback._fixture->GetBody();
 
 						uint32_t* test = (uint32_t*)body->GetUserData();
 						b2MouseJointDef def;
@@ -345,9 +348,9 @@ bool S_StateSyncSimulation::MouseDown(const b2Vec2 & p)
 	MouseQueryCallback callback(p);
 	_world->QueryAABB(&callback, aabb);
 
-	if (callback.m_fixture)
+	if (callback._fixture)
 	{
-		b2Body* body = callback.m_fixture->GetBody();
+		b2Body* body = callback._fixture->GetBody();
 
 		uint32_t* test = (uint32_t*)body->GetUserData();
 		b2MouseJointDef def;

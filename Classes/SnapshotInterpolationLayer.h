@@ -10,8 +10,6 @@
 #include "network_connection.h"
 #include "network_packet.h"
 
-//#include "NetworkDebugDataSource.h"
-
 #include <stdio.h>
 
 #include "SnapshotInterpolationClient.h"
@@ -19,6 +17,13 @@
 #include "SnapshotInterpolationSimulation.h"
 #include "GameLayer.h"
 
+/**
+	Snapshot Interpolation Layer
+	- Layer for snapshot interpolation technique
+	- Calls client or server update functions
+	- Displays cocos2d ui
+	- Passes the transport protocol to client or server
+*/
 class SnapshotInterpolationLayer : public GameLayer
 {
 private:

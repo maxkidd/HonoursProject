@@ -1,8 +1,6 @@
 #ifndef _STATESYNCSIMULATION_H_
 #define _STATESYNCSIMULATION_H_
 
-
-//#include <stdint.h>
 #include <vector>
 #include <cocos2d.h>
 #include <Box2D\Box2D.h>
@@ -13,21 +11,29 @@
 
 #include "network_simulation.h"
 
-
+/**
+	Snapshot of the world for time-manipulation
+	- Not implemented
+*/
 struct StateSyncSnapshot
 {
 	std::chrono::time_point<std::chrono::high_resolution_clock> time;
 	std::vector<std::pair<uint32_t, b2Transform>> boxes; // B2VEC2  -> BoxData
 };
 
-
+/**
+	Mouse Query Callback
+	- To create a mouse joint per client
+	- Logic done only on server side
+	- Future: Client prediction of input data 
+*/
 class MouseQueryCallback : public b2QueryCallback
 {
 public:
 	MouseQueryCallback(const b2Vec2& point)
 	{
-		m_point = point;
-		m_fixture = nullptr;
+		_point = point;
+		_fixture = nullptr;
 	}
 
 	bool ReportFixture(b2Fixture* fixture)
@@ -35,24 +41,26 @@ public:
 		b2Body* body = fixture->GetBody();
 		if (body->GetType() == b2_dynamicBody)
 		{
-			bool inside = fixture->TestPoint(m_point);
+			bool inside = fixture->TestPoint(_point);
 			if (inside)
 			{
-				m_fixture = fixture;
-
-				// We are done, terminate the query.
+				_fixture = fixture;
 				return false;
 			}
 		}
-
-		// Continue the query.
 		return true;
 	}
 
-	b2Vec2 m_point;
-	b2Fixture* m_fixture;
+	b2Vec2 _point;
+	b2Fixture* _fixture;
 };
 
+/**
+	State Synchroization Simulation (Server)
+	- Server logic for simulation
+	- Processes input packets from clients and updates the simulation
+	- Sends updated snapshots of the world
+*/
 class StateSyncSimulation : public NetworkSimulation
 {
 protected:

@@ -10,9 +10,6 @@
 #include "network_connection.h"
 #include "network_packet.h"
 
-
-//#include "NetworkDebugDataSource.h"
-
 #include <stdio.h>
 
 #include "StateSyncClient.h"
@@ -21,6 +18,13 @@
 
 #include "GameLayer.h"
 
+/**
+	State Synchronization Layer
+	- Layer for state synchronization technique
+	- Calls client or server update functions
+	- Displays cocos2d ui
+	- Passes the transport protocol to client or server
+*/
 class StateSyncLayer : public GameLayer
 {
 private:

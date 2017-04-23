@@ -229,41 +229,36 @@ void SnapshotInterpolationLayer::connectAsClient()
 	CCIMGUI::getInstance()->addImGUI([=]() {
 		static bool show_app_about = false;
 		ImGui::Begin("Connect to server!", &show_app_about, ImGuiWindowFlags_AlwaysAutoResize & ImGuiWindowFlags_MenuBar);
-		//if (ImGui::BeginPopup("Connects"))
+		
+		static char ip[32] = "localhost";
+		static char port[32] = "1500";
+
+		ImGui::InputText("ip_address", ip, IM_ARRAYSIZE(ip));
+		ImGui::InputText("port", port, IM_ARRAYSIZE(port));
+
+		if (ImGui::Button("Connect"))
 		{
-			//if (ImGui::BeginMenu("Connect to Server!"))
+			if (server)
 			{
-				static char ip[32] = "localhost";
-				static char port[32] = "1500";
-
-				ImGui::InputText("ip_address", ip, IM_ARRAYSIZE(ip));
-				ImGui::InputText("port", port, IM_ARRAYSIZE(port));
-
-				if (ImGui::Button("Connect"))
-				{
-					if (server)
-					{
-						delete server;
-						server = nullptr;
-					}
-					if (client){delete client;}
-
-					if (_simulation)removeChild(_simulation);
-
-					_simulation = C_SnapshotInterpolationSimulation::create();
-					addChild(_simulation, 9999);
-
-					client = new SnapshotClient((C_SnapshotInterpolationSimulation*)_simulation, &_transport);
-					client->Connect(ip, port);
-
-
-					// Remove on the next frame
-					CCIMGUI::getInstance()->removeImGUI("ConnectSnaphotInterp", false);
-				}
+				delete server;
+				server = nullptr;
 			}
+			if (client){delete client;}
 
-			ImGui::End();
+			if (_simulation)removeChild(_simulation);
+
+			_simulation = C_SnapshotInterpolationSimulation::create();
+			addChild(_simulation, 9999);
+
+			client = new SnapshotClient((C_SnapshotInterpolationSimulation*)_simulation, &_transport);
+			client->Connect(ip, port);
+
+
+			// Remove on the next frame
+			CCIMGUI::getInstance()->removeImGUI("ConnectSnaphotInterp", false);
+			
 		}
+		ImGui::End();
 	}, "ConnectSnaphotInterp");
 
 	// Old connect UI

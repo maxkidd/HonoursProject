@@ -122,13 +122,13 @@ void StateSyncLayer::update(float dt)
 	if (server && server->IsActive()) // Server
 	{
 		server->ProcessMessages();
-		while (updateTimer > 1.0f / 20.0f)
+		while (updateTimer > 1.0f / 30.0f)
 		{
 			server->GenerateMessages();
 			server->SendPackets();
 			server->WritePackets();
 
-			updateTimer -= 1.0f / 20.0f;
+			updateTimer -= 1.0f / 30.0f;
 		}
 
 		server->ReadPackets();
@@ -217,41 +217,36 @@ void StateSyncLayer::connectAsClient()
 	CCIMGUI::getInstance()->addImGUI([=]() {
 		static bool show_app_about = false;
 		ImGui::Begin("Connect to server!", &show_app_about, ImGuiWindowFlags_AlwaysAutoResize & ImGuiWindowFlags_MenuBar);
-		//if (ImGui::BeginPopup("Connects"))
+		
+		static char ip[32] = "localhost";
+		static char port[32] = "1500";
+
+		ImGui::InputText("ip_address", ip, IM_ARRAYSIZE(ip));
+		ImGui::InputText("port", port, IM_ARRAYSIZE(port));
+
+		if (ImGui::Button("Connect"))
 		{
-			//if (ImGui::BeginMenu("Connect to Server!"))
+			if (server)
 			{
-				static char ip[32] = "localhost";
-				static char port[32] = "1500";
-
-				ImGui::InputText("ip_address", ip, IM_ARRAYSIZE(ip));
-				ImGui::InputText("port", port, IM_ARRAYSIZE(port));
-
-				if (ImGui::Button("Connect"))
-				{
-					if (server)
-					{
-						delete server;
-						server = nullptr;
-					}
-					if (client) { delete client; }
-
-					if (_simulation)removeChild(_simulation);
-
-					_simulation = C_StateSyncSimulation::create();
-					addChild(_simulation, 9999);
-
-					client = new StateSyncClient((C_StateSyncSimulation*)_simulation, &_transport);
-					client->Connect(ip, port);
-
-
-					// Remove on the next frame
-					CCIMGUI::getInstance()->removeImGUI("ConnectStateSync", false);
-				}
+				delete server;
+				server = nullptr;
 			}
+			if (client) { delete client; }
 
-			ImGui::End();
+			if (_simulation)removeChild(_simulation);
+
+			_simulation = C_StateSyncSimulation::create();
+			addChild(_simulation, 9999);
+
+			client = new StateSyncClient((C_StateSyncSimulation*)_simulation, &_transport);
+			client->Connect(ip, port);
+
+
+			// Remove on the next frame
+			CCIMGUI::getInstance()->removeImGUI("ConnectStateSync", false);
+
 		}
+		ImGui::End();
 	}, "ConnectStateSync");
 
 	/*
