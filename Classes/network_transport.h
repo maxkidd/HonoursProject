@@ -18,7 +18,8 @@ using asio::ip::udp;
 class NetworkLog;
 
 /**
-	Added info regarding packets sent/recv
+	Packet Info
+	- Information about the packet that will be useful when sending or processing
 */
 struct PacketInfo
 {
@@ -30,9 +31,9 @@ struct PacketInfo
 	Packet* packet;
 };
 /**
-	Base class for sending and receiving packets
-
-	Different transport implementations can be setup
+	Base Transport
+	- Base class for sending and receiving packets
+	- Used for multiple implementations of sockets or data transfer methods (eg bluetooth)
 */
 class BaseTransport
 {
@@ -74,7 +75,8 @@ protected:
 };
 
 /**
-	Transport using ASIO to send/recv packets over UDP
+	Socket Transport
+	- Transport using ASIO to send/recv packets over UDP
 */
 class SocketTransport : public BaseTransport
 {

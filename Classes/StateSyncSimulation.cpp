@@ -178,7 +178,7 @@ void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * c
 		{
 			b2Body* body = p.first;
 
-			StateSyncBoxMove* move = (StateSyncBoxMove*)mf->Create(STATESYNC_MESSAGE_UPDATE_BOX);
+			StateSyncBoxMove* move = (StateSyncBoxMove*)mf->Create(STATESYNC_MESSAGE_MOVE_BOX);
 
 			move->Serialize(stream);
 			// Don't send anymore messages once reaching target
@@ -481,7 +481,7 @@ bool C_StateSyncSimulation::ProcessMessages(Connection * con)
 			}
 
 			break;
-			case STATESYNC_MESSAGE_UPDATE_BOX:
+			case STATESYNC_MESSAGE_MOVE_BOX:
 			{
 				// Process move
 				StateSyncBoxMove* move = (StateSyncBoxMove*)message;

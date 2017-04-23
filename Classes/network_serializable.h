@@ -33,8 +33,10 @@ template <typename Stream> bool SerializeBool(Stream& stream, bool& value)
 	return result;
 }
 
-//class IStream;
-//class OStream;
+/**
+	Serializable
+	- Inherited by packets and messages
+*/
 class Serializable
 {
 public:
@@ -45,6 +47,7 @@ public:
 	virtual bool SerializeInternal(class OStream& stream) = 0;
 };
 
+// Combine functions to serialize with a generic stream type
 #define VIRTUAL_SERIALIZE_FUNCTIONS()											\
 	bool SerializeInternal(class InStream& stream){return Serialize(stream);};	\
 	bool SerializeInternal(class OStream& stream){return Serialize(stream);};

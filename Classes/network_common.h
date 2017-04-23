@@ -143,53 +143,16 @@ PACKET_FACTORY_START(UnreliablePacketFactory, PacketFactory, CLIENT_SERVER_MAX_P
 PACKET_FACTORY_END();
 
 
+/// Snapshot create message (deprecated)
+/**
+	81 bits
+*/
 class SnapshotBoxCreate : public NMessage
 {
 public:
-	uint32_t id = 0;
-	float x, y = 0.0f;
-	uint32_t rot = 0;
-
-	template<typename Stream> bool Serialize(Stream& stream)
-	{
-		stream.SerializeInteger(id, 0, 255);
-
-		SerializeFloat(stream, x);
-		SerializeFloat(stream, y);
-		stream.SerializeInteger(rot, 0, 360);
-
-		return true;
-	}
-	VIRTUAL_SERIALIZE_FUNCTIONS();
-};
-
-class SnapshotBoxMove : public NMessage
-{
-public:
-	uint32_t id = 0;
-	float x, y = 0.0f;
-	uint32_t rot = 0;
-
-	template<typename Stream> bool Serialize(Stream& stream)
-	{
-		stream.SerializeInteger(id, 0, 255);
-
-		SerializeFloat(stream, x);
-		SerializeFloat(stream, y);
-		stream.SerializeInteger(rot, 0, 360);
-		
-		return true;
-	}
-	VIRTUAL_SERIALIZE_FUNCTIONS();
-};
-
-
-class StateSyncBoxCreate : public NMessage
-{
-public:
-	uint32_t id = 0;
-	float x, y = 0.0f;
-	uint32_t rot = 0;
+	uint32_t id = 0;	// 8 bits
+	float x, y = 0.0f;	// 32 + 32 bits
+	uint32_t rot = 0;	// 9 bits
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
@@ -205,6 +168,54 @@ public:
 };
 
 /// Snapshot move message
+/**
+	81 bits
+*/
+class SnapshotBoxMove : public NMessage
+{
+public:
+	uint32_t id = 0;	// 8 bits
+	float x, y = 0.0f;	// 32 + 32 bits
+	uint32_t rot = 0;	// 9 bits
+
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
+		stream.SerializeInteger(id, 0, 255);
+
+		SerializeFloat(stream, x);
+		SerializeFloat(stream, y);
+		stream.SerializeInteger(rot, 0, 360);
+		
+		return true;
+	}
+	VIRTUAL_SERIALIZE_FUNCTIONS();
+};
+
+/// StateSync create message
+/**
+	81 bits
+*/
+class StateSyncBoxCreate : public NMessage
+{
+public:
+	uint32_t id = 0; // 8 bits
+	float x, y = 0.0f; // 32 + 32 bits
+	uint32_t rot = 0; // 9 bits
+
+	template<typename Stream> bool Serialize(Stream& stream)
+	{
+		stream.SerializeInteger(id, 0, 255);
+
+		SerializeFloat(stream, x);
+		SerializeFloat(stream, y);
+		stream.SerializeInteger(rot, 0, 360);
+
+		return true;
+	}
+	VIRTUAL_SERIALIZE_FUNCTIONS();
+};
+
+/// StateSync move message
 /**
 	109 bits
 */
@@ -255,18 +266,20 @@ public:
 			rotVel = (float(i_rotVel) / 10.0f) - 10.0f;
 		}
 
-		//SerializeFloat(stream, rotVel);
-
 		return true;
 	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
 
+/// User Command message
+/**
+	1 or 65 bits
+*/
 class UserCMD : public NMessage
 {
 public:
-	uint32_t mDown = false;
-	float mX, mY = 0;
+	uint32_t mDown = false;	// 1 bit
+	float mX, mY = 0;		// 32 + 32 bits
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
@@ -286,14 +299,14 @@ enum SnapshotMessageTypes
 {
 	SNAPSHOT_MESSAGE_ERROR = -1,
 	SNAPSHOT_MESSAGE_MOVE_BOX = 0,		// Box message
-	//SNAPSHOT_MESSAGE_CREATE_BOX,		// NOT REQUIRED
+	//SNAPSHOT_MESSAGE_CREATE_BOX,		// deprecated
 	SNAPSHOT_MESSAGE_USER_CMD,
 	SNAPSHOT_MESSAGE_MAX
 };
 enum StateSyncMessageTypes
 {
 	STATESYNC_MESSAGE_ERROR = -1,
-	STATESYNC_MESSAGE_UPDATE_BOX = 0,		// Box message
+	STATESYNC_MESSAGE_MOVE_BOX = 0,		// Box message
 	STATESYNC_MESSAGE_CREATE_BOX,		// Box message
 	STATESYNC_MESSAGE_USER_CMD,
 	STATESYNC_MESSAGE_MAX
@@ -302,10 +315,9 @@ enum StateSyncMessageTypes
 MESSAGE_FACTORY_START(SnapshotMessageFactory, MessageFactory, SNAPSHOT_MESSAGE_MAX);
 	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_MOVE_BOX, SnapshotBoxMove);
 	MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_USER_CMD, UserCMD);
-	//MESSAGE_FACTORY_TYPE(SNAPSHOT_MESSAGE_CREATE_BOX, SnapshotBoxCreate); NOT REQUIRED
 MESSAGE_FACTORY_END();
 MESSAGE_FACTORY_START(StateSyncMessageFactory, MessageFactory, STATESYNC_MESSAGE_MAX);
-	MESSAGE_FACTORY_TYPE(STATESYNC_MESSAGE_UPDATE_BOX, StateSyncBoxMove);
+	MESSAGE_FACTORY_TYPE(STATESYNC_MESSAGE_MOVE_BOX, StateSyncBoxMove);
 	MESSAGE_FACTORY_TYPE(STATESYNC_MESSAGE_CREATE_BOX, StateSyncBoxCreate);
 	MESSAGE_FACTORY_TYPE(STATESYNC_MESSAGE_USER_CMD, UserCMD);
 MESSAGE_FACTORY_END();

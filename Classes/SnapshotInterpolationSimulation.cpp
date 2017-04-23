@@ -427,11 +427,6 @@ void C_SnapshotInterpolationSimulation::Step()
 	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - first.time; // 0-50ms
 	float t = std::min(1.0f, elapsed.count()*20.0f);// between 0 and 1 for every 50ms
 
-	//std::chrono::duration<float> elapsed2 = std::chrono::high_resolution_clock::now() - second.time; // 50-100ms
-	//float t2 = std::min(1.0f, elapsed.count()*20.0f);// between 0 and 1 for every 50ms
-
-	//if(elapsed2 > 50.0f)
-
 	auto it1 = first.boxes.begin();
 	auto it2 = second.boxes.begin();
 	auto it3 = third.boxes.begin();
@@ -462,7 +457,6 @@ void C_SnapshotInterpolationSimulation::Step()
 		float y = Cubic(firstVec.y, secondVec.y, firstVec.y + (firstVec.y - secondVec.y) / 10.0f,
 			secondVec.y + (secondVec.y - thirdVec.y) / 10.0f, t);
 
-		//_boxes_interp[box.first].Set(Lerp(secondVec, firstVec, t), LerpRad(secondRot, firstRot, t));
 		_boxes_interp[box.first].Set(b2Vec2(x, y), LerpRad(secondRot, firstRot, t));
 	}
 }

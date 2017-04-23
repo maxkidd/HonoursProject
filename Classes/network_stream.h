@@ -9,12 +9,20 @@ using namespace std;
 class MessageFactory;
 class PacketFactory;
 
+/**
+	Stream Context
+	- Holds useful network information for packet creation by other layers
+*/
 struct StreamContext
 {
 	MessageFactory* _messageFactory = nullptr;
 	PacketFactory* _packetFactory = nullptr;
 };
 
+/**
+	Base Stream
+	- Interface for the different stream types
+*/
 class BaseStream
 {
 public:
@@ -25,6 +33,11 @@ private:
 	StreamContext* _context;
 };
 
+
+/**
+	Out Stream
+	- Serializing data to  by transferred over a network
+*/
 class OStream : public BaseStream
 {
 public:
@@ -71,6 +84,10 @@ private:
 	BitWrite _bitWriter;
 };
 
+/**
+	In Stream
+	- Reading serialized data transferred over a network
+*/
 class InStream : public BaseStream
 {
 public:
@@ -112,7 +129,10 @@ private:
 	BitRead _bitReader;
 };
 
-
+/**
+	Measure Stream
+	- Calculate accurately the amount of bits used
+*/
 class MeasureStream : public BaseStream
 {
 private:

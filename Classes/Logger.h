@@ -5,6 +5,9 @@
 
 #include <chrono>
 
+/**
+	Type of log created
+*/
 enum _logType
 {
 	LOG_PACKET_RECEIVED,
@@ -12,6 +15,8 @@ enum _logType
 	LOG_PACKET_ACK,
 	LOG_ERROR
 };
+
+// Colour defines
 #define COLOUR_RED		ImVec4(1.0f, 0.3f, 0.3f, 1.0f)
 #define COLOUR_GREEN	ImVec4(0.3f, 1.0f, 0.3f, 1.0f)
 #define COLOUR_PURPLE	ImVec4(0.5f, 0.3f, 0.5f, 1.0f)
@@ -19,6 +24,7 @@ enum _logType
 #define COLOUR_WHITE	ImVec4(0.3f, 0.3f, 0.3f, 1.0f)
 #define COLOUR_BLACK	ImVec4(1.0f, 1.0f, 1.0f, 1.0f)
 
+// Return colour based on log type
 static ImVec4 LOG_COLOR(_logType type)
 {
 	switch (type)
@@ -36,8 +42,15 @@ static ImVec4 LOG_COLOR(_logType type)
 	}
 }
 
+/**
+	Network Log
+	- Log's packet debug data
+	- Displays in the console
+	- Displays as a graph over time
+*/
 struct NetworkLog
 {
+	// Bandiwdth data
 	struct BandwidthData
 	{
 		bool _isSending;
@@ -46,32 +59,38 @@ struct NetworkLog
 		BandwidthData(bool sending, int bytes) :_isSending(sending), _bytes(bytes) {}
 	};
 
+	// Singleton functions
 	static NetworkLog* getInstance();
 	static void destroyInstance();
 
-	ImGuiTextBuffer     Buf;
+	ImGuiTextBuffer     Buf;	// Console buffer
 
-	//ImVector<std::pair<_logType, ImGuiTextBuffer>>	LogType;
-	ImGuiTextFilter _filter;
-	ImVector<ImVec4> _typeOffsets;        // Index to colour offset
-	ImVector<int>       _lineOffsets;        // Index to lines offset
+	ImGuiTextFilter _filter;	// Console filter
+
+	ImVector<ImVec4> _typeOffsets;		// Index to colour offset
+	ImVector<int>       _lineOffsets;	// Index to lines offset
+
+	// Last second for bandwidth data to be collected per second
+	std::chrono::high_resolution_clock::time_point _lastSecond;
+
+	// Packet data logged
 	ImVector<BandwidthData>       o_bandwidthData;
 	ImVector<BandwidthData>       i_bandwidthData;
 
-	std::chrono::high_resolution_clock::time_point _lastSecond;
+	// Bandwidth data logged per second (bps) displayed as kbps
 	ImVector<BandwidthData>       o_bandwidthTimeData;
 	ImVector<BandwidthData>       i_bandwidthTimeData;
 
-	bool _scrollToBottom;
-	int display_count = 70;
-	int func_type = 0;
-	bool colour = false;
+	bool _scrollToBottom;	// Scrolls to bottom after every packet log
+	int display_count = 70;	// The amount of results displayed in the graphs
+	int func_type = 0;		// Type of function to call
+	bool colour = false;	// Colour toggle for the console
 
+	/**
+		Histogram and Line functions for displaying network data
+	*/
 	struct LogView
 	{
-		static float Sin(void*, int i) { return sinf(i * 0.1f); }
-		static float Saw(void*, int i) { return (i & 1) ? 1.0f : 0.0f; }
-
 		static bool paused;// Toggle for histogram view
 
 		static float bandwidth(void* data, int i) {
@@ -116,10 +135,9 @@ struct NetworkLog
 		LogView::paused = !LogView::paused;
 	}
 
+	// Add new log to display
 	void    AddLog(_logType type, const char* fmt, ...) IM_PRINTFARGS(2)
 	{
-
-
 		int old_size = Buf.size();
 		va_list args;
 		va_start(args, fmt);
@@ -138,9 +156,6 @@ struct NetworkLog
 		auto time = std::chrono::high_resolution_clock::now();
 		if (((std::chrono::duration<float>)(time - _lastSecond)).count() > 1.0f)
 		{
-			//o_bandwidthTimeData.back()._bytes /= 1024;
-			//i_bandwidthTimeData.back()._bytes /= 1024;
-
 			_lastSecond = time;
 			o_bandwidthTimeData.push_back(BandwidthData(true, 0));
 			i_bandwidthTimeData.push_back(BandwidthData(false, 0));
@@ -159,6 +174,7 @@ struct NetworkLog
 		
 	}
 
+	// Draw ImGui data
 	void    Draw(const char* title, bool* p_opened = NULL)
 	{
 		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiSetCond_FirstUseEver);
@@ -199,8 +215,9 @@ struct NetworkLog
 
 		ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 		if (copy) ImGui::LogToClipboard();
-
-		if (_filter.IsActive())
+		
+		// Filter (uses colour based on type)
+		if (_filter.IsActive()) 
 		{
 			const char* buf_begin = Buf.begin();
 			const char* line = buf_begin;
@@ -217,7 +234,7 @@ struct NetworkLog
 				line = line_end && line_end[1] ? line_end + 1 : NULL;
 			}
 		}
-		else if(colour)
+		else if(colour) // Colour log
 		{
 			const char* buf_begin = Buf.begin();
 			const char* line = buf_begin;
@@ -233,7 +250,6 @@ struct NetworkLog
 				}
 				line = line_end && line_end[1] ? line_end + 1 : NULL;
 			}
-			//ImGui::TextUnformatted(Buf.begin());
 		}
 		else
 		{

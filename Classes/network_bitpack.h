@@ -7,7 +7,10 @@
 
 using namespace std;
 
-
+/**
+	Bit write class
+	Writes at the bit-level to a buffer converting endianness for network streams
+*/
 class BitWrite
 {
 public:
@@ -80,6 +83,10 @@ private:
 	int _bitsWritten;
 };
 
+/**
+	Bit read class
+	Reades at the bit-level from a buffer converting endianness back from network streams
+*/
 class BitRead
 {
 public:

@@ -15,7 +15,11 @@ enum NetworkDebugType
 	NET_LOG,
 	NET_ERR
 };
-
+/**
+	Network Debug Data Source
+	- DEPRECATED
+	- Use ImGui instead
+*/
 class NetworkDebugDataSource : public TableViewDataSource
 {
 private:

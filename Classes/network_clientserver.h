@@ -8,6 +8,12 @@
 
 #include "network_common.h"
 
+/**
+	Client
+	- Controls the state of the client
+	- Attempts to connect to a server
+	- Updates client state based on connection status
+*/
 class Client
 {
 public:
@@ -74,6 +80,11 @@ protected:
 
 };
 
+/**
+	Server
+	- Controls the state of the state
+	- Listens for incoming requests other packets from connected clients
+*/
 class Server
 {
 protected:

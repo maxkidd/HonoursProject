@@ -6,6 +6,11 @@
 
 class PacketFactory;
 
+/**
+	Packet
+	- Inherits serializable for packets to serialize specific packet data
+	- Message type defined by the packet factory as a type of RTTI
+*/
 class Packet : public Serializable
 {
 public:
@@ -25,6 +30,12 @@ private:
 	uint32_t _type;
 };
 
+/**
+	Packet Factory
+	- Factory class for creating packets
+	- CreatePacket inherited by the type of packet factory and defined by
+		the packet factory macro
+*/
 class PacketFactory
 {
 public:
@@ -42,6 +53,10 @@ private:
 	uint32_t _packetTypes;
 };
 
+
+/**
+	Packet Factory Macro
+*/
 #define PACKET_FACTORY_START(factory_class, base_class, num_packets)				\
 class factory_class : public base_class{											\
 public:																				\

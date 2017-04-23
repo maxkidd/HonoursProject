@@ -15,6 +15,12 @@ using namespace asio::ip;
 
 #define TIMEOUT 2.0f
 
+/**
+	Connection
+	- Controls the connection between client and server
+	- Processes packets and generates packets
+	- Processes acknowledgements ready to send back or utilize in the logic
+*/
 class Connection
 {
 public:

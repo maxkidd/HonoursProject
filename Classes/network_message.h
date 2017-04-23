@@ -5,6 +5,11 @@
 
 class MessageFactory;
 
+/**
+	Network Message
+	- Inherits serializable for messages to serialize specific message data
+	- Message type defined by the message factory as a type of RTTI
+*/
 class NMessage : public Serializable
 {
 private:
@@ -25,7 +30,12 @@ protected:
 	virtual bool Serialize(OStream& stream);
 };
 
-
+/**
+	Message Factory
+	- Factory class for creating messages
+	- CreateMessage inherited by the type of message factory and defined by
+		the message factory macro
+*/
 class MessageFactory
 {
 public:
@@ -45,7 +55,9 @@ private:
 	uint32_t _messageTypes;
 };
 
-
+/**
+	 Message Factory Macro
+*/
 #define MESSAGE_FACTORY_START(factory_class, base_class, num_messages)				\
 class factory_class : public base_class{											\
 public:																				\
