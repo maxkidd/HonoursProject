@@ -129,12 +129,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
 						//runAction(Sequence::create()
 						//Director::getInstance()->pushScene(TransitionSplitCols::create(1.0f, SnapshotInterpolationLayer::scene()));
 						//Director::getInstance()->pushScene(MainMenu::createScene());
-						Director::getInstance()->pushScene(SnapshotInterpolationLayer::scene());
+						Director::getInstance()->replaceScene(SnapshotInterpolationLayer::scene());
 					}
 					if (ImGui::MenuItem("State Synchronization"))
 					{
 						//Director::getInstance()->pushScene(MainMenu::createScene());
-						Director::getInstance()->pushScene(StateSyncLayer::scene());
+						Director::getInstance()->replaceScene(StateSyncLayer::scene());
 					}
 					ImGui::EndMenu();
 				}
@@ -145,7 +145,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 				if (ImGui::MenuItem("Back"))
 				{
-					Director::getInstance()->pushScene(MainMenu::createScene());
+					Director::getInstance()->replaceScene(MainMenu::createScene());
 				}
 				if (ImGui::MenuItem("Quit"))
 				{

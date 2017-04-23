@@ -203,19 +203,24 @@ public:
 	}
 	VIRTUAL_SERIALIZE_FUNCTIONS();
 };
+
+/// Snapshot move message
+/**
+	109 bits
+*/
 class StateSyncBoxMove : public NMessage
 {
 public:
-	uint32_t id = 0;
-	float x, y = 0.0f;
-	uint32_t rot = 0;
+	uint32_t id = 0; // 8 bits
+	float x, y = 0.0f; // 32 + 32 bits
+	uint32_t rot = 0; // 9 bits
 
-	float velocityX, velocityY = 0.0f;
-	float rotVel = 0.0f;
+	float velocityX, velocityY = 0.0f; // 10 + 10 bits
+	float rotVel = 0.0f; // 8 bits
 
 	template<typename Stream> bool Serialize(Stream& stream)
 	{
-		stream.SerializeInteger(id);
+		stream.SerializeInteger(id, 0, 255);
 
 		SerializeFloat(stream, x);
 		SerializeFloat(stream, y);
@@ -226,25 +231,31 @@ public:
 		{
 			// Clamp
 			velocityX = velocityX + 50.0f;
-			velocityX = std::max(std::min(velocityX, 100.0f), 0.0f) * 100.0f;
+			velocityX = std::max(std::min(velocityX, 100.0f), 0.0f) * 10.0f;
 
 			velocityY = velocityY + 50.0f;
-			velocityY = std::max(std::min(velocityY, 100.0f), 0.0f) * 100.0f;
+			velocityY = std::max(std::min(velocityY, 100.0f), 0.0f) * 10.0f;
+
+			rotVel += 10.0f;
+			rotVel = std::max(std::min(rotVel, 20.0f), 0.0f) * 10.0f;
 		}
 
 		uint32_t i_velocityX = (uint32_t)floor(velocityX);
 		uint32_t i_velocityY = (uint32_t)floor(velocityY);
+		uint32_t i_rotVel = (uint32_t)floor(rotVel);
 
-		stream.SerializeInteger(i_velocityX, 0, 10000);
-		stream.SerializeInteger(i_velocityY, 0, 10000);
+		stream.SerializeInteger(i_velocityX, 0, 1000);
+		stream.SerializeInteger(i_velocityY, 0, 1000);
+		stream.SerializeInteger(i_rotVel, 0, 200);
 
 		if (Stream::IsReading)
 		{
-			velocityX = (float(i_velocityX) / 100.0f) - 50.0f;
-			velocityY = (float(i_velocityY) / 100.0f) - 50.0f;
+			velocityX = (float(i_velocityX) / 10.0f) - 50.0f;
+			velocityY = (float(i_velocityY) / 10.0f) - 50.0f;
+			rotVel = (float(i_rotVel) / 10.0f) - 10.0f;
 		}
 
-		SerializeFloat(stream, rotVel);
+		//SerializeFloat(stream, rotVel);
 
 		return true;
 	}

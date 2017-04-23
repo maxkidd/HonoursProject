@@ -24,7 +24,7 @@ GameLayer::GameLayer()
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			// Go back to menu
-			Director::getInstance()->pushScene(TransitionFadeTR::create(1.0f, MainMenu::createScene()));
+			Director::getInstance()->replaceScene(TransitionFadeTR::create(1.0f, MainMenu::createScene()));
 		}
 	});
 	addChild(backButton);
@@ -32,5 +32,5 @@ GameLayer::GameLayer()
 
 GameLayer::~GameLayer()
 {
-
+	//removeChild(backButton);
 }

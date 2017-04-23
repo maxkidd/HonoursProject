@@ -99,6 +99,7 @@ private:
 public:
 	CREATE_FUNC(S_StateSyncSimulation);
 	S_StateSyncSimulation();
+	virtual ~S_StateSyncSimulation();
 
 	virtual void GenerateMessages(MessageFactory* mf, Connection* con);
 	virtual bool ProcessMessages(Connection * con);
@@ -122,6 +123,7 @@ private:
 public:
 	CREATE_FUNC(C_StateSyncSimulation);
 	C_StateSyncSimulation();
+	virtual ~C_StateSyncSimulation();
 
 	virtual void Step();
 	virtual bool ProcessMessages(Connection * con);

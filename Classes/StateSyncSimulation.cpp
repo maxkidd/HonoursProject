@@ -100,6 +100,10 @@ S_StateSyncSimulation::S_StateSyncSimulation()
 	}
 }
 
+S_StateSyncSimulation::~S_StateSyncSimulation()
+{
+}
+
 void S_StateSyncSimulation::GenerateMessages(MessageFactory * mf, Connection * con)
 {
 	if (_connectionSynchronized.find(con) == _connectionSynchronized.end())
@@ -378,6 +382,10 @@ void S_StateSyncSimulation::MouseUp(const b2Vec2 & p)
 }
 
 C_StateSyncSimulation::C_StateSyncSimulation()
+{
+}
+
+C_StateSyncSimulation::~C_StateSyncSimulation()
 {
 }
 

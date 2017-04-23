@@ -49,8 +49,7 @@ SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
 	}
 	if (_simulation)
 	{
-		delete _simulation;
-		_simulation = nullptr;
+		removeChild(_simulation);
 	}
 	if (_tableView)
 	{

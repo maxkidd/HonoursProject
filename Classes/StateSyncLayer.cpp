@@ -32,6 +32,11 @@ StateSyncLayer::~StateSyncLayer()
 	{
 		_statusLabel = nullptr;
 	}
+	if (_simulation)
+	{
+		removeChild(_simulation);
+	}
+
 	if (client)
 	{
 		client->Disconnect();
@@ -43,11 +48,6 @@ StateSyncLayer::~StateSyncLayer()
 		delete server;
 	}
 
-	if (_simulation)
-	{
-		removeChild(_simulation);
-		delete _simulation;
-	}
 
 }
 
