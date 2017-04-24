@@ -116,7 +116,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 			if (ImGui::BeginMenu("File"))
 			{
 				ImGui::MenuItem("(State Sync menu)", NULL, false, false);
-				if (ImGui::MenuItem("Debug menu", "")) {}
 				if (ImGui::BeginMenu("Open..."))
 				{
 
@@ -138,9 +137,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 					}
 					ImGui::EndMenu();
 				}
-				if (ImGui::MenuItem("Connect"))
+				//if (ImGui::MenuItem("Test"))
 				{
-					testToggle = true;
+					//testToggle = true;
 				}
 
 				if (ImGui::MenuItem("Back"))
@@ -153,10 +152,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 				}
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Game"))
+			//if (ImGui::BeginMenu("Game"))
 			{
 				//if (ImGui::MenuItem("Quit", "Alt+F4")) {}
-				ImGui::EndMenu();
+				//ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Info"))
 			{
@@ -169,7 +168,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 					udp::socket socket(netService);
 					socket.connect(ep);
 					asio::ip::address addr = socket.local_endpoint().address();
-					//std::cout << "My IP according to google is: " << addr.to_string() << std::endl;
 					ImGui::MenuItem(addr.to_string().c_str(), NULL, false, false);
 				}
 				catch (std::exception& e) {

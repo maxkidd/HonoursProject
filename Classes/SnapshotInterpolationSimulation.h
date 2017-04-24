@@ -96,7 +96,7 @@ private:
 
 
 	GLESDebugDraw _debugDraw;
-	std::deque<WorldSnapshot> snapshots; // Queue of snapshots
+	std::deque<WorldSnapshot> _snapshots; // Queue of snapshots
 
 	std::map<uint32_t, b2Transform> _boxes;
 	std::map<uint32_t, b2Transform> _boxes_interp;

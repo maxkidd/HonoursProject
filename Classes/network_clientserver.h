@@ -19,26 +19,24 @@ class Client
 public:
 	enum ClientState
 	{
-		CLIENT_SLEEP, // Not active
-		CLIENT_REQUESTING, // Requesting connection with server
-		CLIENT_REQUEST_DENIED, // Request denied
-		CLIENT_CONNECTED, // Connected after request accepted
-		CLIENT_TIMEDOUT // Timed out
+		CLIENT_SLEEP,			// Not active
+		CLIENT_REQUESTING,		// Requesting connection with server
+		CLIENT_REQUEST_DENIED,	// Request denied
+		CLIENT_CONNECTED,		// Connected after request accepted
+		CLIENT_TIMEDOUT			// Timed out
 	} _state;
 protected:
 
-	NetworkSimulation* _simulation = nullptr;// Simulation layer
-	BaseTransport* _transport = nullptr;// Transport layer
-	Connection* _connection = nullptr;// Connection layer
+	NetworkSimulation* _simulation = nullptr;	// Simulation layer
+	BaseTransport* _transport = nullptr;		// Transport layer
+	Connection* _connection = nullptr;			// Connection layer
 
-	bool _active = false;// false by default until connected
+	bool _active = false;	// false by default until connected
 
 	// Server info
 	const char* _serverIP = nullptr;
 	const char* _serverPort = nullptr;
 	udp::endpoint _serverEndpoint;
-
-	float jitterBuffer = 0.1f; // 100ms jitter buffer
 
 public:
 	Client(NetworkSimulation* simulation, BaseTransport* transport);
@@ -68,12 +66,14 @@ public:
 	std::string GetNetworkState();
 protected:
 
+	/*	Process packet types	*/
 	void ProcessPacket(Packet* packet, const udp::endpoint& endpoint);
 	void ProcessAcceptPacket(ConnectionAcceptPacket* packet, const udp::endpoint& endpoint);
 	void ProcessDeniedPacket(ConnectionDeniedPacket* packet, const udp::endpoint& endpoint);
 	void ProcessConnectionPacket(ConnectionPacket* packet, const udp::endpoint& endpoint);
 	void ProcessDisconnectPacket(ConnectionDisconnectPacket* packet, const udp::endpoint& endpoint);
 
+	// Create packets
 	Packet* CreateRequestPacket();
 	Packet* CreateDisconnectPacket();
 	Packet* CreateConnectionPacket();
@@ -90,26 +90,25 @@ class Server
 protected:
 	enum ServerState
 	{
-		SERVER_SLEEP, // Not active
-		SERVER_ALIVE, // Running and can accept clients
-		SERVER_CONNECTED // Running with 1 or more clients connected
+		SERVER_SLEEP,		// Not active
+		SERVER_ALIVE,		// Running and can accept clients
+		SERVER_CONNECTED	// Running with 1 or more clients connected
 	} _state;
 
 	NetworkSimulation* _simulation = nullptr;
 	BaseTransport* _transport = nullptr;
 
 
-	static const int MAX_SLOTS = 32;
+	static const int MAX_SLOTS = 32;			// Maximum slots on a server
 	static const int NULL_CLIENT_ID = MAX_SLOTS;
 
 	bool _active = true; // Active on create
 
-	uint16_t _connectedClients = 0;
+	uint16_t _connectedClients = 0;	// Counter
 	
 	// Clients
-	bool _clientConnected[MAX_SLOTS] = { false };
-	//ClientData _clientData[MAX_SLOTS]; // NOT NEEEDED
-	Connection* _connections[MAX_SLOTS];
+	bool _clientConnected[MAX_SLOTS] = { false };	// Clients connected lookup
+	Connection* _connections[MAX_SLOTS];			// Connection associated to [ID]
 public:
 	Server(NetworkSimulation* simulation, BaseTransport* transport);
 	virtual ~Server();

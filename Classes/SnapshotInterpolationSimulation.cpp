@@ -1,12 +1,14 @@
 #include "SnapshotInterpolationSimulation.h"
 
+
+// Mouse query for server ONLY
 class MouseQueryCallback : public b2QueryCallback
 {
 public:
 	MouseQueryCallback(const b2Vec2& point)
 	{
-		m_point = point;
-		m_fixture = nullptr;
+		_point = point;
+		_fixture = nullptr;
 	}
 
 	bool ReportFixture(b2Fixture* fixture)
@@ -14,23 +16,20 @@ public:
 		b2Body* body = fixture->GetBody();
 		if (body->GetType() == b2_dynamicBody)
 		{
-			bool inside = fixture->TestPoint(m_point);
+			bool inside = fixture->TestPoint(_point);
 			if (inside)
 			{
-				m_fixture = fixture;
-
-				// We are done, terminate the query.
+				_fixture = fixture;
 				return false;
 			}
 		}
-
-		// Continue the query.
 		return true;
 	}
 
-	b2Vec2 m_point;
-	b2Fixture* m_fixture;
+	b2Vec2 _point;
+	b2Fixture* _fixture;
 };
+
 SnapshotInterpolationSimulation::SnapshotInterpolationSimulation()
 {
 
@@ -236,9 +235,9 @@ bool S_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 					MouseQueryCallback callback(p);
 					_world->QueryAABB(&callback, aabb);
 
-					if (callback.m_fixture)
+					if (callback._fixture)
 					{
-						b2Body* body = callback.m_fixture->GetBody();
+						b2Body* body = callback._fixture->GetBody();
 
 						uint32_t* test = (uint32_t*)body->GetUserData();
 						b2MouseJointDef def;
@@ -330,9 +329,9 @@ bool S_SnapshotInterpolationSimulation::MouseDown(const b2Vec2 & p)
 	MouseQueryCallback callback(p);
 	_world->QueryAABB(&callback, aabb);
 
-	if (callback.m_fixture)
+	if (callback._fixture)
 	{
-		b2Body* body = callback.m_fixture->GetBody();
+		b2Body* body = callback._fixture->GetBody();
 		b2MouseJointDef def;
 		def.bodyA = _ground;
 		def.bodyB = body;
@@ -415,14 +414,14 @@ void C_SnapshotInterpolationSimulation::draw(cocos2d::Renderer * renderer, const
 
 void C_SnapshotInterpolationSimulation::Step()
 {// Interpolation done here
-	if (snapshots.size() < 4)
+	if (_snapshots.size() < 4)
 		return;
 
 
 	// Linear interolation test
-	WorldSnapshot first = snapshots[0];
-	WorldSnapshot second = snapshots[1];
-	WorldSnapshot third = snapshots[2];
+	WorldSnapshot first = _snapshots[0];
+	WorldSnapshot second = _snapshots[1];
+	WorldSnapshot third = _snapshots[2];
 
 	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - first.time; // 0-50ms
 	float t = std::min(1.0f, elapsed.count()*20.0f);// between 0 and 1 for every 50ms
@@ -517,8 +516,8 @@ bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 	}
 
 	// Remove old snapshot
-	if (snapshots.size() > 6)
-		snapshots.pop_back();
+	if (_snapshots.size() > 6)
+		_snapshots.pop_back();
 
 	// Create new snapshot and push to the queue
 	WorldSnapshot newSnapshot;
@@ -527,7 +526,7 @@ bool C_SnapshotInterpolationSimulation::ProcessMessages(Connection * con)
 	{
 		newSnapshot.boxes.push_back(b);
 	}
-	snapshots.push_front(newSnapshot);
+	_snapshots.push_front(newSnapshot);
 
 	return true;
 }

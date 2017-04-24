@@ -3,6 +3,7 @@
 
 #include "network_clientserver.h"
 
+//	State Synchronization Client
 class StateSyncClient : public Client
 {
 private:

@@ -35,8 +35,6 @@ private:
 
 	SocketTransport _transport;
 
-	TableView* _tableView = nullptr;
-
 	float _networkTimer = 0.0f;
 	float _physicsTimer = 0.0f;
 

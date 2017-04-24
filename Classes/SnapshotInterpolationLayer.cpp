@@ -51,11 +51,6 @@ SnapshotInterpolationLayer::~SnapshotInterpolationLayer()
 	{
 		removeChild(_simulation);
 	}
-	if (_tableView)
-	{
-		delete _tableView;
-		_tableView = nullptr;
-	}
 }
 
 cocos2d::Scene * SnapshotInterpolationLayer::scene()
@@ -147,8 +142,6 @@ void SnapshotInterpolationLayer::update(float dt)
 		server->ReceivePackets();
 
 		debugString.append("Server: " + server->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
-
-		//_tableView->reloadData();
 	}
 	else if (client && client->IsActive()) // Client
 	{
@@ -167,8 +160,6 @@ void SnapshotInterpolationLayer::update(float dt)
 		client->ReceivePackets();
 
 		debugString.append("Client: " + client->GetNetworkState() + " Port: " + std::to_string(_transport.GetPort()));
-
-		//_tableView->reloadData();
 	}
 	else
 	{
